@@ -21,6 +21,12 @@ public class Room implements Serializable {
     private int numSlots;
     private ArrayList<TimeUnit> busyTimeList;
 
+    public Room(String roomID, int numSlots, ArrayList<TimeUnit> busyTimeList) {
+        this.roomID = roomID;
+        this.numSlots = numSlots;
+        this.busyTimeList = busyTimeList;
+    }
+
     public Room(String roomID, Area area, int numSlots, ArrayList<TimeUnit> busyTimeList) {
         this.roomID = roomID;
         this.area = area;
@@ -30,6 +36,11 @@ public class Room implements Serializable {
 
     public String getRoomID() {
         return roomID;
+    }
+
+    public int getRoomIDInt() {
+        String id = roomID.substring("Room".length());
+        return Integer.parseInt(id);
     }
 
     public Area getArea() {
@@ -60,10 +71,10 @@ public class Room implements Serializable {
         this.busyTimeList = busyTimeList;
     }
 
-    public void addBusyTime(TimeUnit busyTime){
+    public void addBusyTime(TimeUnit busyTime) {
         busyTimeList.add(busyTime);
     }
-    
+
     @Override
     public String toString() {
         return "Room{" + "roomID=" + roomID + ", area=" + area.getAreaID() + ", numSlots=" + numSlots + ", busyTimeList=" + busyTimeList + '}';

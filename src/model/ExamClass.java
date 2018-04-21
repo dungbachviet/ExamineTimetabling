@@ -20,6 +20,11 @@ public class ExamClass implements Serializable {
     private Course course;
     private ArrayList<String> enrollmentList;
 
+    public ExamClass(String examClassID) {
+        this.examClassID = examClassID;
+        this.enrollmentList = new ArrayList<>();
+    }
+
     public ExamClass(String examClassID, Course course, ArrayList<String> enrollmentList) {
         this.examClassID = examClassID;
         this.course = course;
@@ -28,6 +33,11 @@ public class ExamClass implements Serializable {
 
     public String getExamClassID() {
         return examClassID;
+    }
+
+    public int getExamClassIDInt() {
+        String id = examClassID.substring("ExamClass".length());
+        return Integer.parseInt(id);
     }
 
     public Course getCourse() {
@@ -58,7 +68,7 @@ public class ExamClass implements Serializable {
 
     @Override
     public String toString() {
-        return "ExamClass{" + "examClassID=" + examClassID + ", course=" + course + ", enrollmentList=" + enrollmentList + '}';
+        return "ExamClass{" + "examClassID=" + examClassID + ", course=" + course.getCourseID() + ", enrollmentList=" + enrollmentList + '}';
     }
 
     @Override

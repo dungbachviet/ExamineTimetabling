@@ -20,6 +20,12 @@ public class Teacher implements Serializable {
     private ArrayList<Course> teachingCourseList;
     private ArrayList<TimeUnit> busyTimeList;
 
+    public Teacher(String teacherID, ArrayList<TimeUnit> busyTimeList) {
+        this.teacherID = teacherID;
+        this.busyTimeList = busyTimeList;
+        this.teachingCourseList = new ArrayList<>();
+    }
+
     public Teacher(String teacherID, ArrayList<Course> teachingCourseList, ArrayList<TimeUnit> busyTimeList) {
         this.teacherID = teacherID;
         this.teachingCourseList = teachingCourseList;
@@ -28,6 +34,11 @@ public class Teacher implements Serializable {
 
     public String getTeacherID() {
         return teacherID;
+    }
+
+    public int getTeacherIDInt() {
+        String id = teacherID.substring("Teacher".length());
+        return Integer.parseInt(id);
     }
 
     public ArrayList<Course> getTeachingCourseList() {
@@ -50,11 +61,11 @@ public class Teacher implements Serializable {
         this.busyTimeList = busyTimeList;
     }
 
-    public void addTeacher(Course course) {
+    public void addCourse(Course course) {
         teachingCourseList.add(course);
     }
-    
-    public void addBusyTime(TimeUnit busyTime){
+
+    public void addBusyTime(TimeUnit busyTime) {
         busyTimeList.add(busyTime);
     }
 

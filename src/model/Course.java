@@ -24,10 +24,17 @@ public class Course implements Serializable {
     public Course(String courseID, int difficultLevel) {
         this.courseID = courseID;
         this.difficultLevel = difficultLevel;
+        this.examClassList = new ArrayList<>();
+        this.teacherList = new ArrayList<>();
     }
 
     public String getCourseID() {
         return courseID;
+    }
+
+    public int getCourseIDInt() {
+        String id = courseID.substring("Course".length());
+        return Integer.parseInt(id);
     }
 
     public int getDifficultLevel() {
@@ -57,12 +64,12 @@ public class Course implements Serializable {
     public void setTeacherList(ArrayList<Teacher> teacherList) {
         this.teacherList = teacherList;
     }
-    
+
     public void addExamClass(ExamClass examClass) {
         examClassList.add(examClass);
     }
-    
-    public void addTeacher(Teacher teacher){
+
+    public void addTeacher(Teacher teacher) {
         teacherList.add(teacher);
     }
 
