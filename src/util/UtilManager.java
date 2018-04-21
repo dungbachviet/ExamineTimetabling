@@ -5,14 +5,18 @@
  */
 package util;
 
+import static java.lang.Math.floor;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
 import model.Area;
 import model.Course;
 import model.ExamClass;
 import model.ExamineTimetablingManager;
 import model.Room;
 import model.Teacher;
+import model.TimeUnit;
 
 /**
  *
@@ -20,12 +24,30 @@ import model.Teacher;
  */
 public class UtilManager {
 
-    public static ExamineTimetablingManager generateData(
-            int numExamDays, int numAreas, int numCourses, int numStudents,
-            int numExamClasses, int numRooms, int numTeachers, int difficultLevelOfData
-    ) {
+    public static ExamineTimetablingManager generateData(int difficultLevelOfData) {
+
+        switch (difficultLevelOfData) {
+            case 1: {
+                return generateDataLevel1();
+            }
+            default:
+                return generateDataLevel1();
+        }
+    }
+
+    public static ExamineTimetablingManager generateDataLevel1() {
+
+        // parameter control difficult level
+        int numAreas = 3;
+        int numRooms = numAreas * 3;
+        int numCourses = 100;
+        int numExamClasses = numCourses * 2;
+        int numExamDays = 20;
+        int numStudents = 1000;
+        int numTeachers = 20;
+
         System.out.println("\n============= <Generating data> =============");
-        System.out.println("\nRandom data Level " + difficultLevelOfData);
+        System.out.println("\nRandom data Level " + 1);
         System.out.println("\nNum exam days: " + numExamDays);
         System.out.println("\nNum areas: " + numAreas);
         System.out.println("\nNum courses: " + numCourses);
@@ -35,19 +57,22 @@ public class UtilManager {
         System.out.println("\nNum teachers: " + numTeachers);
         System.out.println("\n============= </Generating data> =============");
 
-        switch (difficultLevelOfData) {
-            case 1: {
-                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents, numExamClasses, numRooms, numTeachers);
-            }
-            default:
-                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents, numExamClasses, numRooms, numTeachers);
-        }
-    }
+//        int minStudentOfClass = 30;
+//        int maxStudentOfClass = 90;
+//
+//        int minNumCoursesOfStudent = 5;
+//        int maxNumCoursesOfStudent = 8;
+        int minNumSlotsOfRoom = 50;
+        int maxNumSlotsOfRoom = 150;
 
-    public static ExamineTimetablingManager generateDataLevel1(
-            int numExamDays, int numAreas, int numCourses, int numStudents,
-            int numExamClasses, int numRooms, int numTeachers
-    ) {
+        int minBusyTime = 3;
+        int maxBusyTime = 5;
+
+        int minDifficultCourse = 1;
+        int maxDifficultCourse = 3;
+
+        int numTabuDays = 3;
+
         ExamineTimetablingManager etm = new ExamineTimetablingManager();
 
         HashMap<String, Area> hmIDToArea = new HashMap<>();
@@ -56,8 +81,22 @@ public class UtilManager {
         HashMap<String, Room> hmIDToRoom = new HashMap<>();
         HashMap<String, Teacher> hmIDToTeacher = new HashMap<>();
 
-        ArrayList<Integer> availableDayList;
-        ArrayList<Integer> jamLevelList;
+        ArrayList<Integer> availableDayList = new ArrayList<>();
+        for (int i = 1; i <= numExamDays; ++i) {
+            availableDayList.add(i);
+        }
+        for (int i = 0; i < numTabuDays; ++i) {
+            int indexRemove = randomInt(0, availableDayList.size() - 1);
+            availableDayList.remove(indexRemove);
+        }
+
+        ArrayList<Integer> jamLevelList = new ArrayList<>();
+        jamLevelList.add(4);        // mức độ tắc nghẽn của kíp 0 là mức 4 - mức cao nhất
+        jamLevelList.add(2);
+        jamLevelList.add(1);
+        jamLevelList.add(3);
+
+        Random R = new Random(7);
 
         // generate rooms and areas
         for (int i = 0; i < numAreas; ++i) {
@@ -71,13 +110,110 @@ public class UtilManager {
             String areaID = "Area" + (i % numAreas + 1);
             Area area = hmIDToArea.get(areaID);
 
-            int numSlots = 0;
-            if (i < numRooms / 2) {
-                numSlots
+            int numSlots = randomInt(minNumSlotsOfRoom, maxNumSlotsOfRoom);
+            int numBusyTime = randomInt(minBusyTime, maxBusyTime);
+            HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
+
+            while (hsTimeUnit.size() < numBusyTime) {
+                TimeUnit timeUnit = new TimeUnit(randomInt(1, numExamDays), randomInt(1, 4));
+                hsTimeUnit.add(timeUnit);
             }
+            ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
             Room room = new Room(roomID, area, numSlots, busyTimeList);
+            hmIDToRoom.put(roomID, room);
+
+            area.addRoom(room);
         }
 
+        //generate course - teacher - exam class
+        // generate teachers
+        for (int i = 0; i < numTeachers; ++i) {
+            String teacherID = "Teacher" + (i + 1);
+            int numBusyTime = randomInt(minBusyTime, maxBusyTime);
+            HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
+
+            while (hsTimeUnit.size() < numBusyTime) {
+                TimeUnit timeUnit = new TimeUnit(randomInt(1, numExamDays), randomInt(1, 4));
+                hsTimeUnit.add(timeUnit);
+            }
+            ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
+
+            Teacher teacher = new Teacher(teacherID, busyTimeList);
+            hmIDToTeacher.put(teacherID, teacher);
+        }
+
+        // generate courses
+        for (int i = 0; i < numCourses; ++i) {
+            String courseID = "Course" + (i + 1);
+            int difficultOfCourse = randomInt(minDifficultCourse, maxDifficultCourse);
+            Course course = new Course(courseID, difficultOfCourse);
+            hmIDToCourse.put(courseID, course);
+
+            // add connection between course and teacher
+            // each course taught by 2 teacher
+            for (int j = 0; j < 2; ++j) {
+                String teacherID = "Teacher" + String.valueOf(randomInt(1, numTeachers));
+                Teacher teacher = hmIDToTeacher.get(teacherID);
+                teacher.addCourse(course);
+                course.addTeacher(teacher);
+            }
+        }
+
+        // generate exam classes
+        for (int i = 0; i < numExamClasses; ++i) {
+            String examClassID = "ExamClass" + (i + 1);
+            ExamClass examClass = new ExamClass(examClassID);
+            hmIDToExamClass.put(examClassID, examClass);
+
+            // add connection between course and exam class
+            String courseID = "Course" + String.valueOf(randomInt(1, numCourses));
+            Course course = hmIDToCourse.get(courseID);
+            course.addExamClass(examClass);
+            examClass.setCourse(course);
+        }
+
+        // generate student enrollment
+        for (int i = 0; i < numStudents; ++i) {
+            String studentID = "Student" + (i + 1);
+            String courseID = "Course" + String.valueOf(randomInt(1, numCourses));
+            Course course = hmIDToCourse.get(courseID);
+            ArrayList<ExamClass> examClassList = course.getExamClassList();
+            if (!examClassList.isEmpty()) {
+                ExamClass examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
+                // add connection student enrollment exam class
+                examClass.addEnrollment(studentID);
+            }
+        }
+
+        etm.setHmIDToArea(hmIDToArea);
+        etm.setHmIDToCourse(hmIDToCourse);
+        etm.setHmIDToExamClass(hmIDToExamClass);
+        etm.setHmIDToRoom(hmIDToRoom);
+        etm.setHmIDToTeacher(hmIDToTeacher);
+        etm.setHmIDToTeacher(hmIDToTeacher);
+        etm.setAvailableDayList(availableDayList);
+        etm.setJamLevelList(jamLevelList);
+
         return etm;
+    }
+
+    public static int randomInt(int min, int max) {
+        Random R = new Random();
+        return R.nextInt(max - min + 1) + min;
+    }
+
+    public static void main(String[] args) {
+        ExamineTimetablingManager etm = UtilManager.generateData(0);
+        System.out.println(etm);
+        
+        System.out.println("\n==========================================\n");
+        
+        String path = "src/dataset_timetabling/test_data.txt";
+        DataIO.writeObject(path, etm);
+        
+        ExamineTimetablingManager etm2 = DataIO.readObject(path);
+        
+        System.out.println("\nETM read from file:\n");
+        System.out.println(etm2);
     }
 }
