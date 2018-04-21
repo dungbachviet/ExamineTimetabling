@@ -21,7 +21,7 @@ import model.Teacher;
 public class UtilManager {
 
     public static ExamineTimetablingManager generateData(
-            int numExamDays, int numAreas, int numCourses,int numStudents,
+            int numExamDays, int numAreas, int numCourses, int numStudents,
             int numExamClasses, int numRooms, int numTeachers, int difficultLevelOfData
     ) {
         System.out.println("\n============= <Generating data> =============");
@@ -37,10 +37,10 @@ public class UtilManager {
 
         switch (difficultLevelOfData) {
             case 1: {
-                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents,numExamClasses, numRooms, numTeachers);
+                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents, numExamClasses, numRooms, numTeachers);
             }
             default:
-                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents,numExamClasses, numRooms, numTeachers);
+                return generateDataLevel1(numExamDays, numAreas, numCourses, numStudents, numExamClasses, numRooms, numTeachers);
         }
     }
 
@@ -70,9 +70,9 @@ public class UtilManager {
             String roomID = "Room" + (i + 1);
             String areaID = "Area" + (i % numAreas + 1);
             Area area = hmIDToArea.get(areaID);
-            
+
             int numSlots = 0;
-            if(i < numRooms / 2){
+            if (i < numRooms / 2) {
                 numSlots
             }
             Room room = new Room(roomID, area, numSlots, busyTimeList);
