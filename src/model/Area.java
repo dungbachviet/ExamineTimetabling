@@ -38,6 +38,10 @@ public class Area implements Serializable {
     public void setRoomList(ArrayList<Room> roomList) {
         this.roomList = roomList;
     }
+    
+    public void addRoom(Room room){
+        roomList.add(room);
+    }
 
     @Override
     public String toString() {

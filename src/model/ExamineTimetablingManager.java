@@ -8,6 +8,8 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -91,6 +93,12 @@ public class ExamineTimetablingManager implements Serializable {
     public ArrayList<Integer> getAvailableDayList() {
         return availableDayList;
     }
+    
+    public Set<Integer> getAvailableDaySet(){
+        Set<Integer> set = new HashSet<>(availableDayList);
+        return set;
+    }
+    
 
     public ArrayList<Integer> getJamLevelList() {
         return jamLevelList;

@@ -6,6 +6,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -17,6 +18,8 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
     private String courseID;
     private int difficultLevel;
+    private ArrayList<ExamClass> examClassList;
+    private ArrayList<Teacher> teacherList;
 
     public Course(String courseID, int difficultLevel) {
         this.courseID = courseID;
@@ -31,12 +34,36 @@ public class Course implements Serializable {
         return difficultLevel;
     }
 
+    public ArrayList<ExamClass> getExamClassList() {
+        return examClassList;
+    }
+
+    public ArrayList<Teacher> getTeacherList() {
+        return teacherList;
+    }
+
     public void setCourseID(String courseID) {
         this.courseID = courseID;
     }
 
     public void setDifficultLevel(int difficultLevel) {
         this.difficultLevel = difficultLevel;
+    }
+
+    public void setExamClassList(ArrayList<ExamClass> examClassList) {
+        this.examClassList = examClassList;
+    }
+
+    public void setTeacherList(ArrayList<Teacher> teacherList) {
+        this.teacherList = teacherList;
+    }
+    
+    public void addExamClass(ExamClass examClass) {
+        examClassList.add(examClass);
+    }
+    
+    public void addTeacher(Teacher teacher){
+        teacherList.add(teacher);
     }
 
     @Override

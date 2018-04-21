@@ -50,6 +50,14 @@ public class Teacher implements Serializable {
         this.busyTimeList = busyTimeList;
     }
 
+    public void addTeacher(Course course) {
+        teachingCourseList.add(course);
+    }
+    
+    public void addBusyTime(TimeUnit busyTime){
+        busyTimeList.add(busyTime);
+    }
+
     @Override
     public String toString() {
         return "Teacher{" + "teacherID=" + teacherID + ", teachingCourseList=" + teachingCourseList + ", busyTimeList=" + busyTimeList + '}';

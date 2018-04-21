@@ -60,6 +60,10 @@ public class Room implements Serializable {
         this.busyTimeList = busyTimeList;
     }
 
+    public void addBusyTime(TimeUnit busyTime){
+        busyTimeList.add(busyTime);
+    }
+    
     @Override
     public String toString() {
         return "Room{" + "roomID=" + roomID + ", area=" + area.getAreaID() + ", numSlots=" + numSlots + ", busyTimeList=" + busyTimeList + '}';

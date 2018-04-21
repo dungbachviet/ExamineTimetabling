@@ -50,6 +50,12 @@ public class ExamClass implements Serializable {
         this.enrollmentList = enrollmentList;
     }
 
+    public void addEnrollment(String studentID) {
+        if (!enrollmentList.contains(studentID)) {
+            enrollmentList.add(studentID);
+        }
+    }
+
     @Override
     public String toString() {
         return "ExamClass{" + "examClassID=" + examClassID + ", course=" + course + ", enrollmentList=" + enrollmentList + '}';
