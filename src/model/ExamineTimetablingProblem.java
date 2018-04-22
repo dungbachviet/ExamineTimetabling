@@ -15,11 +15,17 @@ import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.LessThan;
 import localsearch.constraints.basic.NotEqual;
 import localsearch.constraints.basic.OR;
+import localsearch.functions.basic.FuncMinus;
+import localsearch.functions.basic.FuncMult;
+import localsearch.functions.basic.FuncPlus;
+import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.functions.element.Element;
 import localsearch.functions.element.ElementTmp;
 import localsearch.functions.max_min.Max;
 import localsearch.functions.max_min.Min;
+import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
+import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 
@@ -35,10 +41,10 @@ public class ExamineTimetablingProblem {
     public HashMap<String, Room> hmIDToRoom;
     public HashMap<String, Teacher> hmIDToTeacher;
 
-    public HashMap<Integer, ExamClass> hmIntegerToExamClass;
 
-    public ArrayList<Integer> availableDayList;            // ds các ngày có thể tổ chức thi
-    public ArrayList<Integer> jamLevelList;                // ds mức độ tắc nghẽn của các kíp thi
+
+    public ArrayList<Integer> availableDayList; // ds các ngày có thể tổ chức thi
+    public ArrayList<Integer> jamLevelList; // ds mức độ tắc nghẽn của các kíp thi
 
     public int[][] commonStudents;
     public int[] roomSlots;
@@ -63,6 +69,46 @@ public class ExamineTimetablingProblem {
     VarIntLS[] examTimeSlots;
     VarIntLS[] examRooms;
     VarIntLS[][] examClassToTeacher;
+    
+    IFunction examGapObj; // Maximize the minimum of gap between 2 exam times
+    IFunction consecutiveObj; // Maximize the consecutive time for teacher
+    IFunction balanceAreaObj; // Balance rooms at each timeslot for exam areas
+    IFunction utilizeRoomObj; // Utilize maximally the capacity of each room, avoid wasting
+    IFunction distributeDifficultyObj; // Distribute difficult degree throughout exam process
+    IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
+    IFunction suitableTimeSlotObj; // Avoid helding much exams on traffic jam time
+    
+    
+    public ExamineTimetablingProblem() {
+        ExamineTimetablingManager manager = new ExamineTimetablingManager();
+        hmIDToArea = manager.getHmIDToArea();
+        hmIDToCourse = manager.getHmIDToCourse();
+        hmIDToExamClass = manager.getHmIDToExamClass();
+        hmIDToRoom = manager.getHmIDToRoom();
+        hmIDToTeacher = manager.getHmIDToTeacher();
+        
+        availableDayList = manager.getAvailableDayList();
+        jamLevelList = manager.getJamLevelList();
+        
+        commonStudents = manager.calcNumberCommonStudentOfClasses();
+//        roomSlots = manager.
+        numExamClass = manager.getNumExamClasses();
+        numTeacher = manager.getNumTeachers();
+        numCourse = manager.getNumCourses();
+        numRoom = manager.getNumRooms();
+        numArea = manager.getNumAreas();
+
+        areas = manager.getAreaList();
+        courses = manager.getCourseList();
+        examClasses = manager.getExamClassList();
+        rooms = manager.getRoomList();
+        teachers = manager.getTeacherList();
+        setAvailableDay = manager.getAvailableDaySet();
+        sameCourseCodeClass = manager.getCommonExamClassCourseList();
+        
+    
+    }
+    
 
     public void stateModel() {
 
@@ -140,9 +186,8 @@ public class ExamineTimetablingProblem {
 
         // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
         // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
-        // Constraint : Don't allow any 2 exam classes having any same student to be placed at same time
-        VarIntLS[] convertIntToVarIntLS = new VarIntLS[2]; // convert integer to VarIntLS
-        convertIntToVarIntLS[0] = new VarIntLS(ls,0,0);
+        // Constraint : Don't allow any 2 exam classes having any same student are at least 1 timeslot apart
+        
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
                 // Same room, same day ==> not same timeslot
@@ -153,6 +198,7 @@ public class ExamineTimetablingProblem {
                         ),
                         new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2])
                 ));
+                
                 
                 // Same timeslot, same day ==> not any same teacher
                 S.post(new Implicate(
@@ -184,33 +230,110 @@ public class ExamineTimetablingProblem {
                 ));
                 
   
-                // Same student ==> not same timeslot, not same day
-                convertIntToVarIntLS[1] = new VarIntLS(ls,commonStudents[classIndex1][classIndex2],commonStudents[classIndex1][classIndex2]);
-                S.post(
-                new Implicate(
-                        new LessThan(convertIntToVarIntLS[0], convertIntToVarIntLS[1]),
+                // Same student, same day ==> |timeslot1 - timeslot2| >= 2
+                VarIntLS[] convertIntToVarIntLS = new VarIntLS[2];
+                convertIntToVarIntLS[0] = new VarIntLS(ls, 0, 0);
+                convertIntToVarIntLS[1] = new VarIntLS(ls, commonStudents[classIndex1][classIndex2], commonStudents[classIndex1][classIndex2]);
+                
+                VarIntLS[] timeSlots = new VarIntLS[2];
+                timeSlots[0] = examTimeSlots[classIndex1];
+                timeSlots[1] = examTimeSlots[classIndex2];
+                
+                IFunction max = new Max(timeSlots);
+                IFunction min = new Min(timeSlots);
+                
+                S.post(new Implicate(
                         new AND(
-                                new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]),
-                                new NotEqual(examDays[classIndex1], examDays[classIndex2])
-                        )
-                )
-                );
-                
-                
-                
-   
+                                new LessThan(convertIntToVarIntLS[0], convertIntToVarIntLS[1]),
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                        ),
+                        new LessOrEqual(2, new FuncMinus(max, min))
+                ));
+ 
             }
         }
         
         
+        // Constraint - Don't allow teacher supervise any exam class having same courseID 
+        for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+            int courseID = examClasses.get(classIndex).getCourse().getCourseIDInt();
+            VarIntLS convertIntToVarIntLS = new VarIntLS(ls, courseID, courseID);
+            for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
+                ArrayList<Integer> courseList = teachers.get(teacherIndex).getTeachingCourseListIDInt();
+                for (int courseIndex = 0; courseIndex < courseList.size(); courseIndex++) {
+                    
+                    S.post(
+                            new Implicate(
+                                    new IsEqual(convertIntToVarIntLS, courseList.get(courseIndex)),
+                                    new AND(
+                                            new NotEqual(examClassToTeacher[classIndex][0], teacherIndex),
+                                            new NotEqual(examClassToTeacher[classIndex][1], teacherIndex)
+                                    )
+                            )
+                    );
+                      
+                }
+                        
+            }
+        }
+        
+        // Objective 1 : Maximize the minimum of gap between 2 exam times
+        ArrayList<IFunction> commonExamGaps = new ArrayList<IFunction>();
+        for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
+            for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
+                if (commonStudents[classIndex1][classIndex2] > 0) {
+                    IFunction[] examTimes = new IFunction[2];
+                    
+                    // Calculates Day[i]*4 + Timeslot[j]
+                    examTimes[0] = new FuncPlus(new FuncMult(examDays[classIndex1], 4), examTimeSlots[classIndex1]);
+                    examTimes[1] = new FuncPlus(new FuncMult(examDays[classIndex2], 4), examTimeSlots[classIndex2]);
+                    
+                    commonExamGaps.add(new FuncMinus(new Max(examTimes), new Min(examTimes)));
+                }
+            }
+        }
+        
+        IFunction[] commonExamGapsFunction = new IFunction[commonExamGaps.size()];
+        for (int index = 0; index < commonExamGaps.size(); index++)
+            commonExamGapsFunction[index] = commonExamGaps.get(index);
+        
+        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
+        
+        // Objective : Avoid disproportinating between number of student and room's capacity
+        IFunction[] slotDisproportion = new IFunction[numExamClass];
+        for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+            int classSlots = examClasses.get(classIndex).getEnrollmentList().size();
+            slotDisproportion[classIndex] = new FuncMinus(new ElementTmp(roomSlots, examRooms[classIndex]), classSlots);
+        }
+        
+        disproportionObj = new Max(slotDisproportion); // minimize the maximum
+        
+        // Objective : Avoid helding much exams on traffic jam time
+        IFunction[] timeSlotSuits = new IFunction[4];
+        for (int timeSlotIndex = 0; timeSlotIndex < jamLevelList.size(); timeSlotIndex++) {
+            // Number timeslot i * jamLevel[i]
+            timeSlotSuits[timeSlotIndex] = new FuncMult(new ConditionalSum(examTimeSlots, timeSlotIndex), jamLevelList.get(timeSlotIndex));
+        }
+        suitableTimeSlotObj = new Sum(timeSlotSuits);
         
         
         
         
+         
+        
+//        IFunction examGapObj; // Maximize the minimum of gap between 2 exam times
+//    IFunction consecutiveObj; // Maximize the consecutive time for teacher
+//    IFunction balanceAreaObj; // Balance rooms at each timeslot for exam areas
+//    IFunction utilizeRoomObj; // Utilize maximally the capacity of each room, avoid wasting
+//    IFunction distributeDifficultyObj; // Distribute difficult degree throughout exam process
+//    IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
+//    IFunction suitableSessionObj; // Avoid helding much exams on traffic jam time
         
         
         
-              
+        ls.close();
+        
+    
         
         
 
