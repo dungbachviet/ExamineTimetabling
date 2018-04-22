@@ -123,10 +123,11 @@ public class ExamineTimetablingManager implements Serializable {
         return hmIDToTeacher.size();
     }
     
-    public ArrayList<Integer> getRoomSlots(){
-        ArrayList<Integer> result = new ArrayList<>();
-        for(Room room : getRoomList()){
-            result.add(room.getNumSlots());
+    public int[] getRoomSlots(){
+        ArrayList<Room> roomList = getRoomList();
+        int[] result = new int[roomList.size()];
+        for(int i = 0; i < result.length; ++i){
+            result[i] = roomList.get(i).getNumSlots();
         }
         return result;
     }
