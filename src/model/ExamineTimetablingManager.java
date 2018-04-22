@@ -156,34 +156,40 @@ public class ExamineTimetablingManager implements Serializable {
         StringBuilder str = new StringBuilder();
         str.append("\n============= <ETM> =============");
 
-        str.append("\nList areas:\n");
+        str.append("\nList available days: " + availableDayList.size() + "\n");
+        str.append(availableDayList);
+
+        str.append("\nList jim level: " + jamLevelList.size() + "\n");
+        str.append(jamLevelList);
+
+        str.append("\nList areas: " + hmIDToArea.size() + "\n");
         for (String id : hmIDToArea.keySet()) {
             Area area = hmIDToArea.get(id);
-            str.append(area.toString());
+            str.append(area + "\n");
         }
 
-        str.append("\nList Courses:\n");
+        str.append("\nList courses: " + hmIDToCourse.size() + "\n");
         for (String id : hmIDToCourse.keySet()) {
             Course course = hmIDToCourse.get(id);
-            str.append(course.toString());
+            str.append(course + "\n");
         }
 
-        str.append("\nList Exam Class:\n");
+        str.append("\nList exam class: " + hmIDToExamClass.size() + "\n");
         for (String id : hmIDToExamClass.keySet()) {
             ExamClass examClass = hmIDToExamClass.get(id);
-            str.append(examClass.toString());
+            str.append(examClass + "\n");
         }
 
-        str.append("\nList Rooms:\n");
+        str.append("\nList rooms: " + hmIDToRoom.size() + "\n");
         for (String id : hmIDToRoom.keySet()) {
             Room room = hmIDToRoom.get(id);
-            str.append(room.toString());
+            str.append(room + "\n");
         }
 
-        str.append("\nList teachers:\n");
+        str.append("\nList teachers: " + hmIDToTeacher.size() + "\n");
         for (String id : hmIDToTeacher.keySet()) {
             Teacher teacher = hmIDToTeacher.get(id);
-            str.append(teacher.toString());
+            str.append(teacher + "\n");
         }
 
         str.append("\n============= </ETM> =============");

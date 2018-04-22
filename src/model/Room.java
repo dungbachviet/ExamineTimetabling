@@ -77,7 +77,7 @@ public class Room implements Serializable {
 
     @Override
     public String toString() {
-        return "Room{" + "roomID=" + roomID + ", area=" + area.getAreaID() + ", numSlots=" + numSlots + ", busyTimeList=" + busyTimeList + '}';
+        return "Room{" + "ID=" + roomID + ", area=" + area.getAreaID() + ", numSlots=" + numSlots + ", busyTimeList=" + busyTimeList + '}';
     }
 
     @Override

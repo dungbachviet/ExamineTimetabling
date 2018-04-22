@@ -51,7 +51,7 @@ public class Area implements Serializable {
 
     @Override
     public String toString() {
-        return "Area{" + "areaID=" + areaID + ", roomList=" + roomList + '}';
+        return "Area{" + "ID=" + areaID + ", roomList=" + roomList + '}';
     }
 
     @Override
