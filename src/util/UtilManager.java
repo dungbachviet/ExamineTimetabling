@@ -209,10 +209,10 @@ public class UtilManager {
         Random R = new Random();
         return R.nextInt(max - min + 1) + min;
     }
-    
-    public static ArrayList<Integer> randomIntegerList(int size, int min, int max){
+
+    public static ArrayList<Integer> randomIntegerList(int size, int min, int max) {
         ArrayList<Integer> list = new ArrayList<>();
-        for(int i = 0; i < size; ++i){
+        for (int i = 0; i < size; ++i) {
             list.add(randomInt(min, max));
         }
         return list;
@@ -222,13 +222,60 @@ public class UtilManager {
         Random R = new Random();
         return (max - min + 1) * R.nextDouble() + min;
     }
-    
-    public static ArrayList<Double> randomDoubleList(int size, int min, int max){
+
+    public static ArrayList<Double> randomDoubleList(int size, int min, int max) {
         ArrayList<Double> list = new ArrayList<>();
-        for(int i = 0; i < size; ++i){
+        for (int i = 0; i < size; ++i) {
             list.add(randomDouble(min, max));
         }
         return list;
+    }
+
+    public static HashMap<String, Double> createHashMapFromList(ArrayList<String> list, double[] arr) {
+        HashMap<String, Double> hm = new HashMap<>();
+
+        for (int i = 0; i < arr.length; ++i) {
+            hm.put(list.get(i), arr[i]);
+        }
+
+        return hm;
+    }
+
+    public static double getMin(ArrayList<Double> list) {
+        double min = Double.MAX_VALUE;
+        for (double v : list) {
+            if (v < min) {
+                min = v;
+            }
+        }
+        return min;
+    }
+
+    public static double getMax(ArrayList<Double> list) {
+        double max = Double.MIN_VALUE;
+        for (double v : list) {
+            if (v > max) {
+                max = v;
+            }
+        }
+        return max;
+    }
+
+    public static double getAverage(ArrayList<Double> list) {
+        double sum = 0;
+        for (double v : list) {
+            sum += v;
+        }
+        return sum / list.size();
+    }
+
+    public static double getVariance(ArrayList<Double> list) {
+        double sum = 0;
+        double avg = getAverage(list);
+        for (double v : list) {
+            sum += Math.abs(v - avg);
+        }
+        return sum / list.size();
     }
 
     public static void main(String[] args) {
