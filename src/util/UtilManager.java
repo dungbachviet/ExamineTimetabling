@@ -5,7 +5,6 @@
  */
 package util;
 
-import static java.lang.Math.floor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,28 +25,17 @@ public class UtilManager {
 
     public static ExamineTimetablingManager generateData(int difficultLevelOfData) {
 
-        switch (difficultLevelOfData) {
-            case 1: {
-                return generateDataLevel1();
-            }
-            default:
-                return generateDataLevel1();
-        }
-    }
-
-    public static ExamineTimetablingManager generateDataLevel1() {
-
-        // parameter control difficult level
+        // parameters control difficult level
         int numAreas = 3;
         int numRooms = numAreas * 3;
         int numCourses = 100;
         int numExamClasses = numCourses * 2;
-        int numExamDays = 20;
+        int numExamDays = 21;
         int numStudents = 1000;
-        int numTeachers = 20;
+        int numTeachers = 50;
 
         System.out.println("\n============= <Generating data> =============");
-        System.out.println("\nRandom data Level " + 1);
+        System.out.println("\nRandom data Level " + difficultLevelOfData);
         System.out.println("\nNum exam days: " + numExamDays);
         System.out.println("\nNum areas: " + numAreas);
         System.out.println("\nNum courses: " + numCourses);
@@ -57,6 +45,27 @@ public class UtilManager {
         System.out.println("\nNum teachers: " + numTeachers);
         System.out.println("\n============= </Generating data> =============");
 
+        switch (difficultLevelOfData) {
+            case 1: {
+                return generateDataLevel1(numAreas, numRooms, numCourses, numExamClasses, numExamDays, numStudents, numTeachers);
+            }
+            default:
+                return generateDataLevel1(numAreas, numRooms, numCourses, numExamClasses, numExamDays, numStudents, numTeachers);
+        }
+    }
+
+    public static ExamineTimetablingManager generateDataLevel1(
+            int numAreas,
+            int numRooms,
+            int numCourses,
+            int numExamClasses,
+            int numExamDays,
+            int numStudents,
+            int numTeachers
+    ) {
+
+        // parameter corresponding with difficult of dataset
+        
 //        int minStudentOfClass = 30;
 //        int maxStudentOfClass = 90;
 //
@@ -205,14 +214,14 @@ public class UtilManager {
     public static void main(String[] args) {
         ExamineTimetablingManager etm = UtilManager.generateData(0);
         System.out.println(etm);
-        
+
         System.out.println("\n==========================================\n");
-        
+
         String path = "src/dataset_timetabling/test_data.txt";
         DataIO.writeObject(path, etm);
-        
+
         ExamineTimetablingManager etm2 = DataIO.readObject(path);
-        
+
         System.out.println("\nETM read from file:\n");
         System.out.println(etm2);
     }
