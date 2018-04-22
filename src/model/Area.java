@@ -21,10 +21,16 @@ public class Area implements Serializable {
 
     public Area(String areaID) {
         this.areaID = areaID;
+        this.roomList = new ArrayList<>();
     }
 
     public String getAreaID() {
         return areaID;
+    }
+
+    public int getAreaIDInt() {
+        String id = areaID.substring("Area".length());
+        return Integer.parseInt(id);
     }
 
     public ArrayList<Room> getRoomList() {
@@ -39,9 +45,13 @@ public class Area implements Serializable {
         this.roomList = roomList;
     }
 
+    public void addRoom(Room room) {
+        roomList.add(room);
+    }
+
     @Override
     public String toString() {
-        return "Area{" + "areaID=" + areaID + ", roomList=" + roomList + '}';
+        return "Area{" + "ID=" + areaID + ", roomList=" + roomList + '}';
     }
 
     @Override
