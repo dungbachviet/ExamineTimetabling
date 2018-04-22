@@ -299,7 +299,7 @@ public class ExamineTimetablingProblem {
         
         examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
         
-        // Objective : Avoid disproportinating between number of student and room's capacity
+        // Objective 2 : Avoid disproportinating between number of student and room's capacity
         IFunction[] slotDisproportion = new IFunction[numExamClass];
         for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
             int classSlots = examClasses.get(classIndex).getEnrollmentList().size();
@@ -308,15 +308,25 @@ public class ExamineTimetablingProblem {
         
         disproportionObj = new Max(slotDisproportion); // minimize the maximum
         
-        // Objective : Avoid helding much exams on traffic jam time
+        // Objective 3 : Avoid helding much exams on traffic jam time
         IFunction[] timeSlotSuits = new IFunction[4];
         for (int timeSlotIndex = 0; timeSlotIndex < jamLevelList.size(); timeSlotIndex++) {
             // Number timeslot i * jamLevel[i]
             timeSlotSuits[timeSlotIndex] = new FuncMult(new ConditionalSum(examTimeSlots, timeSlotIndex), jamLevelList.get(timeSlotIndex));
         }
-        suitableTimeSlotObj = new Sum(timeSlotSuits);
+        suitableTimeSlotObj = new Sum(timeSlotSuits); 
         
+        // Objective 4 : 
+        IFunction[] times = new IFunction[numExamClass];
+        IFunction[] timeMultDifficult = new IFunction[numExamClass];
+        for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+            times[classIndex] = new FuncPlus(new FuncMult(examDays[classIndex], 4), examTimeSlots[classIndex]);
+            int classDifficulty = examClasses.get(classIndex).getCourse().getDifficultLevel();
+            timeMultDifficult[classIndex] = new FuncMult(times[classIndex], classDifficulty);
+        }
         
+        // Distribute difficult degree throughout exam process
+        distributeDifficultyObj = new Sum(timeMultDifficult); // Maximize
         
         
          
