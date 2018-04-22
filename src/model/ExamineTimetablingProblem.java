@@ -91,7 +91,7 @@ public class ExamineTimetablingProblem {
         jamLevelList = manager.getJamLevelList();
         
         commonStudents = manager.calcNumberCommonStudentOfClasses();
-//        roomSlots = manager.;
+        roomSlots = manager.getRoomSlots();
         numExamClass = manager.getNumExamClasses();
         numTeacher = manager.getNumTeachers();
         numCourse = manager.getNumCourses();
@@ -338,8 +338,7 @@ public class ExamineTimetablingProblem {
 //    IFunction distributeDifficultyObj; // Distribute difficult degree throughout exam process
 //    IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
 //    IFunction suitableSessionObj; // Avoid helding much exams on traffic jam time
-        
-        
+                
         
         ls.close();
         
