@@ -40,7 +40,7 @@ public class TimeUnit implements Serializable {
 
     @Override
     public String toString() {
-        return "TimeUnit{" + "day=" + day + ", timeSlot=" + timeSlot + '}';
+        return "TimeUnit{" + day + ", " + timeSlot + '}';
     }
 
     @Override
