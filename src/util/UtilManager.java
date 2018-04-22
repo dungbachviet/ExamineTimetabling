@@ -65,7 +65,6 @@ public class UtilManager {
     ) {
 
         // parameter corresponding with difficult of dataset
-        
 //        int minStudentOfClass = 30;
 //        int maxStudentOfClass = 90;
 //
@@ -124,7 +123,7 @@ public class UtilManager {
             HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
 
             while (hsTimeUnit.size() < numBusyTime) {
-                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays-1), randomInt(0, 3));
+                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays - 1), randomInt(0, 3));
                 hsTimeUnit.add(timeUnit);
             }
             ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
@@ -142,7 +141,7 @@ public class UtilManager {
             HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
 
             while (hsTimeUnit.size() < numBusyTime) {
-                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays-1), randomInt(0, 3));
+                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays - 1), randomInt(0, 3));
                 hsTimeUnit.add(timeUnit);
             }
             ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
@@ -161,7 +160,7 @@ public class UtilManager {
             // add connection between course and teacher
             // each course taught by 2 teacher
             for (int j = 0; j < 2; ++j) {
-                String teacherID = "Teacher" + String.valueOf(randomInt(0, numTeachers-1));
+                String teacherID = "Teacher" + String.valueOf(randomInt(0, numTeachers - 1));
                 Teacher teacher = hmIDToTeacher.get(teacherID);
                 teacher.addCourse(course);
                 course.addTeacher(teacher);
@@ -175,7 +174,7 @@ public class UtilManager {
             hmIDToExamClass.put(examClassID, examClass);
 
             // add connection between course and exam class
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses-1));
+            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
             Course course = hmIDToCourse.get(courseID);
             course.addExamClass(examClass);
             examClass.setCourse(course);
@@ -184,7 +183,7 @@ public class UtilManager {
         // generate student enrollment
         for (int i = 0; i < numStudents; ++i) {
             String studentID = "Student" + i;
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses-1));
+            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
             Course course = hmIDToCourse.get(courseID);
             ArrayList<ExamClass> examClassList = course.getExamClassList();
             if (!examClassList.isEmpty()) {
@@ -209,6 +208,27 @@ public class UtilManager {
     public static int randomInt(int min, int max) {
         Random R = new Random();
         return R.nextInt(max - min + 1) + min;
+    }
+    
+    public static ArrayList<Integer> randomIntegerList(int size, int min, int max){
+        ArrayList<Integer> list = new ArrayList<>();
+        for(int i = 0; i < size; ++i){
+            list.add(randomInt(min, max));
+        }
+        return list;
+    }
+
+    public static double randomDouble(int min, int max) {
+        Random R = new Random();
+        return (max - min + 1) * R.nextDouble() + min;
+    }
+    
+    public static ArrayList<Double> randomDoubleList(int size, int min, int max){
+        ArrayList<Double> list = new ArrayList<>();
+        for(int i = 0; i < size; ++i){
+            list.add(randomDouble(min, max));
+        }
+        return list;
     }
 
     public static void main(String[] args) {

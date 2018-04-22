@@ -5,10 +5,14 @@
  */
 package util;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import model.ExamineTimetablingManager;
 
 /**
@@ -38,21 +42,43 @@ public class DataIO {
             e.printStackTrace();
         }
     }
-    
-    public static ExamineTimetablingManager readObject(String path){
-        
+
+    public static ExamineTimetablingManager readObject(String path) {
+
         ExamineTimetablingManager etm = null;
-        
-        try(FileInputStream fis = new FileInputStream(path)){
+
+        try (FileInputStream fis = new FileInputStream(path)) {
             ObjectInputStream ois = new ObjectInputStream(fis);
-            
-            etm = (ExamineTimetablingManager)(ois.readObject());
-            
+
+            etm = (ExamineTimetablingManager) (ois.readObject());
+
             System.out.println("\nRead ETM from " + path + " done");
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return etm;
+    }
+
+    public static boolean makeDir(String pathFile) {
+        Path path = Paths.get(DataIO.getAbsolutePath(pathFile));
+        //if directory exists?
+        if (!Files.exists(path)) {
+            try {
+                Files.createDirectories(path);
+                System.out.println("created new dir " + path);
+                return true;
+            } catch (Exception e) {
+                //fail to create directory
+                e.printStackTrace();
+                System.out.println("ERROR create new dir " + path);
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static String getAbsolutePath(String path){
+        return new File(path).getAbsolutePath();
     }
 }
