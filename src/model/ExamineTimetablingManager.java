@@ -159,7 +159,7 @@ public class ExamineTimetablingManager implements Serializable {
         str.append("\nList available days: " + availableDayList.size() + "\n");
         str.append(availableDayList);
 
-        str.append("\nList jim level: " + jamLevelList.size() + "\n");
+        str.append("\nList jam level: " + jamLevelList.size() + "\n");
         str.append(jamLevelList);
 
         str.append("\nList areas: " + hmIDToArea.size() + "\n");

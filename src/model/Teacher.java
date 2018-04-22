@@ -44,6 +44,14 @@ public class Teacher implements Serializable {
     public ArrayList<Course> getTeachingCourseList() {
         return teachingCourseList;
     }
+    
+    public ArrayList<Integer> getTeachingCourseListIDInt() {
+        ArrayList<Integer> result = new ArrayList<>();
+        for(Course course : teachingCourseList){
+            result.add(course.getCourseIDInt());
+        }
+        return result;
+    }
 
     public ArrayList<TimeUnit> getBusyTimeList() {
         return busyTimeList;
