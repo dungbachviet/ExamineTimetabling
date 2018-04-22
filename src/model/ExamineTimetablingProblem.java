@@ -91,7 +91,7 @@ public class ExamineTimetablingProblem {
         jamLevelList = manager.getJamLevelList();
         
         commonStudents = manager.calcNumberCommonStudentOfClasses();
-//        roomSlots = manager.
+//        roomSlots = manager.getRoomSlots();
         numExamClass = manager.getNumExamClasses();
         numTeacher = manager.getNumTeachers();
         numCourse = manager.getNumCourses();
