@@ -122,6 +122,14 @@ public class ExamineTimetablingManager implements Serializable {
     public int getNumTeachers() {
         return hmIDToTeacher.size();
     }
+    
+    public ArrayList<Integer> getRoomSlots(){
+        ArrayList<Integer> result = new ArrayList<>();
+        for(Room room : getRoomList()){
+            result.add(room.getNumSlots());
+        }
+        return result;
+    }
 
     public void setHmIDToArea(HashMap<String, Area> hmIDToArea) {
         this.hmIDToArea = hmIDToArea;
