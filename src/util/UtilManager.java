@@ -91,7 +91,7 @@ public class UtilManager {
         HashMap<String, Teacher> hmIDToTeacher = new HashMap<>();
 
         ArrayList<Integer> availableDayList = new ArrayList<>();
-        for (int i = 1; i <= numExamDays; ++i) {
+        for (int i = 0; i < numExamDays; ++i) {
             availableDayList.add(i);
         }
         for (int i = 0; i < numTabuDays; ++i) {
@@ -109,14 +109,14 @@ public class UtilManager {
 
         // generate rooms and areas
         for (int i = 0; i < numAreas; ++i) {
-            String areaID = "Area" + (i + 1);
+            String areaID = "Area" + i;
             Area area = new Area(areaID);
             hmIDToArea.put(areaID, area);
         }
 
         for (int i = 0; i < numRooms; ++i) {
-            String roomID = "Room" + (i + 1);
-            String areaID = "Area" + (i % numAreas + 1);
+            String roomID = "Room" + i;
+            String areaID = "Area" + (i % numAreas);
             Area area = hmIDToArea.get(areaID);
 
             int numSlots = randomInt(minNumSlotsOfRoom, maxNumSlotsOfRoom);
@@ -124,7 +124,7 @@ public class UtilManager {
             HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
 
             while (hsTimeUnit.size() < numBusyTime) {
-                TimeUnit timeUnit = new TimeUnit(randomInt(1, numExamDays), randomInt(1, 4));
+                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays-1), randomInt(0, 3));
                 hsTimeUnit.add(timeUnit);
             }
             ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
@@ -137,12 +137,12 @@ public class UtilManager {
         //generate course - teacher - exam class
         // generate teachers
         for (int i = 0; i < numTeachers; ++i) {
-            String teacherID = "Teacher" + (i + 1);
+            String teacherID = "Teacher" + i;
             int numBusyTime = randomInt(minBusyTime, maxBusyTime);
             HashSet<TimeUnit> hsTimeUnit = new HashSet<>();
 
             while (hsTimeUnit.size() < numBusyTime) {
-                TimeUnit timeUnit = new TimeUnit(randomInt(1, numExamDays), randomInt(1, 4));
+                TimeUnit timeUnit = new TimeUnit(randomInt(0, numExamDays-1), randomInt(0, 3));
                 hsTimeUnit.add(timeUnit);
             }
             ArrayList<TimeUnit> busyTimeList = new ArrayList<>(hsTimeUnit);
@@ -153,7 +153,7 @@ public class UtilManager {
 
         // generate courses
         for (int i = 0; i < numCourses; ++i) {
-            String courseID = "Course" + (i + 1);
+            String courseID = "Course" + i;
             int difficultOfCourse = randomInt(minDifficultCourse, maxDifficultCourse);
             Course course = new Course(courseID, difficultOfCourse);
             hmIDToCourse.put(courseID, course);
@@ -161,7 +161,7 @@ public class UtilManager {
             // add connection between course and teacher
             // each course taught by 2 teacher
             for (int j = 0; j < 2; ++j) {
-                String teacherID = "Teacher" + String.valueOf(randomInt(1, numTeachers));
+                String teacherID = "Teacher" + String.valueOf(randomInt(0, numTeachers-1));
                 Teacher teacher = hmIDToTeacher.get(teacherID);
                 teacher.addCourse(course);
                 course.addTeacher(teacher);
@@ -170,12 +170,12 @@ public class UtilManager {
 
         // generate exam classes
         for (int i = 0; i < numExamClasses; ++i) {
-            String examClassID = "ExamClass" + (i + 1);
+            String examClassID = "ExamClass" + i;
             ExamClass examClass = new ExamClass(examClassID);
             hmIDToExamClass.put(examClassID, examClass);
 
             // add connection between course and exam class
-            String courseID = "Course" + String.valueOf(randomInt(1, numCourses));
+            String courseID = "Course" + String.valueOf(randomInt(0, numCourses-1));
             Course course = hmIDToCourse.get(courseID);
             course.addExamClass(examClass);
             examClass.setCourse(course);
@@ -183,8 +183,8 @@ public class UtilManager {
 
         // generate student enrollment
         for (int i = 0; i < numStudents; ++i) {
-            String studentID = "Student" + (i + 1);
-            String courseID = "Course" + String.valueOf(randomInt(1, numCourses));
+            String studentID = "Student" + i;
+            String courseID = "Course" + String.valueOf(randomInt(0, numCourses-1));
             Course course = hmIDToCourse.get(courseID);
             ArrayList<ExamClass> examClassList = course.getExamClassList();
             if (!examClassList.isEmpty()) {
@@ -212,7 +212,7 @@ public class UtilManager {
     }
 
     public static void main(String[] args) {
-        ExamineTimetablingManager etm = UtilManager.generateData(0);
+        ExamineTimetablingManager etm = UtilManager.generateData(1);
         System.out.println(etm);
 
         System.out.println("\n==========================================\n");
