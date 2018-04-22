@@ -136,6 +136,8 @@ public class ExamineTimetablingProblem {
         int sameCourseCodeClasslength = sameCourseCodeClass.size();
         for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
             ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
+            
+            // Get timeSlot and days of exam classes having common course code
             int length = listClasses.size();
             VarIntLS[] listTimeSlots = new VarIntLS[length];
             VarIntLS[] listDays = new VarIntLS[length];
@@ -143,7 +145,8 @@ public class ExamineTimetablingProblem {
                 listTimeSlots[index] = examTimeSlots[listClasses.get(index)];
                 listDays[index] = examDays[listClasses.get(index)];
             }
-
+            
+            
             S.post(new AND(
                     new IsEqual(new Max(listTimeSlots), new Min(listTimeSlots)),
                     new IsEqual(new Max(listDays), new Min(listDays))));
@@ -155,6 +158,7 @@ public class ExamineTimetablingProblem {
             ArrayList<TimeUnit> busyList = rooms.get(roomIndex).getBusyTimeList();
             for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
                 for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+                    // examRooms[classIndex]=roomIndex & examDays[classIndex] belongs to busy day ==> not same timeslot
                     S.post(new Implicate(
                             new AND(
                                     new IsEqual(examRooms[classIndex], roomIndex),
@@ -172,13 +176,14 @@ public class ExamineTimetablingProblem {
             ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
             for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
                 for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+                    
                     S.post(new Implicate(
                             new AND(
-                                    new OR(new IsEqual(examClassToTeacher[classIndex][0], teacherIndex),
-                                            new IsEqual(examClassToTeacher[classIndex][1], teacherIndex)),
-                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay())
+                                    new OR(new IsEqual(examClassToTeacher[classIndex][0], teacherIndex),// is equal to teacher1
+                                            new IsEqual(examClassToTeacher[classIndex][1], teacherIndex)),// is equal to teacher2
+                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay()) // same day
                             ),
-                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())
+                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())// not same timeslot
                     ));
                 }
             }
@@ -186,27 +191,27 @@ public class ExamineTimetablingProblem {
 
         // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
         // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
-        // Constraint : Don't allow any 2 exam classes having any same student are at least 1 timeslot apart
+        // Constraint : Any 2 exam classes having any same student are at least 1 timeslot apart
         
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
                 // Same room, same day ==> not same timeslot
                 S.post(new Implicate(
                         new AND(
-                                new IsEqual(examRooms[classIndex1], examRooms[classIndex2]),
-                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                                new IsEqual(examRooms[classIndex1], examRooms[classIndex2]), // same room
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // saem day
                         ),
-                        new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2])
+                        new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]) // not same timeslot
                 ));
                 
                 
                 // Same timeslot, same day ==> not any same teacher
                 S.post(new Implicate(
                         new AND(
-                                new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]),
-                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                                new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]), // same timeslot
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // same day
                         ),
-                        new AND(
+                        new AND( // 4 conditions : not any common teacher exists in 2 exam class at same time
                                 new NotEqual(
                                         examClassToTeacher[classIndex1][1],
                                         examClassToTeacher[classIndex2][0]
@@ -244,17 +249,17 @@ public class ExamineTimetablingProblem {
                 
                 S.post(new Implicate(
                         new AND(
-                                new LessThan(convertIntToVarIntLS[0], convertIntToVarIntLS[1]),
-                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                                new LessThan(convertIntToVarIntLS[0], convertIntToVarIntLS[1]), // condition : exists common students
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // same day
                         ),
-                        new LessOrEqual(2, new FuncMinus(max, min))
+                        new LessOrEqual(2, new FuncMinus(max, min)) // at least 1 timeslot apart
                 ));
  
             }
         }
         
         
-        // Constraint - Don't allow teacher supervise any exam class having same courseID 
+        // Constraint - Don't allow teacher to supervise any exam class having same courseID with her/him
         for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
             int courseID = examClasses.get(classIndex).getCourse().getCourseIDInt();
             VarIntLS convertIntToVarIntLS = new VarIntLS(ls, courseID, courseID);
@@ -264,10 +269,10 @@ public class ExamineTimetablingProblem {
                     
                     S.post(
                             new Implicate(
-                                    new IsEqual(convertIntToVarIntLS, courseList.get(courseIndex)),
+                                    new IsEqual(convertIntToVarIntLS, courseList.get(courseIndex)), // same courseID
                                     new AND(
-                                            new NotEqual(examClassToTeacher[classIndex][0], teacherIndex),
-                                            new NotEqual(examClassToTeacher[classIndex][1], teacherIndex)
+                                            new NotEqual(examClassToTeacher[classIndex][0], teacherIndex), // the teacher can not be any one of 
+                                            new NotEqual(examClassToTeacher[classIndex][1], teacherIndex) // two teachers assigned that exam class
                                     )
                             )
                     );
@@ -299,7 +304,7 @@ public class ExamineTimetablingProblem {
         
         examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
         
-        // Objective 2 : Avoid disproportinating between number of student and room's capacity
+        // Objective 2 : Avoid disproportination between exam class's number of student and room's capacity
         IFunction[] slotDisproportion = new IFunction[numExamClass];
         for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
             int classSlots = examClasses.get(classIndex).getEnrollmentList().size();
@@ -316,29 +321,22 @@ public class ExamineTimetablingProblem {
         }
         suitableTimeSlotObj = new Sum(timeSlotSuits); 
         
-        // Objective 4 : 
+        // Objective 4 : Difficult courses should be examed nearly at last of exam process
         IFunction[] times = new IFunction[numExamClass];
-        IFunction[] timeMultDifficult = new IFunction[numExamClass];
+        IFunction[] timeMultDifficult = new IFunction[numExamClass]; // time*difficultLevel
         for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+            // Calculates time[i] = Day[i]*4 + timeSlot[i]
             times[classIndex] = new FuncPlus(new FuncMult(examDays[classIndex], 4), examTimeSlots[classIndex]);
+            
+            // Get difficult level of exam class
             int classDifficulty = examClasses.get(classIndex).getCourse().getDifficultLevel();
             timeMultDifficult[classIndex] = new FuncMult(times[classIndex], classDifficulty);
         }
         
         // Distribute difficult degree throughout exam process
-        distributeDifficultyObj = new Sum(timeMultDifficult); // Maximize
+        distributeDifficultyObj = new Sum(timeMultDifficult); // Maximize the sum
         
-        
-         
-        
-//        IFunction examGapObj; // Maximize the minimum of gap between 2 exam times
-//    IFunction consecutiveObj; // Maximize the consecutive time for teacher
-//    IFunction balanceAreaObj; // Balance rooms at each timeslot for exam areas
-//    IFunction utilizeRoomObj; // Utilize maximally the capacity of each room, avoid wasting
-//    IFunction distributeDifficultyObj; // Distribute difficult degree throughout exam process
-//    IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
-//    IFunction suitableSessionObj; // Avoid helding much exams on traffic jam time
-                
+                     
         
         ls.close();
         
