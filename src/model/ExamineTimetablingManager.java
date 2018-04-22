@@ -131,6 +131,26 @@ public class ExamineTimetablingManager implements Serializable {
         return result;
     }
 
+    public int getNumAreas(){
+        return hmIDToArea.size();
+    }
+    
+    public int getNumCourses(){
+        return hmIDToCourse.size();
+    }
+    
+    public int getNumExamClasses(){
+        return hmIDToExamClass.size();
+    }
+    
+    public int getNumRooms(){
+        return hmIDToRoom.size();
+    }
+    
+    public int getNumTeachers(){
+        return hmIDToTeacher.size();
+    }
+    
     public void setHmIDToArea(HashMap<String, Area> hmIDToArea) {
         this.hmIDToArea = hmIDToArea;
     }
@@ -159,6 +179,7 @@ public class ExamineTimetablingManager implements Serializable {
         this.jamLevelList = jamLevelList;
     }
 
+<<<<<<< HEAD
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
@@ -245,6 +266,30 @@ public class ExamineTimetablingManager implements Serializable {
             ArrayList<Integer> list = new ArrayList<>();
             for (ExamClass examClass : course.getExamClassList()) {
                 list.add(examClass.getExamClassIDInt());
+=======
+    public int[][] calcNumberCommonStudentOfClasses() {
+        ArrayList<ExamClass> examClassList = getExamClassList();
+        int numExamClasses = examClassList.size();
+        int[][] result = new int[numExamClasses][numExamClasses];
+
+        for (int i = 0; i < numExamClasses - 1; ++i) {
+            for (int j = i + 1; j < numExamClasses; ++j) {
+                // count common students
+                ExamClass class1 = examClassList.get(i);
+                ExamClass class2 = examClassList.get(j);
+                
+                ArrayList<String> enrollmentList1 = class1.getEnrollmentList();
+                ArrayList<String> enrollmentList2 = class2.getEnrollmentList();
+                int numCommonStudents = 0;
+                for(String studentID : enrollmentList1){
+                    if(enrollmentList2.contains(studentID)){
+                        numCommonStudents++;
+                    }
+                }
+                
+                result[i][j] = numCommonStudents;
+                result[j][i] = result[i][j];
+>>>>>>> origin/master
             }
         }
 
