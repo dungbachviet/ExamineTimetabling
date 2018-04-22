@@ -8,6 +8,8 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -92,30 +94,35 @@ public class ExamineTimetablingManager implements Serializable {
         return availableDayList;
     }
 
+    public Set<Integer> getAvailableDaySet() {
+        Set<Integer> set = new HashSet<>(availableDayList);
+        return set;
+    }
+
     public ArrayList<Integer> getJamLevelList() {
         return jamLevelList;
     }
 
-    public int getNumAreas(){
+    public int getNumAreas() {
         return hmIDToArea.size();
     }
-    
-    public int getNumCourses(){
+
+    public int getNumCourses() {
         return hmIDToCourse.size();
     }
-    
-    public int getNumExamClasses(){
+
+    public int getNumExamClasses() {
         return hmIDToExamClass.size();
     }
-    
-    public int getNumRooms(){
+
+    public int getNumRooms() {
         return hmIDToRoom.size();
     }
-    
-    public int getNumTeachers(){
+
+    public int getNumTeachers() {
         return hmIDToTeacher.size();
     }
-    
+
     public void setHmIDToArea(HashMap<String, Area> hmIDToArea) {
         this.hmIDToArea = hmIDToArea;
     }
@@ -144,6 +151,52 @@ public class ExamineTimetablingManager implements Serializable {
         this.jamLevelList = jamLevelList;
     }
 
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+        str.append("\n============= <ETM> =============");
+
+        str.append("\nList available days: " + availableDayList.size() + "\n");
+        str.append(availableDayList);
+
+        str.append("\nList jim level: " + jamLevelList.size() + "\n");
+        str.append(jamLevelList);
+
+        str.append("\nList areas: " + hmIDToArea.size() + "\n");
+        for (String id : hmIDToArea.keySet()) {
+            Area area = hmIDToArea.get(id);
+            str.append(area + "\n");
+        }
+
+        str.append("\nList courses: " + hmIDToCourse.size() + "\n");
+        for (String id : hmIDToCourse.keySet()) {
+            Course course = hmIDToCourse.get(id);
+            str.append(course + "\n");
+        }
+
+        str.append("\nList exam class: " + hmIDToExamClass.size() + "\n");
+        for (String id : hmIDToExamClass.keySet()) {
+            ExamClass examClass = hmIDToExamClass.get(id);
+            str.append(examClass + "\n");
+        }
+
+        str.append("\nList rooms: " + hmIDToRoom.size() + "\n");
+        for (String id : hmIDToRoom.keySet()) {
+            Room room = hmIDToRoom.get(id);
+            str.append(room + "\n");
+        }
+
+        str.append("\nList teachers: " + hmIDToTeacher.size() + "\n");
+        for (String id : hmIDToTeacher.keySet()) {
+            Teacher teacher = hmIDToTeacher.get(id);
+            str.append(teacher + "\n");
+        }
+
+        str.append("\n============= </ETM> =============");
+
+        return str.toString();
+    }
+
     public int[][] calcNumberCommonStudentOfClasses() {
         ArrayList<ExamClass> examClassList = getExamClassList();
         int numExamClasses = examClassList.size();
@@ -154,18 +207,36 @@ public class ExamineTimetablingManager implements Serializable {
                 // count common students
                 ExamClass class1 = examClassList.get(i);
                 ExamClass class2 = examClassList.get(j);
-                
+
                 ArrayList<String> enrollmentList1 = class1.getEnrollmentList();
                 ArrayList<String> enrollmentList2 = class2.getEnrollmentList();
                 int numCommonStudents = 0;
-                for(String studentID : enrollmentList1){
-                    if(enrollmentList2.contains(studentID)){
+                for (String studentID : enrollmentList1) {
+                    if (enrollmentList2.contains(studentID)) {
                         numCommonStudents++;
                     }
                 }
-                
+
                 result[i][j] = numCommonStudents;
                 result[j][i] = result[i][j];
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     *
+     * @return 1 ArrayList gồm các ArrayList. Mỗi ArrayList con chứa mã index
+     * của các lớp thi cùng thuộc 1 học phần
+     */
+    public ArrayList<ArrayList<Integer>> getCommonExamClassCourseList() {
+        ArrayList<ArrayList<Integer>> result = new ArrayList<>();
+
+        for (Course course : getCourseList()) {
+            ArrayList<Integer> list = new ArrayList<>();
+            for (ExamClass examClass : course.getExamClassList()) {
+                list.add(examClass.getExamClassIDInt());
             }
         }
 

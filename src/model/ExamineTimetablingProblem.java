@@ -9,8 +9,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 import localsearch.constraints.basic.AND;
+import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
+import localsearch.constraints.basic.LessThan;
+import localsearch.constraints.basic.NotEqual;
+import localsearch.constraints.basic.OR;
 import localsearch.functions.element.Element;
 import localsearch.functions.element.ElementTmp;
 import localsearch.functions.max_min.Max;
@@ -100,10 +104,113 @@ public class ExamineTimetablingProblem {
         }
         
         
-        // Constraint : not allowed to place an exam class in a room's any time unit of busy time list
-        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
-            
+        // Constraint : Don't allow to violate the busy list of rooms
+        for (int roomIndex = 0; roomIndex < numRoom; roomIndex++) {
+            ArrayList<TimeUnit> busyList = rooms.get(roomIndex).getBusyTimeList();
+            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+                    S.post(new Implicate(
+                            new AND(
+                                    new IsEqual(examRooms[classIndex], roomIndex),
+                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay())
+                            ),
+                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())
+                    ));
+                }
+            }
         }
+        
+
+        // Constraint : Don't allow to violate the busy list of teachers
+        for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
+            ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
+            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+                    S.post(new Implicate(
+                            new AND(
+                                    new OR(new IsEqual(examClassToTeacher[classIndex][0], teacherIndex),
+                                            new IsEqual(examClassToTeacher[classIndex][1], teacherIndex)),
+                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay())
+                            ),
+                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())
+                    ));
+                }
+            }
+        }
+
+        // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
+        // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
+        // Constraint : Don't allow any 2 exam classes having any same student to be placed at same time
+        VarIntLS[] convertIntToVarIntLS = new VarIntLS[2]; // convert integer to VarIntLS
+        convertIntToVarIntLS[0] = new VarIntLS(ls,0,0);
+        for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
+            for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
+                // Same room, same day ==> not same timeslot
+                S.post(new Implicate(
+                        new AND(
+                                new IsEqual(examRooms[classIndex1], examRooms[classIndex2]),
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                        ),
+                        new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2])
+                ));
+                
+                // Same timeslot, same day ==> not any same teacher
+                S.post(new Implicate(
+                        new AND(
+                                new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]),
+                                new IsEqual(examDays[classIndex1], examDays[classIndex2])
+                        ),
+                        new AND(
+                                new NotEqual(
+                                        examClassToTeacher[classIndex1][1],
+                                        examClassToTeacher[classIndex2][0]
+                                ),
+                                new AND(
+                                        new NotEqual(
+                                                examClassToTeacher[classIndex1][1],
+                                                examClassToTeacher[classIndex2][1]
+                                        ),
+                                        new AND(
+                                                new NotEqual(
+                                                        examClassToTeacher[classIndex1][0],
+                                                        examClassToTeacher[classIndex2][0]
+                                                ),
+                                                new NotEqual(
+                                                        examClassToTeacher[classIndex1][0],
+                                                        examClassToTeacher[classIndex2][1]
+                                                ))
+                                )
+                        )
+                ));
+                
+  
+                // Same student ==> not same timeslot, not same day
+                convertIntToVarIntLS[1] = new VarIntLS(ls,commonStudents[classIndex1][classIndex2],commonStudents[classIndex1][classIndex2]);
+                S.post(
+                new Implicate(
+                        new LessThan(convertIntToVarIntLS[0], convertIntToVarIntLS[1]),
+                        new AND(
+                                new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]),
+                                new NotEqual(examDays[classIndex1], examDays[classIndex2])
+                        )
+                )
+                );
+                
+                
+                
+   
+            }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+              
         
         
 
