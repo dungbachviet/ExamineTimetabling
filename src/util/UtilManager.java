@@ -194,25 +194,35 @@ public class UtilManager {
             // random course for each student
             int numCourseOfStudent = randomInt(minCourseOfStudent, maxCourseOfStudent);
             idCourse = 0;
+            int idExamClass = 0;
             for (int j = 0; j < numCourseOfStudent; ++j) {
 //                String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
                 boolean loop = true;
                 while (loop) {
                     String courseID = "Course" + idCourse;
                     Course course = hmIDToCourse.get(courseID);
-                    ArrayList<ExamClass> examClassList = course.getExamClassList();
-                    if (!examClassList.isEmpty()) {
-                        ExamClass examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
-                        // add connection student enrollment exam class
-                        if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
-                            loop = true;
+                    ExamClass examClass = course.getExamClassEmptyEnrollment();
+
+                    if (examClass == null) {
+                        ArrayList<ExamClass> examClassList = course.getExamClassList();
+                        if (!examClassList.isEmpty()) {
+//                        idExamClass = (idExamClass + 1) * (examClassList.size() - 1);
+                            examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
+                            // add connection student enrollment exam class
+                            if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
+                                loop = true;
+                            } else {
+                                examClass.addEnrollment(studentID);
+                                loop = false;
+                            }
                         } else {
-                            examClass.addEnrollment(studentID);
-                            loop = false;
+                            loop = true;
                         }
-                    } else {
-                        loop = true;
+                    }else{
+                        loop = false;
+                        examClass.addEnrollment(studentID);
                     }
+
                     idCourse = (idCourse + 1) % (numCourses - 1);
                 }
             }

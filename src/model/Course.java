@@ -78,6 +78,19 @@ public class Course implements Serializable {
         return "Course{" + "ID=" + courseID + ", difficult=" + difficultLevel + '}';
     }
 
+    public ExamClass getExamClassEmptyEnrollment(){
+        ExamClass result = null;
+        
+        for(ExamClass examClass : examClassList){
+            if(examClass.getEnrollmentList().isEmpty()){
+                result = examClass;
+                break;
+            }
+        }
+        
+        return result;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
