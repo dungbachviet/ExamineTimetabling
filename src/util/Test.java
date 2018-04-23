@@ -13,6 +13,7 @@ import gui_timetabling.MultipleLinesChart;
 import java.util.ArrayList;
 import java.util.HashMap;
 import model.ExamineTimetablingManager;
+import static util.UtilManager.randomDouble;
 
 /**
  *
@@ -26,14 +27,14 @@ public class Test {
         Parameter para1 = new Parameter();
         FakeAlgorithm fa1 = new FakeAlgorithm("FakeAlgo", para1);
 
-        double[] list1 = {100.0, 300.0, 400.0};
+        double[] list1 = {100.0, 400.0};
         ArrayList<Double> listValue1 = new ArrayList<>();
         for (double v : list1) {
             listValue1.add(v);
         }
         para1.addParameter("TabuLength", listValue1);
 
-        double[] list2 = {40.0, 70.0, 150.0};
+        double[] list2 = {40.0, 150.0};
         ArrayList<Double> listValue2 = new ArrayList<>();
         for (double v : list2) {
             listValue2.add(v);
@@ -87,13 +88,35 @@ public class Test {
 
         HashMap<String, HashMap<String, Double>> hmParameterIDToParameter = new HashMap<>();
         int id = 0;
+        String tempTime = String.valueOf(System.currentTimeMillis());
+
         for (ExamineTimetablingManager etm : etmList) {
             // test each dataset
+            String dataName = etm.getDatasetName();
             for (AbstractAlgorithm algo : algoList) {
                 // test each algo
+                String dirSaveStatistic = "src/statistics/"
+                        + tempTime + "/" + dataName + "/Parameter_Selection/" + algo.getAlgoName();
+                DataIO.makeDir(dirSaveStatistic);
+                
                 ArrayList<HashMap<String, Double>> parameterList = new ArrayList<>();
                 parameterList = algo.getApplyParameterList();
                 ArrayList<ArrayList<String>> statisticList = new ArrayList<>();
+                ArrayList<String> listColName = new ArrayList<>();
+                listColName.add("Parameter_ID");
+                for (String key : parameterList.get(0).keySet()) {
+                    listColName.add(key);
+                }
+                listColName.add("Min_Bestfiness");
+                listColName.add("Avg_Bestfiness");
+                listColName.add("Max_Bestfiness");
+                listColName.add("Var_Bestfiness");
+                listColName.add("Min_Time");
+                listColName.add("Avg_Time");
+                listColName.add("Max_Time");
+                listColName.add("Var_Time");
+                statisticList.add(listColName);
+
                 for (HashMap<String, Double> singleParameter : parameterList) {
                     id++;
                     String parameterID = algo.getAlgoName() + "_" + id;
@@ -104,21 +127,32 @@ public class Test {
                         // run algo with specific parameter
                         HashMap<String, Line> output = algo.runAlgo(singleParameter);
                         outputList.add(output);
+
+                        if (curTest <= 3) {
+                            // save image fitness curve
+                            ArrayList<Line> lineList = new ArrayList<>();
+                            Line line = output.get("Fitness");
+                            String nameLine = parameterID + "_NumTest" + curTest;
+                            line.setLineName(nameLine);
+                            String pathSaveImage = dirSaveStatistic + "/" + nameLine +".png";
+                            
+                            lineList.add(line);
+                            saveImage(lineList, "Loop", "Fitness", parameterID,
+                                    pathSaveImage, false);
+                        }
                     }
 
                     // statistic of 1 parameter
                     ArrayList<String> statistic = handleOutputList(parameterID, singleParameter, outputList);
-                    String pathSaveExcel = "src/statistics/"
-                            + System.currentTimeMillis() + "/Parameter_Selection/" + algo.getAlgoName();
-                    DataIO.makeDir(pathSaveExcel);
-                    System.out.println("\nPath Excel = " + pathSaveExcel);
 
-                    System.out.println(statistic);
-
+//                    System.out.println(statistic);
                     statisticList.add(statistic);
-                    pathSaveExcel += "/" + algo.getAlgoName() + ".csv";
-                    DataIO.writeFileExcel(pathSaveExcel, statisticList);
+
                 }
+                
+                String pathSaveExcel = dirSaveStatistic + "/" + algo.getAlgoName() + ".csv";
+                System.out.println("\nPath Excel = " + pathSaveExcel);
+                DataIO.writeFileExcel(pathSaveExcel, statisticList);
             }
         }
 
@@ -172,16 +206,40 @@ public class Test {
         }
 
         statisticList.add(String.valueOf(minBestFitness));
-        statisticList.add(String.valueOf(maxBestFitness));
         statisticList.add(String.valueOf(avgBestFitness));
+        statisticList.add(String.valueOf(maxBestFitness));
         statisticList.add(String.valueOf(varBestFitness));
 
         statisticList.add(String.valueOf(minTime));
-        statisticList.add(String.valueOf(maxTime));
         statisticList.add(String.valueOf(avgTime));
+        statisticList.add(String.valueOf(maxTime));
         statisticList.add(String.valueOf(varTime));
 
         return statisticList;
 
+    }
+
+    /**
+     * Save one image
+     *
+     * @param xLabel
+     * @param yLabel
+     * @param chartTitle
+     */
+    private static void saveImage(
+            ArrayList<Line> lineList, String xLabel, String yLabel,
+            String chartTitle, String pathSaveImage, boolean isShowGui) {
+
+        MultipleLinesChart mlc = new MultipleLinesChart("Demo");
+        mlc.setxAxisLabel(xLabel);
+        mlc.setyAxisLabel(yLabel);
+        mlc.setChartTitle(chartTitle);
+
+        mlc.setLineList(lineList);
+
+//        pathSaveImage = "src/statistics/test_1.png";
+        isShowGui = false;
+//        DataIO.makeDir(pathSaveImage);
+        mlc.renderGraph(isShowGui, pathSaveImage);
     }
 }

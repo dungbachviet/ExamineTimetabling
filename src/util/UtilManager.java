@@ -28,7 +28,7 @@ public class UtilManager {
         // parameters control difficult level
         int numAreas = 3;
         int numRooms = numAreas * 3;
-        int numCourses = 100;
+        int numCourses = 30;
         int numExamClasses = numCourses * 2;
         int numExamDays = 21;
         int numStudents = 1000;
@@ -66,7 +66,7 @@ public class UtilManager {
 
         // parameter corresponding with difficult of dataset
 //        int minStudentOfClass = 30;
-//        int maxStudentOfClass = 90;
+        int maxStudentOfClass = 90;
 //
 //        int minNumCoursesOfStudent = 5;
 //        int maxNumCoursesOfStudent = 8;
@@ -80,6 +80,9 @@ public class UtilManager {
         int maxDifficultCourse = 3;
 
         int numTabuDays = 3;
+
+        int minCourseOfStudent = 3;
+        int maxCourseOfStudent = 6;
 
         ExamineTimetablingManager etm = new ExamineTimetablingManager();
 
@@ -168,14 +171,18 @@ public class UtilManager {
         }
 
         // generate exam classes
+        int idCourse = 0;
         for (int i = 0; i < numExamClasses; ++i) {
             String examClassID = "ExamClass" + i;
             ExamClass examClass = new ExamClass(examClassID);
             hmIDToExamClass.put(examClassID, examClass);
 
             // add connection between course and exam class
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
+            String courseID = "Course" + idCourse;
+
             Course course = hmIDToCourse.get(courseID);
+            idCourse = (idCourse + 1) % (numCourses - 1);
+
             course.addExamClass(examClass);
             examClass.setCourse(course);
         }
@@ -183,13 +190,31 @@ public class UtilManager {
         // generate student enrollment
         for (int i = 0; i < numStudents; ++i) {
             String studentID = "Student" + i;
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
-            Course course = hmIDToCourse.get(courseID);
-            ArrayList<ExamClass> examClassList = course.getExamClassList();
-            if (!examClassList.isEmpty()) {
-                ExamClass examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
-                // add connection student enrollment exam class
-                examClass.addEnrollment(studentID);
+
+            // random course for each student
+            int numCourseOfStudent = randomInt(minCourseOfStudent, maxCourseOfStudent);
+            idCourse = 0;
+            for (int j = 0; j < numCourseOfStudent; ++j) {
+//                String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
+                boolean loop = true;
+                while (loop) {
+                    String courseID = "Course" + idCourse;
+                    Course course = hmIDToCourse.get(courseID);
+                    ArrayList<ExamClass> examClassList = course.getExamClassList();
+                    if (!examClassList.isEmpty()) {
+                        ExamClass examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
+                        // add connection student enrollment exam class
+                        if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
+                            loop = true;
+                        } else {
+                            examClass.addEnrollment(studentID);
+                            loop = false;
+                        }
+                    } else {
+                        loop = true;
+                    }
+                    idCourse = (idCourse + 1) % (numCourses - 1);
+                }
             }
         }
 
