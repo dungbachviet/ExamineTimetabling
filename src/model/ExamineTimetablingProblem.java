@@ -28,6 +28,9 @@ import localsearch.model.ConstraintSystem;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
+import localsearch.selectors.MinMaxSelector;
+import util.DataIO;
+import util.UtilManager;
 
 /**
  *
@@ -35,6 +38,8 @@ import localsearch.model.VarIntLS;
  */
 public class ExamineTimetablingProblem {
 
+    ExamineTimetablingManager manager;
+    
     public HashMap<String, Area> hmIDToArea;
     public HashMap<String, Course> hmIDToCourse;
     public HashMap<String, ExamClass> hmIDToExamClass;
@@ -78,9 +83,13 @@ public class ExamineTimetablingProblem {
     IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
     IFunction suitableTimeSlotObj; // Avoid helding much exams on traffic jam time
     
+    public int numCommonClass;
     
     public ExamineTimetablingProblem() {
-        ExamineTimetablingManager manager = new ExamineTimetablingManager();
+        
+        manager = UtilManager.generateData(1);
+        DataIO.writeObject("timetabling_data", manager);
+//        manager = DataIO.readObject("timetabling_data");
         hmIDToArea = manager.getHmIDToArea();
         hmIDToCourse = manager.getHmIDToCourse();
         hmIDToExamClass = manager.getHmIDToExamClass();
@@ -106,19 +115,40 @@ public class ExamineTimetablingProblem {
         setAvailableDay = manager.getAvailableDaySet();
         sameCourseCodeClass = manager.getCommonExamClassCourseList();
         
+        numCommonClass = 0;
+        for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
+            for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
+//                if (commonStudents[classIndex1][classIndex2] > 0) {
+//                    numCommonClass++;
+//                }
+                System.out.println(commonStudents[classIndex1][classIndex2]);
+            
+            }
+        }
+        
+        System.out.println("********** " + numCommonClass);
+        
     
     }
     
 
     public void stateModel() {
 
+        ls = new LocalSearchManager();
+        S = new ConstraintSystem(ls);
+        
         // Set up the value domains for variables 
+        examDays = new VarIntLS[numExamClass];
+        examTimeSlots = new VarIntLS[numExamClass];
+        examRooms = new VarIntLS[numExamClass];
         for (int index = 0; index < numExamClass; index++) {
             examDays[index] = new VarIntLS(ls, setAvailableDay);
+            System.out.println("Domain : examDays : " + setAvailableDay);
             examTimeSlots[index] = new VarIntLS(ls, 0, 3);
-            examRooms[index] = new VarIntLS(ls, 0, numExamClass - 1);
+            examRooms[index] = new VarIntLS(ls, 0, numRoom - 1);
         }
-
+        
+        examClassToTeacher = new VarIntLS[numExamClass][numTeacher];
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             for (int teacherIndex = 0; teacherIndex < 2; teacherIndex++) {
                 examClassToTeacher[examClassIndex][teacherIndex] = new VarIntLS(ls, 0, numTeacher);
@@ -282,6 +312,10 @@ public class ExamineTimetablingProblem {
             }
         }
         
+        
+         
+ 
+        
         // Objective 1 : Maximize the minimum of gap between 2 exam times
         ArrayList<IFunction> commonExamGaps = new ArrayList<IFunction>();
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
@@ -311,6 +345,8 @@ public class ExamineTimetablingProblem {
             slotDisproportion[classIndex] = new FuncMinus(new ElementTmp(roomSlots, examRooms[classIndex]), classSlots);
         }
         
+
+        
         disproportionObj = new Max(slotDisproportion); // minimize the maximum
         
         // Objective 3 : Avoid helding much exams on traffic jam time
@@ -338,16 +374,91 @@ public class ExamineTimetablingProblem {
         
                      
         
+
+
+
         ls.close();
         
+        
+//        
+//    System.out.println("Init S = " + S.violations());
+//        MinMaxSelector mms = new MinMaxSelector(S);
+//
+//        int it = 0;
+//        while (it < 10000 && S.violations() > 0) {
+//
+//            VarIntLS sel_x = mms.selectMostViolatingVariable();
+//            int sel_v = mms.selectMostPromissingValue(sel_x);
+//
+//            sel_x.setValuePropagate(sel_v);
+//            System.out.println("Step " + it + " " + ", S = " + S.violations());
+//            
+//            it++;
+//        }
+//
+//        System.out.println(S.violations());
     
         
         
 
     }
 
-    public static void main(String[] args) {
-        System.out.println("");
+    
+    public void solve() {
+        localsearch.search.TabuSearch ts = new localsearch.search.TabuSearch();
+        ts.search(S, 20, 300, 10000, 200);
+
     }
+
+    public void testBatch(int nbTrials) {
+//        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+//        
+//        
+//        // nbTrials : number of trials (số lần chạy thử)
+//        // Mảng này lưu thời gian cho mỗi lần chạy thử
+//        double[] t = new double[nbTrials];
+//        double avg_t = 0;
+//        for (int k = 0; k < nbTrials; k++) {
+//            double t0 = System.currentTimeMillis();
+//            Timetabling.stateModel();
+//            Timetabling.solve();
+//            t[k] = (System.currentTimeMillis() - t0) * 0.001;
+//            // Lưu tổng thời gian cho tất cả các lần chạy thử
+//            avg_t += t[k];
+//        }
+//        
+//        // Trung bình thời gian cho từng lần chạy thử
+//        avg_t = avg_t * 1.0 / nbTrials;
+//        System.out.println("Time = " + avg_t);
+    }
+
+    public static void main(String[] args) {
+        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+        System.out.println(Timetabling.manager.toString());
+        
+        Timetabling.stateModel();
+//        Timetabling.solve();
+        
+//        // nbTrials : number of trials (số lần chạy thử)
+//        // Mảng này lưu thời gian cho mỗi lần chạy thử
+//        double[] t = new double[nbTrials];
+//        double avg_t = 0;
+//        for (int k = 0; k < nbTrials; k++) {
+//            double t0 = System.currentTimeMillis();
+//            Timetabling.stateModel();
+//            Timetabling.solve();
+//            t[k] = (System.currentTimeMillis() - t0) * 0.001;
+//            // Lưu tổng thời gian cho tất cả các lần chạy thử
+//            avg_t += t[k];
+//        }
+//        
+//        // Trung bình thời gian cho từng lần chạy thử
+//        avg_t = avg_t * 1.0 / nbTrials;
+//        System.out.println("Time = " + avg_t);
+    }
+    
+    
+    
+
 
 }
