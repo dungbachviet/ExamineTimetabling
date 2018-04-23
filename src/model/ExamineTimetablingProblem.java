@@ -18,6 +18,7 @@ import localsearch.constraints.basic.OR;
 import localsearch.functions.basic.FuncMinus;
 import localsearch.functions.basic.FuncMult;
 import localsearch.functions.basic.FuncPlus;
+import localsearch.functions.basic.FuncVarConst;
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.functions.element.Element;
 import localsearch.functions.element.ElementTmp;
@@ -336,7 +337,8 @@ public class ExamineTimetablingProblem {
         for (int index = 0; index < commonExamGaps.size(); index++)
             commonExamGapsFunction[index] = commonExamGaps.get(index);
         
-        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
+//        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
+        examGapObj = new FuncVarConst(ls, 0);
         
         // Objective 2 : Avoid disproportination between exam class's number of student and room's capacity
         IFunction[] slotDisproportion = new IFunction[numExamClass];
@@ -379,66 +381,56 @@ public class ExamineTimetablingProblem {
 
         ls.close();
         
-        
-//        
-//    System.out.println("Init S = " + S.violations());
-//        MinMaxSelector mms = new MinMaxSelector(S);
-//
-//        int it = 0;
-//        while (it < 10000 && S.violations() > 0) {
-//
-//            VarIntLS sel_x = mms.selectMostViolatingVariable();
-//            int sel_v = mms.selectMostPromissingValue(sel_x);
-//
-//            sel_x.setValuePropagate(sel_v);
-//            System.out.println("Step " + it + " " + ", S = " + S.violations());
-//            
-//            it++;
-//        }
-//
-//        System.out.println(S.violations());
-    
-        
-        
+   
 
     }
 
     
     public void solve() {
-        localsearch.search.TabuSearch ts = new localsearch.search.TabuSearch();
-        ts.search(S, 20, 300, 10000, 200);
+        
+        // Tham lam 2 buoc de triet tieu vi pham rang buoc
+        System.out.println("Init S = " + S.violations());
+        MinMaxSelector mms = new MinMaxSelector(S);
 
+        int it = 0;
+        while (it < 10000 && S.violations() > 0) {
+
+            VarIntLS sel_x = mms.selectMostViolatingVariable();
+            int sel_v = mms.selectMostPromissingValue(sel_x);
+
+            sel_x.setValuePropagate(sel_v);
+            System.out.println("Step " + it + " " + ", S = " + S.violations());
+            
+            it++;
+        }
+
+        System.out.println(S.violations());
+        
+        // Cai thien chat luong loi giai su dung tabu-search
+        MyTabuSearch ts = new MyTabuSearch();
+        IFunction[] obj = new IFunction[4];
+        obj[0] = examGapObj;
+        obj[1] = disproportionObj;
+        obj[2] = suitableTimeSlotObj;
+        obj[3] = distributeDifficultyObj;
+        ts.mySearchMaintainConstraints(obj, S, 20, 60, 100000, 200);     
     }
 
-    public void testBatch(int nbTrials) {
-//        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
-//        
-//        
-//        // nbTrials : number of trials (số lần chạy thử)
-//        // Mảng này lưu thời gian cho mỗi lần chạy thử
-//        double[] t = new double[nbTrials];
-//        double avg_t = 0;
-//        for (int k = 0; k < nbTrials; k++) {
-//            double t0 = System.currentTimeMillis();
-//            Timetabling.stateModel();
-//            Timetabling.solve();
-//            t[k] = (System.currentTimeMillis() - t0) * 0.001;
-//            // Lưu tổng thời gian cho tất cả các lần chạy thử
-//            avg_t += t[k];
-//        }
-//        
-//        // Trung bình thời gian cho từng lần chạy thử
-//        avg_t = avg_t * 1.0 / nbTrials;
-//        System.out.println("Time = " + avg_t);
-    }
 
     public static void main(String[] args) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
         System.out.println(Timetabling.manager.toString());
         
         Timetabling.stateModel();
-//        Timetabling.solve();
+        Timetabling.solve();
         
+    }
+    
+    
+    public void testBatch(int nbTrials) {
+//        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+//        
+//        
 //        // nbTrials : number of trials (số lần chạy thử)
 //        // Mảng này lưu thời gian cho mỗi lần chạy thử
 //        double[] t = new double[nbTrials];
