@@ -13,6 +13,7 @@ import localsearch.model.IFunction;
 import localsearch.model.VarIntLS;
 import localsearch.search.MoveType;
 import localsearch.search.OneVariableValueMove;
+import localsearch.selectors.MinMaxSelector;
 
 /**
  *
@@ -35,11 +36,36 @@ public class MyTabuSearch {
     public double getTimeBest() {
         return t_best * 0.001;
     }
+    
+    
+    public void TwoStagesGreedy(IConstraint S, int currentTest) {
+        // Tham lam 2 buoc de triet tieu vi pham rang buoc
+        System.out.println("Init S = " + S.violations());
+        MinMaxSelector mms = new MinMaxSelector(S);
+
+        ArrayList<Double> iterationViolation = new ArrayList<Double>();
+        int it = 0;
+        while (it < 10000 && S.violations() > 0) {
+
+            VarIntLS sel_x = mms.selectMostViolatingVariable();
+            int sel_v = mms.selectMostPromissingValue(sel_x);
+
+            sel_x.setValuePropagate(sel_v);
+            System.out.println("Step " + it + " " + ", S = " + S.violations());
+
+            it++;
+            iterationViolation.add((double) S.violations());
+        }
+
+        System.out.println(S.violations());
+        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
+    }
 
     public void mySearchMaintainConstraints(IFunction[] f, IConstraint S,
             int tabulen, int maxTime, int maxIter, int maxStable, int currTest) {
         double t0 = System.currentTimeMillis();
-
+        
+        
         VarIntLS[] x = S.getVariables();
         HashMap<VarIntLS, Integer> map = new HashMap<VarIntLS, Integer>();
         for (int i = 0; i < x.length; i++) {
@@ -79,7 +105,8 @@ public class MyTabuSearch {
         int nic = 0;
         ArrayList<OneVariableValueMove> moves = new ArrayList<OneVariableValueMove>();
         Random R = new Random();
-
+        
+        ArrayList<Double> iterationFitness = new ArrayList<Double>();
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
             int sel_i = -1;
             int sel_v = -1;
@@ -156,10 +183,16 @@ public class MyTabuSearch {
                 }
             }
             it++;
+            iterationFitness.add((double) best);
+            
         }
         for (int i = 0; i < x.length; i++) {
             x[i].setValuePropagate(x_best[i]);
         }
+        
+        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.bestFitness.add((double) best);
+        
     }
 
     private void restartMaintainConstraint(VarIntLS[] x, IConstraint S,
@@ -313,5 +346,9 @@ public class MyTabuSearch {
         }
         System.out.println("TabuSearch, init S = " + S.violations());
     }
+    
+    
+    
+    
 
 }

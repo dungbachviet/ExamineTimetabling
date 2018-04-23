@@ -380,26 +380,11 @@ public class ExamineTimetablingProblem {
 
     public void solve(int currTest) {
 
-        // Tham lam 2 buoc de triet tieu vi pham rang buoc
-        System.out.println("Init S = " + S.violations());
-        MinMaxSelector mms = new MinMaxSelector(S);
+        MyTabuSearch ts = new MyTabuSearch();
 
-        int it = 0;
-        while (it < 10000 && S.violations() > 0) {
-
-            VarIntLS sel_x = mms.selectMostViolatingVariable();
-            int sel_v = mms.selectMostPromissingValue(sel_x);
-
-            sel_x.setValuePropagate(sel_v);
-            System.out.println("Step " + it + " " + ", S = " + S.violations());
-
-            it++;
-        }
-
-        System.out.println(S.violations());
+        ts.TwoStagesGreedy(S, currTest);
 
         // Cai thien chat luong loi giai su dung tabu-search
-        MyTabuSearch ts = new MyTabuSearch();
         IFunction[] obj = new IFunction[4];
         obj[0] = examGapObj;
         obj[1] = disproportionObj;
@@ -418,121 +403,143 @@ public class ExamineTimetablingProblem {
         // set parameter
 
         tabulen = 20;
-        maxTime = 60;
+        maxTime = 10;
         maxIter = 100000;
         maxStable = 200;
 
-        Timetabling.testBatch(2);
+        int numParameters = 3;
+        int[] tabuLenArr = new int[]{20, 40, 60};
+        int[] maxTimeArr = new int[]{15, 20, 60};
+        int[] maxIterArr = new int[]{30000, 50000, 100000};
+        int[] maxStableArr = new int[]{200, 300, 400};
 
-        //===============
         // statistic
-        String dirSaveFile = "src/statistics";
+        String dirSaveFile = "src/statistics/" + System.currentTimeMillis();
         DataIO.makeDir(dirSaveFile);
-
+        int numTest = 2;
         ArrayList<ArrayList<String>> outputList = new ArrayList<>();
-        ArrayList<String> colName = new ArrayList<>();
-        colName.add("ParameterID");
-        colName.add("TabuLen");
-        colName.add("maxTime");
-        colName.add("maxIter");
-        colName.add("maxStable");
-        colName.add("MinFitness");
-        colName.add("AverageFitness");
-        colName.add("MaxFitness");
-        colName.add("VarianceFitness");
-        colName.add("MinTime");
-        colName.add("AverageTime");
-        colName.add("MaxTime");
-        colName.add("VarianceTime");
+        for (int indexPara = 0; indexPara < numParameters; ++indexPara) {
+            String paraID = "Parameter" + (indexPara + 1);
 
-        outputList.add(colName);
+            // set parameter
+            tabulen = tabuLenArr[indexPara];
+            maxTime = maxTimeArr[indexPara];
+            maxIter = maxIterArr[indexPara];
+            maxStable = maxStableArr[indexPara];
 
-        ArrayList<String> row1 = new ArrayList<>();
-        for (Double v : bestFitness) {
-            row1.add(String.valueOf(v));
-        }
+            for (int i = 0; i < numParameters; ++i) {
+                Timetabling.testBatch(numTest);
 
-        double minFitness = UtilManager.getMin(bestFitness);
-        double avgFitness = UtilManager.getAverage(bestFitness);
-        double maxFitness = UtilManager.getMax(bestFitness);
-        double varFitness = UtilManager.getVariance(bestFitness);
+                //===============
+                ArrayList<String> colName = new ArrayList<>();
+                colName.add("ParameterID");
+                colName.add("TabuLen");
+                colName.add("maxTime");
+                colName.add("maxIter");
+                colName.add("maxStable");
+                colName.add("MinFitness");
+                colName.add("AverageFitness");
+                colName.add("MaxFitness");
+                colName.add("VarianceFitness");
+                colName.add("MinTime");
+                colName.add("AverageTime");
+                colName.add("MaxTime");
+                colName.add("VarianceTime");
 
-        double minTime = UtilManager.getMin(timeRun);
-        double avgTime = UtilManager.getAverage(timeRun);
-        double maxTime = UtilManager.getMax(timeRun);
-        double varTime = UtilManager.getVariance(timeRun);
+                outputList.add(colName);
 
-        row1.add(String.valueOf(minFitness));
-        row1.add(String.valueOf(avgFitness));
-        row1.add(String.valueOf(maxFitness));
-        row1.add(String.valueOf(varFitness));
+                ArrayList<String> row1 = new ArrayList<>();
 
-        row1.add(String.valueOf(minTime));
-        row1.add(String.valueOf(avgTime));
-        row1.add(String.valueOf(maxTime));
-        row1.add(String.valueOf(varTime));
+                row1.add("Parameter1");
+                row1.add(String.valueOf(tabulen));
+                row1.add(String.valueOf(maxTime));
+                row1.add(String.valueOf(maxIter));
+                row1.add(String.valueOf(maxStable));
+
+                double minFitness = UtilManager.getMin(bestFitness);
+                double avgFitness = UtilManager.getAverage(bestFitness);
+                double maxFitness = UtilManager.getMax(bestFitness);
+                double varFitness = UtilManager.getVariance(bestFitness);
+
+                double minTime = UtilManager.getMin(timeRun);
+                double avgTime = UtilManager.getAverage(timeRun);
+                double maxTime = UtilManager.getMax(timeRun);
+                double varTime = UtilManager.getVariance(timeRun);
+
+                row1.add(String.valueOf(minFitness));
+                row1.add(String.valueOf(avgFitness));
+                row1.add(String.valueOf(maxFitness));
+                row1.add(String.valueOf(varFitness));
+
+                System.out.println("\n==>" + timeRun);
+                row1.add(String.valueOf(minTime));
+                row1.add(String.valueOf(avgTime));
+                row1.add(String.valueOf(maxTime));
+                row1.add(String.valueOf(varTime));
+                System.out.println("\nRow1 = " + row1);
 
 //        ArrayList<String> row2 = new ArrayList<>();
-//        for(Double v : timeRun){
+//        for(Double v : timeRFun){
 //            row2.add(String.valueOf(v));
 //        }
-        outputList.add(row1);
+                outputList.add(row1);
 //        outputList.add(row2);
 
-        DataIO.writeFileExcel(dirSaveFile + "/1.csv", outputList);
+                boolean isShowGui = true;
+                if (isShowGui) {
+                    // show violation_loop
+                    MultipleLinesChart mlc = new MultipleLinesChart("Demo");
+                    mlc.setxAxisLabel("Loop");
+                    mlc.setyAxisLabel("Violation");
+                    mlc.setChartTitle("Tabu algorithm");
 
-        boolean isShowGui = true;
-        if (isShowGui) {
-            // show violation_loop
-            MultipleLinesChart mlc = new MultipleLinesChart("Demo");
-            mlc.setxAxisLabel("Loop");
-            mlc.setyAxisLabel("Violation");
-            mlc.setChartTitle("Tabu algorithm");
+                    ArrayList<Line> lineList = new ArrayList<>();
+                    ArrayList<Double> xList = new ArrayList<>();
+                    ArrayList<Double> yList = new ArrayList<>();
 
-            ArrayList<Line> lineList = new ArrayList<>();
-            ArrayList<Double> xList = new ArrayList<>();
-            ArrayList<Double> yList = new ArrayList<>();
-            
-            int index = 0;
-            yList = violationList.get(index);
-            
-            for(int i = 0; i < yList.size(); ++i){
-                xList.add(1.0 * (i+1));
+                    int index = 0;
+                    yList = violationList.get(index);
+
+                    for (int k = 0; k < yList.size(); ++k) {
+                        xList.add(1.0 * (k + 1));
+                    }
+
+                    Line lineViolation = new Line("Violation", xList, yList);
+                    lineList.add(lineViolation);
+
+                    mlc.setLineList(lineList);
+
+                    String pathSaveImage = dirSaveFile + "/violation-loop_" + paraID + ".png";
+                    mlc.renderGraph(false, pathSaveImage);
+
+                    // show violation_loop
+                    MultipleLinesChart mlc2 = new MultipleLinesChart("Demo");
+                    mlc2.setxAxisLabel("Loop");
+                    mlc2.setyAxisLabel("Violation");
+                    mlc2.setChartTitle("Tabu algorithm");
+
+                    ArrayList<Line> lineListFitness = new ArrayList<>();
+                    ArrayList<Double> xList2 = new ArrayList<>();
+                    ArrayList<Double> yList2 = new ArrayList<>();
+
+                    int index2 = 0;
+                    yList2 = fitnessList.get(index2);
+
+                    for (int k = 0; k < yList2.size(); ++k) {
+                        xList2.add(1.0 * (k + 1));
+                    }
+
+                    Line lineFitness = new Line("Fitness", xList2, yList2);
+                    lineListFitness.add(lineFitness);
+                    mlc2.setLineList(lineListFitness);
+
+                    String pathSaveImage2 = dirSaveFile + "/fitness-loop_" + paraID + ".png";
+                    mlc2.renderGraph(false, pathSaveImage2);
+                }
+
             }
-            
-            Line lineViolation = new Line("Violation", xList, yList);
-            lineList.add(lineViolation);
-
-            mlc.setLineList(lineList);
-
-            String pathSaveImage = "src/statistics/violation_loop.png";
-            mlc.renderGraph(false, pathSaveImage);
-            
-            
-            // show violation_loop
-            MultipleLinesChart mlc2 = new MultipleLinesChart("Demo");
-            mlc.setxAxisLabel("Loop");
-            mlc.setyAxisLabel("Fitness");
-            mlc.setChartTitle("Tabu algorithm");
-
-            ArrayList<Line> lineListFitness = new ArrayList<>();
-            ArrayList<Double> xList2 = new ArrayList<>();
-            ArrayList<Double> yList2 = new ArrayList<>();
-            
-            int index2 = 0;
-            yList2 = violationList.get(index2);
-            
-            for(int i = 0; i < yList2.size(); ++i){
-                xList2.add(1.0 * (i+1));
-            }
-            
-            Line lineFitness = new Line("Fitness", xList2, yList2);
-            lineListFitness.add(lineFitness);
-            mlc2.setLineList(lineListFitness);
-
-            String pathSaveImage2 = "src/statistics/fitness_loop.png";
-            mlc2.renderGraph(false, pathSaveImage2);
         }
+        DataIO.writeFileExcel(dirSaveFile + "/1.csv", outputList);
 
     }
 
