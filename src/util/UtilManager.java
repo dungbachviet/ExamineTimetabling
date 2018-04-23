@@ -66,7 +66,7 @@ public class UtilManager {
 
         // parameter corresponding with difficult of dataset
 //        int minStudentOfClass = 30;
-        int maxStudentOfClass = 90;
+        int maxStudentOfClass = 75;
 //
 //        int minNumCoursesOfStudent = 5;
 //        int maxNumCoursesOfStudent = 8;
