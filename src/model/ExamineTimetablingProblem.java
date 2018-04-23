@@ -422,7 +422,7 @@ public class ExamineTimetablingProblem {
         maxIter = 100000;
         maxStable = 200;
 
-        Timetabling.testBatch(10);
+        Timetabling.testBatch(2);
 
         //===============
         // statistic
@@ -479,7 +479,7 @@ public class ExamineTimetablingProblem {
         outputList.add(row1);
 //        outputList.add(row2);
 
-        DataIO.writeFileExcel(dirSaveFile + "1.csv", outputList);
+        DataIO.writeFileExcel(dirSaveFile + "/1.csv", outputList);
 
         boolean isShowGui = true;
         if (isShowGui) {
