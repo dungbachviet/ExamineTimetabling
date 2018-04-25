@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,14 +6,17 @@
  */
 package util;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import model.ExamineTimetablingManager;
 
 /**
@@ -80,5 +84,24 @@ public class DataIO {
     
     public static String getAbsolutePath(String path){
         return new File(path).getAbsolutePath();
+    }
+    
+    public static void writeFileExcel(String path, ArrayList<ArrayList<String>> output){
+        try(FileWriter fw = new FileWriter(path)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            for(ArrayList<String> list : output){
+                for(String str : list){
+                    fw.write(str + " ");
+                }
+                fw.write("\n");
+            }
+            
+            bw.close();
+            fw.close();
+            System.out.println("\nWrite excel " + path + " done");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }

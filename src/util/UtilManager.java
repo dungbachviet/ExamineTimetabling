@@ -27,8 +27,10 @@ public class UtilManager {
 
         // parameters control difficult level
         int numAreas = 3;
-        int numRooms = numAreas * 2;
-        int numCourses = 50;
+
+        int numRooms = numAreas * 3;
+        int numCourses = 30;
+
         int numExamClasses = numCourses * 2;
         int numExamDays = 30;
         int numStudents = 1000;
@@ -66,7 +68,7 @@ public class UtilManager {
 
         // parameter corresponding with difficult of dataset
 //        int minStudentOfClass = 30;
-//        int maxStudentOfClass = 90;
+        int maxStudentOfClass = 75;
 //
 //        int minNumCoursesOfStudent = 5;
 //        int maxNumCoursesOfStudent = 8;
@@ -80,6 +82,9 @@ public class UtilManager {
         int maxDifficultCourse = 3;
 
         int numTabuDays = 3;
+
+        int minCourseOfStudent = 3;
+        int maxCourseOfStudent = 6;
 
         ExamineTimetablingManager etm = new ExamineTimetablingManager();
 
@@ -168,14 +173,18 @@ public class UtilManager {
         }
 
         // generate exam classes
+        int idCourse = 0;
         for (int i = 0; i < numExamClasses; ++i) {
             String examClassID = "ExamClass" + i;
             ExamClass examClass = new ExamClass(examClassID);
             hmIDToExamClass.put(examClassID, examClass);
 
             // add connection between course and exam class
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
+            String courseID = "Course" + idCourse;
+
             Course course = hmIDToCourse.get(courseID);
+            idCourse = (idCourse + 1) % (numCourses - 1);
+
             course.addExamClass(examClass);
             examClass.setCourse(course);
         }
@@ -183,13 +192,41 @@ public class UtilManager {
         // generate student enrollment
         for (int i = 0; i < numStudents; ++i) {
             String studentID = "Student" + i;
-            String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
-            Course course = hmIDToCourse.get(courseID);
-            ArrayList<ExamClass> examClassList = course.getExamClassList();
-            if (!examClassList.isEmpty()) {
-                ExamClass examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
-                // add connection student enrollment exam class
-                examClass.addEnrollment(studentID);
+
+            // random course for each student
+            int numCourseOfStudent = randomInt(minCourseOfStudent, maxCourseOfStudent);
+            idCourse = 0;
+            int idExamClass = 0;
+            for (int j = 0; j < numCourseOfStudent; ++j) {
+//                String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
+                boolean loop = true;
+                while (loop) {
+                    String courseID = "Course" + idCourse;
+                    Course course = hmIDToCourse.get(courseID);
+                    ExamClass examClass = course.getExamClassEmptyEnrollment();
+
+                    if (examClass == null) {
+                        ArrayList<ExamClass> examClassList = course.getExamClassList();
+                        if (!examClassList.isEmpty()) {
+//                        idExamClass = (idExamClass + 1) * (examClassList.size() - 1);
+                            examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
+                            // add connection student enrollment exam class
+                            if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
+                                loop = true;
+                            } else {
+                                examClass.addEnrollment(studentID);
+                                loop = false;
+                            }
+                        } else {
+                            loop = true;
+                        }
+                    }else{
+                        loop = false;
+                        examClass.addEnrollment(studentID);
+                    }
+
+                    idCourse = (idCourse + 1) % (numCourses - 1);
+                }
             }
         }
 
@@ -209,10 +246,10 @@ public class UtilManager {
         Random R = new Random();
         return R.nextInt(max - min + 1) + min;
     }
-    
-    public static ArrayList<Integer> randomIntegerList(int size, int min, int max){
+
+    public static ArrayList<Integer> randomIntegerList(int size, int min, int max) {
         ArrayList<Integer> list = new ArrayList<>();
-        for(int i = 0; i < size; ++i){
+        for (int i = 0; i < size; ++i) {
             list.add(randomInt(min, max));
         }
         return list;
@@ -222,13 +259,60 @@ public class UtilManager {
         Random R = new Random();
         return (max - min + 1) * R.nextDouble() + min;
     }
-    
-    public static ArrayList<Double> randomDoubleList(int size, int min, int max){
+
+    public static ArrayList<Double> randomDoubleList(int size, int min, int max) {
         ArrayList<Double> list = new ArrayList<>();
-        for(int i = 0; i < size; ++i){
+        for (int i = 0; i < size; ++i) {
             list.add(randomDouble(min, max));
         }
         return list;
+    }
+
+    public static HashMap<String, Double> createHashMapFromList(ArrayList<String> list, double[] arr) {
+        HashMap<String, Double> hm = new HashMap<>();
+
+        for (int i = 0; i < arr.length; ++i) {
+            hm.put(list.get(i), arr[i]);
+        }
+
+        return hm;
+    }
+
+    public static double getMin(ArrayList<Double> list) {
+        double min = Double.MAX_VALUE;
+        for (double v : list) {
+            if (v < min) {
+                min = v;
+            }
+        }
+        return min;
+    }
+
+    public static double getMax(ArrayList<Double> list) {
+        double max = Double.MIN_VALUE;
+        for (double v : list) {
+            if (v > max) {
+                max = v;
+            }
+        }
+        return max;
+    }
+
+    public static double getAverage(ArrayList<Double> list) {
+        double sum = 0;
+        for (double v : list) {
+            sum += v;
+        }
+        return sum / list.size();
+    }
+
+    public static double getVariance(ArrayList<Double> list) {
+        double sum = 0;
+        double avg = getAverage(list);
+        for (double v : list) {
+            sum += Math.abs(v - avg);
+        }
+        return sum / list.size();
     }
 
     public static void main(String[] args) {

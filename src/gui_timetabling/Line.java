@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class Line {
 
     private String lineName;
+    private double scalar;
     private ArrayList<Double> xList;
 //    private String xLabel;
     private ArrayList<Double> yList;
@@ -23,6 +24,13 @@ public class Line {
         this.lineName = lineName;
         this.xList = xList;
         this.yList = yList;
+    }
+
+    public Line(String lineName, double scalar) {
+        this.lineName = lineName;
+        this.scalar = scalar;
+        xList = new ArrayList<>();
+        yList = new ArrayList<>();
     }
 
     public String getLineName() {
@@ -37,6 +45,14 @@ public class Line {
         return yList;
     }
 
+    public double getScalar() {
+        return scalar;
+    }
+
+    public void setScalar(double scalar) {
+        this.scalar = scalar;
+    }
+
     public void setLineName(String lineName) {
         this.lineName = lineName;
     }
@@ -49,7 +65,7 @@ public class Line {
         this.yList = yList;
     }
 
-    public void addPoint(double x, double y){
+    public void addPoint(double x, double y) {
         xList.add(x);
         yList.add(y);
     }

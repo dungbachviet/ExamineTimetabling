@@ -132,6 +132,16 @@ public class ExamineTimetablingManager implements Serializable {
         return result;
     }
 
+    public String getDatasetName(){
+        String name = "Data-" + getNumAreas() + "-" + 
+                getNumCourses() + "-" + 
+                getNumExamClasses() + "-" +
+                getNumRooms() + "-" +
+                getNumTeachers();
+        return name;
+    }
+    
+    
     public void setHmIDToArea(HashMap<String, Area> hmIDToArea) {
         this.hmIDToArea = hmIDToArea;
     }
