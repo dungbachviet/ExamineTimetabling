@@ -61,8 +61,7 @@ public class ExamineTimetablingProblem {
     //==============
     ExamineTimetablingManager manager;
 
-=======
-    ExamineTimetablingManager manager;
+
     
 
     public HashMap<String, Area> hmIDToArea;
@@ -445,7 +444,6 @@ public class ExamineTimetablingProblem {
         ts.TwoStagesGreedy(S, currTest);
 
         // Cai thien chat luong loi giai su dung tabu-search
-        MyTabuSearch ts = new MyTabuSearch();
 
         IFunction[] obj = new IFunction[4];
         obj[0] = examGapObj;
@@ -633,42 +631,6 @@ public class ExamineTimetablingProblem {
         System.out.println("Time = " + avg_t);
     }
 
-
-
-    public static void main(String[] args) {
-        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
-        System.out.println(Timetabling.manager.toString());
-        
-        Timetabling.stateModel();
-        Timetabling.solve();
-        
-    }
-    
-    
-    public void testBatch(int nbTrials) {
-//        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
-//        
-//        
-//        // nbTrials : number of trials (số lần chạy thử)
-//        // Mảng này lưu thời gian cho mỗi lần chạy thử
-//        double[] t = new double[nbTrials];
-//        double avg_t = 0;
-//        for (int k = 0; k < nbTrials; k++) {
-//            double t0 = System.currentTimeMillis();
-//            Timetabling.stateModel();
-//            Timetabling.solve();
-//            t[k] = (System.currentTimeMillis() - t0) * 0.001;
-//            // Lưu tổng thời gian cho tất cả các lần chạy thử
-//            avg_t += t[k];
-//        }
-//        
-//        // Trung bình thời gian cho từng lần chạy thử
-//        avg_t = avg_t * 1.0 / nbTrials;
-//        System.out.println("Time = " + avg_t);
-    }
-    
-    
-    
 
 
 
