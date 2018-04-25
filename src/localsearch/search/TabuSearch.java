@@ -1510,9 +1510,155 @@ public class TabuSearch {
             }
         }
     }
-    //public double getTimeBest(){
-    //	return t_best*0.001;
-    //}
+
+    
+    
+    
+    private void mySearchMaintainConstraints(IFunction[] f, IConstraint S,
+            int tabulen, int maxTime, int maxIter, int maxStable) {
+        double t0 = System.currentTimeMillis();
+
+        VarIntLS[] x = S.getVariables();
+        HashMap<VarIntLS, Integer> map = new HashMap<VarIntLS, Integer>();
+        for (int i = 0; i < x.length; i++) {
+            map.put(x[i], i);
+        }
+
+        int n = x.length;
+        int maxV = -1000000000;
+        int minV = 100000000;
+        for (int i = 0; i < n; i++) {
+            if (maxV < x[i].getMaxValue()) {
+                maxV = x[i].getMaxValue();
+            }
+            if (minV > x[i].getMinValue()) {
+                minV = x[i].getMinValue();
+            }
+        }
+        int D = maxV - minV;
+        int tabu[][] = new int[n][D + 1];
+        for (int i = 0; i < n; i++) {
+            for (int v = 0; v <= D; v++) {
+                tabu[i][v] = -1;
+            }
+        }
+
+        int it = 0;
+        maxTime = maxTime * 1000;// convert into milliseconds
+
+//        int best = f.getValue();
+        int best = f[0].getValue() - f[1].getValue() + f[2].getValue() + f[3].getValue();
+        int[] x_best = new int[x.length];
+        for (int i = 0; i < x.length; i++) {
+            x_best[i] = x[i].getValue();
+        }
+
+        System.out.println("TabuSearch, init S = " + S.violations());
+        int nic = 0;
+        ArrayList<OneVariableValueMove> moves = new ArrayList<OneVariableValueMove>();
+        Random R = new Random();
+
+        while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
+            int sel_i = -1;
+            int sel_v = -1;
+            int minDelta = 10000000;
+            moves.clear();
+            for (int i = 0; i < n; i++) {
+                for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++) {
+                    int deltaS = S.getAssignDelta(x[i], v);
+                    
+                    
+                    int deltaF1 = f[0].getAssignDelta(x[i], v);
+                    int deltaF2 = f[1].getAssignDelta(x[i], v);
+                    int deltaF3 = f[2].getAssignDelta(x[i], v);
+                    int deltaF4 = f[3].getAssignDelta(x[i], v);
+                            
+                    int newQuality = (f[0].getValue() + deltaF1)  - (f[1].getValue() + deltaF2) + (f[2].getValue() + deltaF3) + (f[3].getValue() + deltaF4);
+                    
+                    if (deltaS <= 0) {
+                        if (tabu[i][v - minV] <= it
+                                || newQuality > best) {
+                            if (newQuality > best) {
+                                best = newQuality;
+                                sel_i = i;
+                                sel_v = v;
+                                moves.clear();
+                                moves.add(new OneVariableValueMove(
+                                        MoveType.OneVariableValueAssignment,
+                                        newQuality, x[i], v));
+                            } else if (newQuality == best) {
+                                moves.add(new OneVariableValueMove(
+                                        MoveType.OneVariableValueAssignment,
+                                        newQuality, x[i], v));
+                            }
+                        }
+                    }
+                }
+            }
+
+            // perform the move
+            if (moves.size() <= 0) {
+                System.out.println("TabuSearch::restart.....");
+                restartMaintainConstraint(x, S, tabu);
+                nic = 0;
+            } else {
+                OneVariableValueMove m = moves.get(R.nextInt(moves.size()));
+                sel_i = map.get(m.getVariable());
+                sel_v = m.getValue();
+                x[sel_i].setValuePropagate(sel_v);
+                tabu[sel_i][sel_v - minV] = it + tabulen;
+                
+                int currentQuality = (f[0].getValue() - f[1].getValue() + f[2].getValue() + f[3].getValue());
+                System.out.println("Step " + it + ", S = " + S.violations()
+                        + ", f = " + currentQuality + ", best = " + best
+                        + ", nic = " + nic);
+                // update best
+                if (currentQuality > best) {
+                    best = currentQuality;
+                    for (int i = 0; i < x.length; i++) {
+                        x_best[i] = x[i].getValue();
+                    }
+                    updateBest();
+                    t_best = System.currentTimeMillis() - t0;
+                }
+
+                //if (minDelta >= 0) {
+                if (currentQuality <=  best) {
+                    nic++;
+                    if (nic > maxStable) {
+                        System.out.println("TabuSearch::restart.....");
+                        restartMaintainConstraint(x, S, tabu);
+                        nic = 0;
+                    }
+                } else {
+                    nic = 0;
+                }
+            }
+            it++;
+        }
+        for (int i = 0; i < x.length; i++) {
+            x[i].setValuePropagate(x_best[i]);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub

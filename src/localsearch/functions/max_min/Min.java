@@ -35,6 +35,7 @@ public class Min extends AbstractInvariant implements IFunction {
 		// maintain the maximal value of the array x
 		// use Heap data structures for the implementation
 		_f = f;
+                System.out.println("Size f : " + f.toString() + " Length : " + f.length);
 		_ls = _f[0].getLocalSearchManager();
 		post();
 
