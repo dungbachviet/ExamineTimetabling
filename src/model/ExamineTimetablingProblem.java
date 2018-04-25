@@ -5,8 +5,10 @@
  */
 package model;
 
+
 import gui_timetabling.Line;
 import gui_timetabling.MultipleLinesChart;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -34,13 +36,16 @@ import localsearch.model.VarIntLS;
 import localsearch.selectors.MinMaxSelector;
 import util.DataIO;
 import util.UtilManager;
+
 import static util.UtilManager.randomDouble;
+
 
 /**
  *
  * @author DungBachViet
  */
 public class ExamineTimetablingProblem {
+
 
     //==============
     public static ArrayList<Double> bestFitness;
@@ -56,11 +61,16 @@ public class ExamineTimetablingProblem {
     //==============
     ExamineTimetablingManager manager;
 
+=======
+    ExamineTimetablingManager manager;
+    
+
     public HashMap<String, Area> hmIDToArea;
     public HashMap<String, Course> hmIDToCourse;
     public HashMap<String, ExamClass> hmIDToExamClass;
     public HashMap<String, Room> hmIDToRoom;
     public HashMap<String, Teacher> hmIDToTeacher;
+
 
     public ArrayList<Integer> availableDayList; // ds các ngày có thể tổ chức thi
     public ArrayList<Integer> jamLevelList; // ds mức độ tắc nghẽn của các kíp thi
@@ -97,12 +107,15 @@ public class ExamineTimetablingProblem {
     IFunction disproportionObj; // Avoid disproportinating between number of student and room's capacity
     IFunction suitableTimeSlotObj; // Avoid helding much exams on traffic jam time
 
+
+
+    
     public int numCommonClass;
-
+    
     public ExamineTimetablingProblem() {
+        
+        manager = UtilManager.generateData(1);
 
-//        manager = UtilManager.generateData(1);
-        manager = DataIO.readObject("src/dataset_timetabling/timetabling_data");
         DataIO.writeObject("timetabling_data", manager);
 //        manager = DataIO.readObject("timetabling_data");
         hmIDToArea = manager.getHmIDToArea();
@@ -111,8 +124,12 @@ public class ExamineTimetablingProblem {
         hmIDToRoom = manager.getHmIDToRoom();
         hmIDToTeacher = manager.getHmIDToTeacher();
 
+
+
+        
         availableDayList = manager.getAvailableDayList();
         jamLevelList = manager.getJamLevelList();
+        
 
         commonStudents = manager.calcNumberCommonStudentOfClasses();
         roomSlots = manager.getRoomSlots();
@@ -130,6 +147,8 @@ public class ExamineTimetablingProblem {
         setAvailableDay = manager.getAvailableDaySet();
         sameCourseCodeClass = manager.getCommonExamClassCourseList();
 
+
+
         numCommonClass = 0;
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
@@ -138,6 +157,7 @@ public class ExamineTimetablingProblem {
 //                }
                 System.out.println(commonStudents[classIndex1][classIndex2]);
 
+
             }
         }
 
@@ -145,10 +165,19 @@ public class ExamineTimetablingProblem {
 
     }
 
+            
+
+    
+
+
     public void stateModel() {
 
         ls = new LocalSearchManager();
         S = new ConstraintSystem(ls);
+
+
+
+        
 
         // Set up the value domains for variables 
         examDays = new VarIntLS[numExamClass];
@@ -160,6 +189,8 @@ public class ExamineTimetablingProblem {
             examTimeSlots[index] = new VarIntLS(ls, 0, 3);
             examRooms[index] = new VarIntLS(ls, 0, numRoom - 1);
         }
+
+
 
         examClassToTeacher = new VarIntLS[numExamClass][numTeacher];
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
@@ -211,6 +242,7 @@ public class ExamineTimetablingProblem {
             }
         }
 
+
         // Constraint : Don't allow to violate the busy list of teachers
         for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
             ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
@@ -232,6 +264,9 @@ public class ExamineTimetablingProblem {
         // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
         // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
         // Constraint : Any 2 exam classes having any same student are at least 1 timeslot apart
+
+      
+      
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
                 // Same room, same day ==> not same timeslot
@@ -243,6 +278,8 @@ public class ExamineTimetablingProblem {
                         new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]) // not same timeslot
                 ));
 
+              
+              
                 // Same timeslot, same day ==> not any same teacher
                 S.post(new Implicate(
                         new AND(
@@ -272,17 +309,23 @@ public class ExamineTimetablingProblem {
                         )
                 ));
 
+              
+              
                 // Same student, same day ==> |timeslot1 - timeslot2| >= 2
                 VarIntLS[] convertIntToVarIntLS = new VarIntLS[2];
                 convertIntToVarIntLS[0] = new VarIntLS(ls, 0, 0);
                 convertIntToVarIntLS[1] = new VarIntLS(ls, commonStudents[classIndex1][classIndex2], commonStudents[classIndex1][classIndex2]);
 
+
+
+                
                 VarIntLS[] timeSlots = new VarIntLS[2];
                 timeSlots[0] = examTimeSlots[classIndex1];
                 timeSlots[1] = examTimeSlots[classIndex2];
-
+                
                 IFunction max = new Max(timeSlots);
                 IFunction min = new Min(timeSlots);
+                
 
                 S.post(new Implicate(
                         new AND(
@@ -292,8 +335,11 @@ public class ExamineTimetablingProblem {
                         new LessOrEqual(2, new FuncMinus(max, min)) // at least 1 timeslot apart
                 ));
 
+ 
             }
         }
+        
+        
 
         // Constraint - Don't allow teacher to supervise any exam class having same courseID with her/him
         for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
@@ -313,10 +359,16 @@ public class ExamineTimetablingProblem {
                             )
                     );
 
+                      
                 }
-
+                        
             }
         }
+        
+        
+         
+ 
+        
 
         // Objective 1 : Maximize the minimum of gap between 2 exam times
         ArrayList<IFunction> commonExamGaps = new ArrayList<IFunction>();
@@ -325,22 +377,25 @@ public class ExamineTimetablingProblem {
                 if (commonStudents[classIndex1][classIndex2] > 0) {
                     IFunction[] examTimes = new IFunction[2];
 
+                    
                     // Calculates Day[i]*4 + Timeslot[j]
                     examTimes[0] = new FuncPlus(new FuncMult(examDays[classIndex1], 4), examTimeSlots[classIndex1]);
                     examTimes[1] = new FuncPlus(new FuncMult(examDays[classIndex2], 4), examTimeSlots[classIndex2]);
+                    
 
                     commonExamGaps.add(new FuncMinus(new Max(examTimes), new Min(examTimes)));
                 }
             }
         }
 
+        
         IFunction[] commonExamGapsFunction = new IFunction[commonExamGaps.size()];
-        for (int index = 0; index < commonExamGaps.size(); index++) {
+        for (int index = 0; index < commonExamGaps.size(); index++)
             commonExamGapsFunction[index] = commonExamGaps.get(index);
-        }
-
+        
 //        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
         examGapObj = new FuncVarConst(ls, 0);
+        
 
         // Objective 2 : Avoid disproportination between exam class's number of student and room's capacity
         IFunction[] slotDisproportion = new IFunction[numExamClass];
@@ -349,7 +404,9 @@ public class ExamineTimetablingProblem {
             slotDisproportion[classIndex] = new FuncMinus(new ElementTmp(roomSlots, examRooms[classIndex]), classSlots);
         }
 
+  
         disproportionObj = new Max(slotDisproportion); // minimize the maximum
+        
 
         // Objective 3 : Avoid helding much exams on traffic jam time
         IFunction[] timeSlotSuits = new IFunction[4];
@@ -357,7 +414,9 @@ public class ExamineTimetablingProblem {
             // Number timeslot i * jamLevel[i]
             timeSlotSuits[timeSlotIndex] = new FuncMult(new ConditionalSum(examTimeSlots, timeSlotIndex), jamLevelList.get(timeSlotIndex));
         }
-        suitableTimeSlotObj = new Sum(timeSlotSuits);
+
+        suitableTimeSlotObj = new Sum(timeSlotSuits); 
+        
 
         // Objective 4 : Difficult courses should be examed nearly at last of exam process
         IFunction[] times = new IFunction[numExamClass];
@@ -370,6 +429,7 @@ public class ExamineTimetablingProblem {
             int classDifficulty = examClasses.get(classIndex).getCourse().getDifficultLevel();
             timeMultDifficult[classIndex] = new FuncMult(times[classIndex], classDifficulty);
         }
+
 
         // Distribute difficult degree throughout exam process
         distributeDifficultyObj = new Sum(timeMultDifficult); // Maximize the sum
@@ -385,12 +445,14 @@ public class ExamineTimetablingProblem {
         ts.TwoStagesGreedy(S, currTest);
 
         // Cai thien chat luong loi giai su dung tabu-search
+        MyTabuSearch ts = new MyTabuSearch();
+
         IFunction[] obj = new IFunction[4];
         obj[0] = examGapObj;
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
-//        ts.mySearchMaintainConstraints(obj, S, 20, 60, 100000, 200, currTest);
+
         ts.mySearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
     }
 
@@ -570,5 +632,44 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
+
+
+
+    public static void main(String[] args) {
+        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+        System.out.println(Timetabling.manager.toString());
+        
+        Timetabling.stateModel();
+        Timetabling.solve();
+        
+    }
+    
+    
+    public void testBatch(int nbTrials) {
+//        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+//        
+//        
+//        // nbTrials : number of trials (số lần chạy thử)
+//        // Mảng này lưu thời gian cho mỗi lần chạy thử
+//        double[] t = new double[nbTrials];
+//        double avg_t = 0;
+//        for (int k = 0; k < nbTrials; k++) {
+//            double t0 = System.currentTimeMillis();
+//            Timetabling.stateModel();
+//            Timetabling.solve();
+//            t[k] = (System.currentTimeMillis() - t0) * 0.001;
+//            // Lưu tổng thời gian cho tất cả các lần chạy thử
+//            avg_t += t[k];
+//        }
+//        
+//        // Trung bình thời gian cho từng lần chạy thử
+//        avg_t = avg_t * 1.0 / nbTrials;
+//        System.out.println("Time = " + avg_t);
+    }
+    
+    
+    
+
+
 
 }
