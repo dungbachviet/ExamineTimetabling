@@ -27,10 +27,12 @@ public class UtilManager {
 
         // parameters control difficult level
         int numAreas = 3;
+
         int numRooms = numAreas * 3;
         int numCourses = 30;
+
         int numExamClasses = numCourses * 2;
-        int numExamDays = 21;
+        int numExamDays = 30;
         int numStudents = 1000;
         int numTeachers = 50;
 
