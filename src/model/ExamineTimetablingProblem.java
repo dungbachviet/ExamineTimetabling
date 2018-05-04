@@ -103,7 +103,9 @@ public class ExamineTimetablingProblem {
 
 //        manager = UtilManager.generateData(1);
         manager = DataIO.readObject("src/dataset_timetabling/timetabling_data");
-        DataIO.writeObject("timetabling_data", manager);
+
+//        DataIO.writeObject("timetabling_data", manager);
+
 //        manager = DataIO.readObject("timetabling_data");
         hmIDToArea = manager.getHmIDToArea();
         hmIDToCourse = manager.getHmIDToCourse();
@@ -391,6 +393,9 @@ public class ExamineTimetablingProblem {
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
+
+//        ts.mySearchMaintainConstraints(obj, S, 20, 60, 100000, 200, currTest);
+
         ts.mySearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
     }
 
@@ -401,17 +406,20 @@ public class ExamineTimetablingProblem {
         // Set up problem's model
         Timetabling.stateModel();
 
-        // Set up parameters for Tabu Search
+//        Timetabling.solve();
+
+        // set parameter
+
         tabulen = 20;
         maxTime = 10;
         maxIter = 100000;
         maxStable = 200;
 
-        int numParameters = 3;
-        int[] tabuLenArr = new int[]{20, 40, 60};
-        int[] maxTimeArr = new int[]{15, 20, 60};
-        int[] maxIterArr = new int[]{30000, 50000, 100000};
-        int[] maxStableArr = new int[]{200, 300, 400};
+        int[] tabuLenArr = new int[]{20, 40};
+        int[] maxTimeArr = new int[]{15, 20};
+        int[] maxIterArr = new int[]{30000, 50000};
+        int[] maxStableArr = new int[]{200, 300};
+        int numParameters = tabuLenArr.length;
 
         // statistic
         String dirSaveFile = "src/statistics/" + System.currentTimeMillis();
@@ -445,102 +453,102 @@ public class ExamineTimetablingProblem {
             maxIter = maxIterArr[indexPara];
             maxStable = maxStableArr[indexPara];
 
-            for (int i = 0; i < numParameters; ++i) {
-                Timetabling.testBatch(numTest);
+            Timetabling.testBatch(numTest);
 
-                //===============
-                ArrayList<String> row1 = new ArrayList<>();
 
-                row1.add("Parameter1");
-                row1.add(String.valueOf(tabulen));
-                row1.add(String.valueOf(maxTime));
-                row1.add(String.valueOf(maxIter));
-                row1.add(String.valueOf(maxStable));
+            ArrayList<String> row1 = new ArrayList<>();
 
-                double minFitness = UtilManager.getMin(bestFitness);
-                double avgFitness = UtilManager.getAverage(bestFitness);
-                double maxFitness = UtilManager.getMax(bestFitness);
-                double varFitness = UtilManager.getVariance(bestFitness);
+//                row1.add("Parameter1");
+            row1.add(paraID);
+            row1.add(String.valueOf(tabulen));
+            row1.add(String.valueOf(maxTime));
+            row1.add(String.valueOf(maxIter));
+            row1.add(String.valueOf(maxStable));
 
-                double minTime = UtilManager.getMin(timeRun);
-                double avgTime = UtilManager.getAverage(timeRun);
-                double maxTime = UtilManager.getMax(timeRun);
-                double varTime = UtilManager.getVariance(timeRun);
+            double minFitness = UtilManager.getMin(bestFitness);
+            double avgFitness = UtilManager.getAverage(bestFitness);
+            double maxFitness = UtilManager.getMax(bestFitness);
+            double varFitness = UtilManager.getVariance(bestFitness);
 
-                row1.add(String.valueOf(minFitness));
-                row1.add(String.valueOf(avgFitness));
-                row1.add(String.valueOf(maxFitness));
-                row1.add(String.valueOf(varFitness));
+            double minTime = UtilManager.getMin(timeRun);
+            double avgTime = UtilManager.getAverage(timeRun);
+            double maxTime = UtilManager.getMax(timeRun);
+            double varTime = UtilManager.getVariance(timeRun);
 
-                System.out.println("\n==>" + timeRun);
-                row1.add(String.valueOf(minTime));
-                row1.add(String.valueOf(avgTime));
-                row1.add(String.valueOf(maxTime));
-                row1.add(String.valueOf(varTime));
-                System.out.println("\nRow1 = " + row1);
+            row1.add(String.valueOf(minFitness));
+            row1.add(String.valueOf(avgFitness));
+            row1.add(String.valueOf(maxFitness));
+            row1.add(String.valueOf(varFitness));
 
-//        ArrayList<String> row2 = new ArrayList<>();
-//        for(Double v : timeRFun){
-//            row2.add(String.valueOf(v));
-//        }
-                outputList.add(row1);
-//        outputList.add(row2);
+            System.out.println("\n==>" + timeRun);
+            row1.add(String.valueOf(minTime));
+            row1.add(String.valueOf(avgTime));
+            row1.add(String.valueOf(maxTime));
+            row1.add(String.valueOf(varTime));
+            System.out.println("\nRow1 = " + row1);
 
-                boolean isShowGui = true;
-                if (isShowGui) {
-                    // show violation_loop
-                    MultipleLinesChart mlc = new MultipleLinesChart("Demo");
-                    mlc.setxAxisLabel("Loop");
-                    mlc.setyAxisLabel("Violation");
-                    mlc.setChartTitle("Tabu algorithm");
+            outputList.add(row1);
 
-                    ArrayList<Line> lineList = new ArrayList<>();
-                    ArrayList<Double> xList = new ArrayList<>();
-                    ArrayList<Double> yList = new ArrayList<>();
+            boolean isShowGui = true;
+            if (isShowGui) {
+                // show violation_loop
+                MultipleLinesChart mlc = new MultipleLinesChart("Demo");
+                mlc.setxAxisLabel("Loop");
+                mlc.setyAxisLabel("Violation");
+                mlc.setChartTitle("Tabu algorithm");
 
-                    int index = 0;
-                    yList = violationList.get(index);
+                ArrayList<Line> lineList = new ArrayList<>();
+                ArrayList<Double> xList = new ArrayList<>();
+                ArrayList<Double> yList = new ArrayList<>();
 
-                    for (int k = 0; k < yList.size(); ++k) {
-                        xList.add(1.0 * (k + 1));
-                    }
+                int index = 0;
+                yList = violationList.get(index);
 
-                    Line lineViolation = new Line("Violation", xList, yList);
-                    lineList.add(lineViolation);
-
-                    mlc.setLineList(lineList);
-
-                    String pathSaveImage = dirSaveFile + "/violation-loop_" + paraID + ".png";
-                    mlc.renderGraph(false, pathSaveImage);
-
-                    // show violation_loop
-                    MultipleLinesChart mlc2 = new MultipleLinesChart("Demo");
-                    mlc2.setxAxisLabel("Loop");
-                    mlc2.setyAxisLabel("Violation");
-                    mlc2.setChartTitle("Tabu algorithm");
-
-                    ArrayList<Line> lineListFitness = new ArrayList<>();
-                    ArrayList<Double> xList2 = new ArrayList<>();
-                    ArrayList<Double> yList2 = new ArrayList<>();
-
-                    int index2 = 0;
-                    yList2 = fitnessList.get(index2);
-
-                    for (int k = 0; k < yList2.size(); ++k) {
-                        xList2.add(1.0 * (k + 1));
-                    }
-
-                    Line lineFitness = new Line("Fitness", xList2, yList2);
-                    lineListFitness.add(lineFitness);
-                    mlc2.setLineList(lineListFitness);
-
-                    String pathSaveImage2 = dirSaveFile + "/fitness-loop_" + paraID + ".png";
-                    mlc2.renderGraph(false, pathSaveImage2);
+                for (int k = 0; k < yList.size(); ++k) {
+                    xList.add(1.0 * (k + 1));
                 }
 
+                Line lineViolation = new Line("Violation", xList, yList);
+                lineList.add(lineViolation);
+
+                mlc.setLineList(lineList);
+
+                String pathSaveImage = dirSaveFile + "/violation-loop_" + paraID + ".png";
+                mlc.renderGraph(false, pathSaveImage);
+
+                // show violation_loop
+                MultipleLinesChart mlc2 = new MultipleLinesChart("Demo");
+                mlc2.setxAxisLabel("Loop");
+                mlc2.setyAxisLabel("Violation");
+                mlc2.setChartTitle("Tabu algorithm");
+
+                ArrayList<Line> lineListFitness = new ArrayList<>();
+                ArrayList<Double> xList2 = new ArrayList<>();
+                ArrayList<Double> yList2 = new ArrayList<>();
+
+                int index2 = 0;
+                yList2 = fitnessList.get(index2);
+
+                for (int k = 0; k < yList2.size(); ++k) {
+                    xList2.add(1.0 * (k + 1));
+                }
+
+                Line lineFitness = new Line("Fitness", xList2, yList2);
+                lineListFitness.add(lineFitness);
+                mlc2.setLineList(lineListFitness);
+
+                String pathSaveImage2 = dirSaveFile + "/fitness-loop_" + paraID + ".png";
+                mlc2.renderGraph(false, pathSaveImage2);
             }
+
         }
-        DataIO.writeFileExcel(dirSaveFile + "/1.csv", outputList);
+        // write excel file
+        String csvPath = dirSaveFile + "/" + Timetabling.manager.getDatasetName() + "_NumTest-" + numTest + ".csv";
+        DataIO.writeFileExcel(csvPath, outputList);
+        
+        // write infomation data file
+        String infoDataPath = dirSaveFile + "/info_data.txt";
+        DataIO.writeStringToFile(infoDataPath, Timetabling.manager.toString());
 
     }
 
