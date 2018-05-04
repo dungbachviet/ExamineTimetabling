@@ -533,8 +533,13 @@ public class ExamineTimetablingProblem {
             }
 
         }
+        // write excel file
         String csvPath = dirSaveFile + "/" + Timetabling.manager.getDatasetName() + "_NumTest-" + numTest + ".csv";
         DataIO.writeFileExcel(csvPath, outputList);
+        
+        // write infomation data file
+        String infoDataPath = dirSaveFile + "/info_data.txt";
+        DataIO.writeStringToFile(infoDataPath, Timetabling.manager.toString());
 
     }
 
