@@ -56,6 +56,7 @@ public class ExamineTimetablingProblem {
     //==============
     ExamineTimetablingManager manager;
 
+
     public HashMap<String, Area> hmIDToArea;
     public HashMap<String, Course> hmIDToCourse;
     public HashMap<String, ExamClass> hmIDToExamClass;
@@ -385,6 +386,7 @@ public class ExamineTimetablingProblem {
         ts.TwoStagesGreedy(S, currTest);
 
         // Cai thien chat luong loi giai su dung tabu-search
+
         IFunction[] obj = new IFunction[4];
         obj[0] = examGapObj;
         obj[1] = disproportionObj;
@@ -571,5 +573,6 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
+
 
 }
