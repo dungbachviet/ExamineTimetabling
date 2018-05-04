@@ -56,7 +56,6 @@ public class ExamineTimetablingProblem {
     //==============
     ExamineTimetablingManager manager;
 
-
     public HashMap<String, Area> hmIDToArea;
     public HashMap<String, Course> hmIDToCourse;
     public HashMap<String, ExamClass> hmIDToExamClass;
@@ -383,16 +382,15 @@ public class ExamineTimetablingProblem {
 
         MyTabuSearch ts = new MyTabuSearch();
 
+        // Phase 1 : Find the feasible solution (constraint violation = 0)
         ts.TwoStagesGreedy(S, currTest);
 
-        // Cai thien chat luong loi giai su dung tabu-search
-
+        // Phase : Improve the quality of solution (maintain the constraint violation to 0)
         IFunction[] obj = new IFunction[4];
         obj[0] = examGapObj;
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
-//        ts.mySearchMaintainConstraints(obj, S, 20, 60, 100000, 200, currTest);
         ts.mySearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
     }
 
@@ -400,10 +398,10 @@ public class ExamineTimetablingProblem {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
         System.out.println(Timetabling.manager.toString());
 
+        // Set up problem's model
         Timetabling.stateModel();
-//        Timetabling.solve();
-        // set parameter
 
+        // Set up parameters for Tabu Search
         tabulen = 20;
         maxTime = 10;
         maxIter = 100000;
@@ -548,7 +546,6 @@ public class ExamineTimetablingProblem {
 
     public static void testBatch(int nbTrials) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
-//        
 
         bestFitness = new ArrayList<>(nbTrials);
         timeRun = new ArrayList<>(nbTrials);
@@ -573,6 +570,5 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
-
 
 }
