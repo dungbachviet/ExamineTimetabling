@@ -104,4 +104,21 @@ public class DataIO {
             e.printStackTrace();
         }
     }
+
+    public static void writeStringToFile(String path, String content){
+        
+        try(FileWriter fw = new FileWriter(path)){
+            BufferedWriter bw = new BufferedWriter(fw);
+            
+            bw.write(content);
+            
+            bw.close();
+            fw.close();
+            System.out.println("\nWrite info data " + path + " done");
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+    }
+    
 }
