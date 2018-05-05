@@ -43,9 +43,17 @@ public class ExamClass implements Serializable {
     public Course getCourse() {
         return course;
     }
+    
+    public int getDifficultCourse(){
+        return course.getDifficultLevel();
+    }
 
     public ArrayList<String> getEnrollmentList() {
         return enrollmentList;
+    }
+    
+    public int getNumStudentEnroll(){
+        return enrollmentList.size();
     }
 
     public void setExamClassID(String examClassID) {
