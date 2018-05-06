@@ -63,17 +63,29 @@ public class MyLocalSearch {
     }
 
     public double calculateFitness(IFunction[] f) {
-        return 0.25 * (f[0].getValue() / ExamineTimetablingProblem.maxExamGap
-                - ExamineTimetablingProblem.minDisproportion / f[1].getValue()
-                + f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+//        System.out.println("f[0].getValue() = " + f[0].getValue() + ", ExamineTimetablingProblem.maxExamGap " + ExamineTimetablingProblem.maxExamGap);
+//        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
+//        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
+//        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+        return 0.25 * ((double)f[0].getValue() / ExamineTimetablingProblem.maxExamGap
+                - (double)ExamineTimetablingProblem.minDisproportion / f[1].getValue()
+                + (double)f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot
+                + (double)f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
     }
 
     public double calculateFitness(IFunction[] f, int delta1, int delta2, int delta3, int delta4) {
-        return 0.25 * ((f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap
-                - ExamineTimetablingProblem.minDisproportion/(f[1].getValue() + delta2)
-                + (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+//        System.out.println("f[0].getValue() = " + f[0].getValue() + ", ExamineTimetablingProblem.maxExamGap " + ExamineTimetablingProblem.maxExamGap);
+//        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
+//        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
+//        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+        return 0.25 * ((double)(f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap
+                - (double)ExamineTimetablingProblem.minDisproportion/(f[1].getValue() + delta2)
+                + (double)(f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot
+                + (double)(f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
     }
 
     public void myTabuSearchMaintainConstraints(IFunction[] f, IConstraint S,
@@ -473,7 +485,7 @@ public class MyLocalSearch {
         }
 
         double currentCeiling = calculateFitness(f);
-        double descendingSpeed = (1 - currentCeiling) / maxIter;
+        double descendingSpeed = (0.5 - currentCeiling) / maxIter;
 
         System.out.println("Degrated Ceiling, init S = " + S.violations() + ", best = " + best + ", Initial Ceiling : " + currentCeiling);
 
