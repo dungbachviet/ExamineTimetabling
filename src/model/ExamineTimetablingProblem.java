@@ -48,19 +48,22 @@ public class ExamineTimetablingProblem {
     public static ArrayList<ArrayList<Double>> violationList;
     public static ArrayList<ArrayList<Double>> fitnessList;
     
-    public static int maxExamGap = 1;
-    public static int minDisproportion = 1;
-    public static int maxSuitableTimeSlot = 1;
-    public static int maxDistributeDifficulty = 1;
+    public static int maxExamGap;
+    public static int minDisproportion;
+    public static int maxSuitableTimeSlot;
+    public static int maxDistributeDifficulty;
         
     public static int tabulen = 20;
-    public static int maxTime = 60;
-    public static int maxIter = 100000;
+    public static int maxTime = 70;
+    public static int maxIter = 200000;
     public static int maxStable = 200;
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
  
-    
+//    tabulen = 20;
+//        maxTime = 10;
+//        maxIter = 100000;
+//        maxStable = 200;
     
 
     //==============
@@ -111,11 +114,31 @@ public class ExamineTimetablingProblem {
 
     public ExamineTimetablingProblem() {
 
-//        manager = UtilManager.generateData(1);
-        manager = DataIO.readObject("src/dataset_timetabling/timetabling_data");
+        manager = UtilManager.generateData(1);
+//        manager = DataIO.readObject("src/dataset_timetabling/timetabling_data");
 
-//        DataIO.writeObject("timetabling_data", manager);
+        DataIO.writeObject("timetabling_data", manager);
 
+        maxExamGap = manager.getGapThreshold();
+        minDisproportion = manager.getDisproportinationThreshold();
+        maxSuitableTimeSlot = manager.getTrafficJamThreshold();
+        maxDistributeDifficulty = manager.getDifficultExamThreshold();
+        
+        
+//        maxExamGap = 1;
+//        minDisproportion = 1;
+//        maxSuitableTimeSlot = 1;
+//        maxDistributeDifficulty = 1;
+        
+        
+        
+        System.out.println("maxExamGap : " + maxExamGap);
+        System.out.println("minDisproportion : " + minDisproportion);
+        System.out.println("maxSuitableTimeSlot : " + maxSuitableTimeSlot);
+        System.out.println("maxDistributeDifficulty : " + maxDistributeDifficulty);
+        
+        
+  
 //        manager = DataIO.readObject("timetabling_data");
         hmIDToArea = manager.getHmIDToArea();
         hmIDToCourse = manager.getHmIDToCourse();
@@ -351,8 +374,8 @@ public class ExamineTimetablingProblem {
             commonExamGapsFunction[index] = commonExamGaps.get(index);
         }
 
-//        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
-        examGapObj = new FuncVarConst(ls, 0);
+        examGapObj = new Min(commonExamGapsFunction); // maximize the minimum
+//        examGapObj = new FuncVarConst(ls, 0);
 
         // Objective 2 : Avoid disproportination between exam class's number of student and room's capacity
         IFunction[] slotDisproportion = new IFunction[numExamClass];
@@ -458,10 +481,10 @@ public class ExamineTimetablingProblem {
 
         // set parameter
 
-        tabulen = 20;
-        maxTime = 10;
-        maxIter = 100000;
-        maxStable = 200;
+//        tabulen = 20;
+//        maxTime = 10;
+//        maxIter = 100000;
+//        maxStable = 200;
         
         
         Timetabling.testBatchDegratedCeiling(1);
