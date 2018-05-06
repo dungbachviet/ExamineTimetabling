@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
-
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/UtilManager.java</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/ExamineTimetablingProblem.java</file>
-            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/test_git.java</file>
-            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/gui_timetabling/MultipleLinesChart.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/ExamineTimetablingManager.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/MyLocalSearch.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/DataIO.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/Test_Statistic.java</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/Test.java</file>
-
-
         </group>
     </open-files>
 </project-private>
