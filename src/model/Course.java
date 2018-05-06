@@ -44,6 +44,10 @@ public class Course implements Serializable {
     public ArrayList<ExamClass> getExamClassList() {
         return examClassList;
     }
+    
+    public int getNumExamClasses(){
+        return examClassList.size();
+    }
 
     public ArrayList<Teacher> getTeacherList() {
         return teacherList;
