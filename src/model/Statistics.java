@@ -49,8 +49,8 @@ public class Statistics {
 
     public static void tabuStatistic(String dirSaveFile) {
 
-        int[] tabuLenArr = new int[]{20, 40};
-        int[] maxTimeArr = new int[]{5, 6};
+        int[] tabuLenArr = new int[]{30, 50};
+        int[] maxTimeArr = new int[]{20, 40};
         int[] maxIterArr = new int[]{30000, 50000};
         int[] maxStableArr = new int[]{200, 300};
         int numParameters = tabuLenArr.length;
@@ -205,8 +205,8 @@ public class Statistics {
 
     public static void annealingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{3, 4};
-        int[] maxIterArr = new int[]{6000, 10000};
+        int[] maxTimeArr = new int[]{20, 40};
+        int[] maxIterArr = new int[]{30000, 50000};
         double[] initialTempArr = new double[]{4000, 5000};
         double[] endingTempArr = new double[]{0.05, 0.1};
         int numParameters = maxTimeArr.length;
@@ -360,9 +360,9 @@ public class Statistics {
 
     public static void degratedCeilingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{3, 8};
+        int[] maxTimeArr = new int[]{20, 40};
         int[] maxIterArr = new int[]{30000, 50000};
-        double[] desiredFitnessArr = new double[]{0.5, 1.0};
+        double[] desiredFitnessArr = new double[]{1.0, 0.5};
         int numParameters = maxTimeArr.length;
         int numTest = 2;
 
