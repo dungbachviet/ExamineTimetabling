@@ -218,7 +218,7 @@ public class MyLocalSearch {
             x[i].setValuePropagate(x_best[i]);
         }
 
-        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.fitnessList2.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
 
     }
@@ -453,13 +453,13 @@ public class MyLocalSearch {
             x[i].setValuePropagate(x_best[i]);
         }
 
-        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.fitnessList2.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
 
     }
 
     public void myDegratedCeilingSearchMaintainConstraints(IFunction[] f, IConstraint S,
-            int maxTime, int maxIter, int currTest) {
+            int maxTime, int maxIter, double desiredFitness, int currTest) {
 
         // Get the initial time
         double t0 = System.currentTimeMillis();
@@ -485,7 +485,7 @@ public class MyLocalSearch {
         }
 
         double currentCeiling = calculateFitness(f);
-        double descendingSpeed = (0.5 - currentCeiling) / maxIter;
+        double descendingSpeed = (desiredFitness - currentCeiling) / maxIter;
 
         System.out.println("Degrated Ceiling, init S = " + S.violations() + ", best = " + best + ", Initial Ceiling : " + currentCeiling);
 
@@ -534,7 +534,7 @@ public class MyLocalSearch {
             x[i].setValuePropagate(x_best[i]);
         }
 
-        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.fitnessList2.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
     }
 
@@ -608,7 +608,7 @@ public class MyLocalSearch {
             x[i].setValuePropagate(x_best[i]);
         }
 
-        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.fitnessList3.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
     }
 
@@ -716,7 +716,7 @@ public class MyLocalSearch {
             x[i].setValuePropagate(x_best[i]);
         }
 
-        ExamineTimetablingProblem.fitnessList.add(currTest, iterationFitness);
+        ExamineTimetablingProblem.fitnessList2.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
     }
 
