@@ -3,13 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/UtilManager.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/core/VarInt.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/Statistics.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/statistics/1525678193764/violation-loop_DegratedCeiling.png</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/ExamineTimetablingProblem.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/statistics/1525679406142/info_data.txt</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/ExamineTimetablingManager.java</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/MyLocalSearch.java</file>
             <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/util/DataIO.java</file>
-
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/Teacher.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/model/ExamClass.java</file>
+            <file>file:/D:/PROGRAMS/PROGRAMMING/Java/NetBeans/LocalSearch/MyExamineTimtabling/ExamineTimetabling/src/statistics/1525678193764/fitness-loop_DegratedCeiling.png</file>
         </group>
     </open-files>
 </project-private>
