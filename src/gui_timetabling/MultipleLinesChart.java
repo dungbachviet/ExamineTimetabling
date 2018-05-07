@@ -171,9 +171,9 @@ public class MultipleLinesChart extends JFrame { // the class extends the JFrame
         renderer.setSeriesPaint(7, Color.CYAN);
 
         // sets thickness for series (using strokes)
-        renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-        renderer.setSeriesStroke(1, new BasicStroke(3.0f));
-        renderer.setSeriesStroke(2, new BasicStroke(2.0f));
+        renderer.setSeriesStroke(0, new BasicStroke(1.5f));
+        renderer.setSeriesStroke(1, new BasicStroke(1.0f));
+        renderer.setSeriesStroke(2, new BasicStroke(0.5f));
 
         // sets paint color for plot outlines
         plot.setOutlinePaint(Color.BLUE);
@@ -186,11 +186,11 @@ public class MultipleLinesChart extends JFrame { // the class extends the JFrame
         plot.setBackgroundPaint(Color.DARK_GRAY);
 
         // sets paint color for the grid lines
-        plot.setRangeGridlinesVisible(true);
-        plot.setRangeGridlinePaint(Color.BLACK);
+//        plot.setRangeGridlinesVisible(true);
+//        plot.setRangeGridlinePaint(Color.BLACK);
 
-        plot.setDomainGridlinesVisible(true);
-        plot.setDomainGridlinePaint(Color.BLACK);
+//        plot.setDomainGridlinesVisible(true);
+//        plot.setDomainGridlinePaint(Color.BLACK);
 
     }
 
