@@ -161,9 +161,14 @@ public class MultipleLinesChart extends JFrame { // the class extends the JFrame
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
         // sets paint color for each series
-        renderer.setSeriesPaint(0, Color.RED);
-        renderer.setSeriesPaint(1, Color.GREEN);
+        renderer.setSeriesPaint(0, Color.GREEN);
+        renderer.setSeriesPaint(1, Color.BLUE);
         renderer.setSeriesPaint(2, Color.YELLOW);
+        renderer.setSeriesPaint(3, Color.ORANGE);
+        renderer.setSeriesPaint(4, Color.PINK);
+        renderer.setSeriesPaint(5, Color.RED);
+        renderer.setSeriesPaint(6, Color.MAGENTA);
+        renderer.setSeriesPaint(7, Color.CYAN);
 
         // sets thickness for series (using strokes)
         renderer.setSeriesStroke(0, new BasicStroke(4.0f));

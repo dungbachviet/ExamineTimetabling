@@ -46,26 +46,27 @@ public class ExamineTimetablingProblem {
     public static ArrayList<Double> bestFitness;
     public static ArrayList<Double> timeRun;
     public static ArrayList<ArrayList<Double>> violationList;
-    public static ArrayList<ArrayList<Double>> fitnessList;
-    
+    public static ArrayList<ArrayList<Double>> fitnessList2;
+    public static ArrayList<ArrayList<Double>> fitnessList3;
+
     public static int maxExamGap;
     public static int minDisproportion;
     public static int maxSuitableTimeSlot;
     public static int maxDistributeDifficulty;
-        
+
     public static int tabulen = 20;
     public static int maxTime = 70;
     public static int maxIter = 200000;
     public static int maxStable = 200;
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
- 
+    
+    public static double desiredFitness = 0.5;
+
 //    tabulen = 20;
 //        maxTime = 10;
 //        maxIter = 100000;
 //        maxStable = 200;
-    
-
     //==============
     ExamineTimetablingManager manager;
 
@@ -114,8 +115,8 @@ public class ExamineTimetablingProblem {
 
     public ExamineTimetablingProblem() {
 
-        manager = UtilManager.generateData(1);
-//        manager = DataIO.readObject("src/dataset_timetabling/timetabling_data");
+//        manager = UtilManager.generateData(1);
+        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
 
         DataIO.writeObject("timetabling_data", manager);
 
@@ -123,22 +124,16 @@ public class ExamineTimetablingProblem {
         minDisproportion = manager.getDisproportinationThreshold();
         maxSuitableTimeSlot = manager.getTrafficJamThreshold();
         maxDistributeDifficulty = manager.getDifficultExamThreshold();
-        
-        
+
 //        maxExamGap = 1;
 //        minDisproportion = 1;
 //        maxSuitableTimeSlot = 1;
 //        maxDistributeDifficulty = 1;
-        
-        
-        
         System.out.println("maxExamGap : " + maxExamGap);
         System.out.println("minDisproportion : " + minDisproportion);
         System.out.println("maxSuitableTimeSlot : " + maxSuitableTimeSlot);
         System.out.println("maxDistributeDifficulty : " + maxDistributeDifficulty);
-        
-        
-  
+
 //        manager = DataIO.readObject("timetabling_data");
         hmIDToArea = manager.getHmIDToArea();
         hmIDToCourse = manager.getHmIDToCourse();
@@ -427,7 +422,7 @@ public class ExamineTimetablingProblem {
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
         ts.myImprovingTabuSearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
-        
+
         // Phase 3 : Continue improving the quality of solution
         ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
@@ -446,9 +441,9 @@ public class ExamineTimetablingProblem {
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
         ts.myAnnealingSearchMaintainConstraints(obj, S, maxTime, maxIter, initialTemp, endingTemp, currTest);
-        
+
         // Phase 3 : Continue improving the quality of solution
-        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest); 
+        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
 
     public void solveDegratedCeiling(int currTest) {
@@ -464,12 +459,11 @@ public class ExamineTimetablingProblem {
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
-        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
-        
-        // Phase 3 : Continue improving the quality of solution
-        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest); 
-    }
+        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
 
+        // Phase 3 : Continue improving the quality of solution
+        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
+    }
 
     public static void main(String[] args) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
@@ -477,16 +471,12 @@ public class ExamineTimetablingProblem {
 
         // Set up problem's model
         Timetabling.stateModel();
-        
 
         // set parameter
-
 //        tabulen = 20;
 //        maxTime = 10;
 //        maxIter = 100000;
 //        maxStable = 200;
-        
-        
         Timetabling.testBatchDegratedCeiling(1);
 //
 //        int[] tabuLenArr = new int[]{20, 40};
@@ -626,12 +616,15 @@ public class ExamineTimetablingProblem {
 
     }
 
-    public static void testBatchTabu(int nbTrials) {
-        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+    public static void testBatchTabu(int nbTrials, ExamineTimetablingProblem Timetabling) {
+        if (Timetabling == null) {
+            Timetabling = new ExamineTimetablingProblem();
+        }
 
         bestFitness = new ArrayList<>(nbTrials);
         timeRun = new ArrayList<>(nbTrials);
-        fitnessList = new ArrayList<>(nbTrials);
+        fitnessList2 = new ArrayList<>(nbTrials);
+        fitnessList3 = new ArrayList<>(nbTrials);
         violationList = new ArrayList<>(nbTrials);
 //        
         // nbTrials : number of trials (số lần chạy thử)
@@ -652,13 +645,16 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
-    
-        public static void testBatchAnnealing(int nbTrials) {
-        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+
+    public static void testBatchAnnealing(int nbTrials, ExamineTimetablingProblem Timetabling) {
+        if (Timetabling == null) {
+            Timetabling = new ExamineTimetablingProblem();
+        }
 
         bestFitness = new ArrayList<>(nbTrials);
         timeRun = new ArrayList<>(nbTrials);
-        fitnessList = new ArrayList<>(nbTrials);
+        fitnessList2 = new ArrayList<>(nbTrials);
+        fitnessList3 = new ArrayList<>(nbTrials);
         violationList = new ArrayList<>(nbTrials);
 //        
         // nbTrials : number of trials (số lần chạy thử)
@@ -679,13 +675,14 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
-    
+
     public static void testBatchDegratedCeiling(int nbTrials) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
 
         bestFitness = new ArrayList<>(nbTrials);
         timeRun = new ArrayList<>(nbTrials);
-        fitnessList = new ArrayList<>(nbTrials);
+        fitnessList2 = new ArrayList<>(nbTrials);
+        fitnessList3 = new ArrayList<>(nbTrials);
         violationList = new ArrayList<>(nbTrials);
 //        
         // nbTrials : number of trials (số lần chạy thử)
@@ -706,7 +703,5 @@ public class ExamineTimetablingProblem {
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
     }
-
-    
 
 }
