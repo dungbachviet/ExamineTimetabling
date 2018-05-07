@@ -29,12 +29,12 @@ public class UtilManager {
         int numAreas = 3;
 
         int numRooms = numAreas * 3;
-        int numCourses = 30;
+        int numCourses = 6;
 
         int numExamClasses = numCourses * 2;
-        int numExamDays = 30;
-        int numStudents = 1000;
-        int numTeachers = 50;
+        int numExamDays = 10;
+        int numStudents = 100;
+        int numTeachers = 6;
 
         System.out.println("\n============= <Generating data> =============");
         System.out.println("\nRandom data Level " + difficultLevelOfData);
