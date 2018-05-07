@@ -7,16 +7,13 @@
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/util/DataIO.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/algorithm/Parameter.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/util/UtilManager.java</file>
-            <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/statistics/1525608781833/violation-loop_Parameter1.png</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/Area.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/util/Test.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/util/Test_Statistic.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/MyLocalSearch.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/Teacher.java</file>
-            <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/statistics/1525608781833/fitness-loop_Parameter2.png</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/algorithm/FakeAlgorithm.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/ExamineTimetablingProblem.java</file>
-            <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/statistics/1525608781833/violation-loop_Parameter2.png</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/ExamineTimetablingManager.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/gui_timetabling/MultipleLinesChart.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/Room.java</file>
@@ -25,7 +22,6 @@
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/ExamClass.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/model/Course.java</file>
             <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/gui_timetabling/Line.java</file>
-            <file>file:/D:/workspace/Java/netbean-window/ExamineTimetabling/src/statistics/1525608781833/fitness-loop_Parameter1.png</file>
         </group>
     </open-files>
 </project-private>

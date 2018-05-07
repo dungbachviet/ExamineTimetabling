@@ -104,10 +104,10 @@ public class UtilManager {
         }
 
         ArrayList<Integer> jamLevelList = new ArrayList<>();
-        jamLevelList.add(4);        // mức độ tắc nghẽn của kíp 0 là mức 4 - mức cao nhất
-        jamLevelList.add(2);
-        jamLevelList.add(1);
+        jamLevelList.add(1);        // mức độ tắc nghẽn của kíp 0 là mức 4 - mức cao nhất
         jamLevelList.add(3);
+        jamLevelList.add(4);
+        jamLevelList.add(2);
 
         Random R = new Random(7);
 
