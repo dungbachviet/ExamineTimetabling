@@ -37,8 +37,8 @@ public class Statistics {
 
         // choose algorithm
         tabuStatistic(dirSaveFile);
-        annealingStatistic(dirSaveFile);
-        degratedCeilingStatistic(dirSaveFile);
+//        annealingStatistic(dirSaveFile);
+//        degratedCeilingStatistic(dirSaveFile);
 
         // write info data
         String infoDataPath = dirSaveFile + "/info_data.txt";
@@ -49,12 +49,12 @@ public class Statistics {
 
     public static void tabuStatistic(String dirSaveFile) {
 
-        int[] tabuLenArr = new int[]{30, 50};
-        int[] maxTimeArr = new int[]{20, 40};
-        int[] maxIterArr = new int[]{30000, 50000};
-        int[] maxStableArr = new int[]{200, 300};
+        int[] tabuLenArr = new int[]{30};
+        int[] maxTimeArr = new int[]{30};
+        int[] maxIterArr = new int[]{500};
+        int[] maxStableArr = new int[]{200};
         int numParameters = tabuLenArr.length;
-        int numTest = 2;
+        int numTest = 1;
 
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();
@@ -205,12 +205,12 @@ public class Statistics {
 
     public static void annealingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{20, 40};
-        int[] maxIterArr = new int[]{30000, 50000};
+        int[] maxTimeArr = new int[]{30, 40};
+        int[] maxIterArr = new int[]{50000, 100000};
         double[] initialTempArr = new double[]{4000, 5000};
         double[] endingTempArr = new double[]{0.05, 0.1};
         int numParameters = maxTimeArr.length;
-        int numTest = 2;
+        int numTest = 1;
 
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();
@@ -360,11 +360,11 @@ public class Statistics {
 
     public static void degratedCeilingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{20, 40};
-        int[] maxIterArr = new int[]{30000, 50000};
+        int[] maxTimeArr = new int[]{30, 40};
+        int[] maxIterArr = new int[]{50000, 100000};
         double[] desiredFitnessArr = new double[]{1.0, 0.5};
         int numParameters = maxTimeArr.length;
-        int numTest = 2;
+        int numTest = 1;
 
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();

@@ -118,8 +118,6 @@ public class ExamineTimetablingProblem {
         manager = UtilManager.generateData(1);
 //        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
 
-//        DataIO.writeObject("timetabling_data", manager);
-
         maxExamGap = manager.getGapThreshold();
         minDisproportion = manager.getDisproportinationThreshold();
         maxSuitableTimeSlot = manager.getTrafficJamThreshold();
@@ -422,6 +420,7 @@ public class ExamineTimetablingProblem {
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
         ts.myImprovingTabuSearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
+//        ts.myTabuSearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
 
         // Phase 3 : Continue improving the quality of solution
         ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
