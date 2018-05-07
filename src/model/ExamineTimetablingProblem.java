@@ -60,7 +60,7 @@ public class ExamineTimetablingProblem {
     public static int maxStable = 200;
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
-    
+
     public static double desiredFitness = 0.5;
 
 //    tabulen = 20;
@@ -115,10 +115,10 @@ public class ExamineTimetablingProblem {
 
     public ExamineTimetablingProblem() {
 
-//        manager = UtilManager.generateData(1);
-        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
+        manager = UtilManager.generateData(1);
+//        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
 
-        DataIO.writeObject("timetabling_data", manager);
+//        DataIO.writeObject("timetabling_data", manager);
 
         maxExamGap = manager.getGapThreshold();
         minDisproportion = manager.getDisproportinationThreshold();
@@ -477,7 +477,7 @@ public class ExamineTimetablingProblem {
 //        maxTime = 10;
 //        maxIter = 100000;
 //        maxStable = 200;
-        Timetabling.testBatchDegratedCeiling(1);
+        ExamineTimetablingProblem.testBatchDegratedCeiling(1, Timetabling);
 //
 //        int[] tabuLenArr = new int[]{20, 40};
 //        int[] maxTimeArr = new int[]{15, 20};
@@ -676,8 +676,11 @@ public class ExamineTimetablingProblem {
         System.out.println("Time = " + avg_t);
     }
 
-    public static void testBatchDegratedCeiling(int nbTrials) {
-        ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
+    public static void testBatchDegratedCeiling(int nbTrials, ExamineTimetablingProblem Timetabling) {
+
+        if (Timetabling == null) {
+            Timetabling = new ExamineTimetablingProblem();
+        }
 
         bestFitness = new ArrayList<>(nbTrials);
         timeRun = new ArrayList<>(nbTrials);

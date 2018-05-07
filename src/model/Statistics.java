@@ -247,7 +247,7 @@ public class Statistics {
             initialTemp = initialTempArr[indexPara];
             endingTemp = endingTempArr[indexPara];
 
-            ExamineTimetablingProblem.testBatchTabu(numTest, Timetabling);
+            ExamineTimetablingProblem.testBatchAnnealing(numTest, Timetabling);
 
             ArrayList<String> row1 = new ArrayList<>();
 
@@ -399,7 +399,7 @@ public class Statistics {
             maxIter = maxIterArr[indexPara];
             desiredFitness = desiredFitnessArr[indexPara];
 
-            ExamineTimetablingProblem.testBatchTabu(numTest, Timetabling);
+            ExamineTimetablingProblem.testBatchDegratedCeiling(numTest, Timetabling);
 
             ArrayList<String> row1 = new ArrayList<>();
 
