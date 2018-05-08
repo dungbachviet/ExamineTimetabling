@@ -192,10 +192,14 @@ public class ExamineTimetablingProblem {
         examClassToTeacher = new VarIntLS[numExamClass][numTeacher];
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             for (int teacherIndex = 0; teacherIndex < 2; teacherIndex++) {
-                examClassToTeacher[examClassIndex][teacherIndex] = new VarIntLS(ls, 0, numTeacher);
+                examClassToTeacher[examClassIndex][teacherIndex] = new VarIntLS(ls, 0, numTeacher-1);
             }
         }
 
+        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
+            S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
+        }
+        
         // Room Capacity Constraint
         int numStudentPerClass;
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
@@ -439,6 +443,8 @@ public class ExamineTimetablingProblem {
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
+//        ts.myAnnealingSearchMaintainConstraints(obj, S, maxTime, maxIter, initialTemp, endingTemp, currTest);
+
         ts.myAnnealingSearchMaintainConstraints(obj, S, maxTime, maxIter, initialTemp, endingTemp, currTest);
 
         // Phase 3 : Continue improving the quality of solution
@@ -463,6 +469,7 @@ public class ExamineTimetablingProblem {
         // Phase 3 : Continue improving the quality of solution
         ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
+
 
     public static void main(String[] args) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
@@ -615,6 +622,7 @@ public class ExamineTimetablingProblem {
 
     }
 
+
     public static void testBatchTabu(int nbTrials, ExamineTimetablingProblem Timetabling) {
         if (Timetabling == null) {
             Timetabling = new ExamineTimetablingProblem();
@@ -676,7 +684,6 @@ public class ExamineTimetablingProblem {
     }
 
     public static void testBatchDegratedCeiling(int nbTrials, ExamineTimetablingProblem Timetabling) {
-
         if (Timetabling == null) {
             Timetabling = new ExamineTimetablingProblem();
         }
@@ -704,6 +711,41 @@ public class ExamineTimetablingProblem {
         // Trung bình thời gian cho từng lần chạy thử
         avg_t = avg_t * 1.0 / nbTrials;
         System.out.println("Time = " + avg_t);
+    }
+
+    public void showSolution() {
+        System.out.println("\n================ Solution =======================");
+
+        for (int i = 0; i < numExamClass; ++i) {
+            
+            System.out.println("Lop " + (i + 1) + ": Ngay " + examDays[i].getValue() + ", Kip: " + examTimeSlots[i].getValue()
+                    + ", Phong: " + examRooms[i].getValue() + ", GV: " + examClassToTeacher[i][0].getValue() + "-" + examClassToTeacher[i][1].getValue()
+            );
+            String idExam = "ExamClass" + i;
+            System.out.println("Suc chua cua phong: " + roomSlots[examRooms[i].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
+            System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID() + ", Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0]) + ", Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1]));
+            System.out.println("Lich ban cua phong thi: " + hmIDToRoom.get("Room" + examRooms[i].getValue()).getBusyTimeList());
+//            System.out.println("GV1id: " + examClassToTeacher[i][0].getValue());
+//            System.out.println("GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()));
+//            System.out.println("GV2id: " + examClassToTeacher[i][1].getValue());
+//            System.out.println("GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()));
+            System.out.println("Lich ban cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getBusyTimeList());
+            System.out.println("Lich ban cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getBusyTimeList());
+            
+            System.out.println("=============================");
+        }
+        
+        System.out.println("\n================ Solution =======================");
+        
+        System.out.println("\n Ma tran chung sinh vien\n");
+        for(int i = 0; i < numExamClass-1; ++i){
+            for(int j = i+1; j<numExamClass; ++j){
+                if(commonStudents[i][j] > 0){
+                    System.out.println("(" + i + "," + j + ") = " + commonStudents[i][j]);
+                }
+            }
+        }
+        System.out.println("===================================");
     }
 
 }

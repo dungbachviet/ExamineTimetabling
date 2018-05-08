@@ -36,9 +36,12 @@ public class Statistics {
         String dirSaveFile = "src/statistics/" + System.currentTimeMillis();
 
         // choose algorithm
-        tabuStatistic(dirSaveFile);
+//        tabuStatistic(dirSaveFile);
 //        annealingStatistic(dirSaveFile);
-//        degratedCeilingStatistic(dirSaveFile);
+        degratedCeilingStatistic(dirSaveFile);
+        
+        //show solution
+        Timetabling.showSolution();
 
         // write info data
         String infoDataPath = dirSaveFile + "/info_data.txt";
@@ -54,7 +57,15 @@ public class Statistics {
         int[] maxIterArr = new int[]{500};
         int[] maxStableArr = new int[]{200};
         int numParameters = tabuLenArr.length;
-        int numTest = 1;
+        int numTest = 2;
+        
+        
+//        int[] tabuLenArr = new int[]{40};
+//        int[] maxTimeArr = new int[]{70};
+//        int[] maxIterArr = new int[]{20};
+//        int[] maxStableArr = new int[]{300};
+//        int numParameters = tabuLenArr.length;
+//        int numTest = 1;
 
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();
@@ -205,12 +216,21 @@ public class Statistics {
 
     public static void annealingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{30, 40};
-        int[] maxIterArr = new int[]{50000, 100000};
-        double[] initialTempArr = new double[]{4000, 5000};
-        double[] endingTempArr = new double[]{0.05, 0.1};
+        int[] maxTimeArr = new int[]{200, 200};
+        int[] maxIterArr = new int[]{300000, 500000};
+        double[] initialTempArr = new double[]{5000, 7000};
+        double[] endingTempArr = new double[]{0.05, 0.01};
         int numParameters = maxTimeArr.length;
-        int numTest = 1;
+        int numTest = 2;
+        
+        
+//        int[] maxTimeArr = new int[]{800};
+//        int[] maxIterArr = new int[]{400};
+//        double[] initialTempArr = new double[]{7000};
+//        double[] endingTempArr = new double[]{0.05};
+//        int numParameters = maxTimeArr.length;
+//        int numTest = 2;
+        
 
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();
@@ -360,12 +380,19 @@ public class Statistics {
 
     public static void degratedCeilingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{30, 40};
-        int[] maxIterArr = new int[]{50000, 100000};
-        double[] desiredFitnessArr = new double[]{1.0, 0.5};
+//        int[] maxTimeArr = new int[]{200, 200};
+////        int[] maxIterArr = new int[]{300000, 500000};
+//        double[] desiredFitnessArr = new double[]{0.45, 0.55};
+//        int numParameters = maxTimeArr.length;
+//        int numTest = 2;
+
+        int[] maxTimeArr = new int[]{60};
+        int[] maxIterArr = new int[]{100};
+        double[] desiredFitnessArr = new double[]{0.5};
         int numParameters = maxTimeArr.length;
         int numTest = 1;
-
+        
+        
         ArrayList<Line> lineViolationList = new ArrayList<>();
         ArrayList<Line> lineFitnessList = new ArrayList<>();
 
