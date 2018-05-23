@@ -46,7 +46,7 @@ public class MyLocalSearch {
 
         ArrayList<Double> iterationViolation = new ArrayList<Double>();
         int it = 0;
-        while (it < 10000 && S.violations() > 0) {
+        while (it < 20000 && S.violations() > 0) {
 
             VarIntLS sel_x = mms.selectMostViolatingVariable();
             int sel_v = mms.selectMostPromissingValue(sel_x);
@@ -63,29 +63,27 @@ public class MyLocalSearch {
     }
 
     public double calculateFitness(IFunction[] f) {
-        
+
 //        System.out.println("f[0].getValue() = " + f[0].getValue() + ", ExamineTimetablingProblem.maxExamGap " + ExamineTimetablingProblem.maxExamGap);
 //        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
 //        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
-        
-        return 0.25 * ((double)f[0].getValue() / ExamineTimetablingProblem.maxExamGap
-                - (double)ExamineTimetablingProblem.minDisproportion / f[1].getValue()
-                + (double)f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + (double)f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
+        return 0.25 * ((double) f[0].getValue() / ExamineTimetablingProblem.maxExamGap
+                - (double) ExamineTimetablingProblem.minDisproportion / f[1].getValue()
+                + (double) f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot
+                + (double) f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
     }
 
     public double calculateFitness(IFunction[] f, int delta1, int delta2, int delta3, int delta4) {
-        
+
 //        System.out.println("f[0].getValue() = " + f[0].getValue() + ", ExamineTimetablingProblem.maxExamGap " + ExamineTimetablingProblem.maxExamGap);
 //        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
 //        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
-        
-        return 0.25 * ((double)(f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap
-                - (double)ExamineTimetablingProblem.minDisproportion/(f[1].getValue() + delta2)
-                + (double)(f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + (double)(f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
+        return 0.25 * ((double) (f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap
+                - (double) ExamineTimetablingProblem.minDisproportion / (f[1].getValue() + delta2)
+                + (double) (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot
+                + (double) (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
     }
 
     public void myTabuSearchMaintainConstraints(IFunction[] f, IConstraint S,
@@ -214,8 +212,7 @@ public class MyLocalSearch {
             iterationFitness.add((double) calculateFitness(f));
 
         }
-        
-        
+
         for (int i = 0; i < x.length; i++) {
             x[i].setValuePropagate(x_best[i]);
         }
@@ -416,14 +413,13 @@ public class MyLocalSearch {
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
 
             // Choose the variable and its value randomly
-            int sel_i = UtilManager.randomInt(0, n-1);
+            int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());
 
             // Check if constraints are be maintaining to 0
             int deltaS = S.getAssignDelta(x[sel_i], sel_v);
             if (deltaS <= 0) {
-                
-              
+
                 // Get changes of each objectives
                 int deltaF1 = f[0].getAssignDelta(x[sel_i], sel_v);
                 int deltaF2 = f[1].getAssignDelta(x[sel_i], sel_v);
@@ -432,19 +428,32 @@ public class MyLocalSearch {
 
                 // Get new quality of neighbor
                 double newQuality = calculateFitness(f, deltaF1, deltaF2, deltaF3, deltaF4);
-                
-                if (newQuality > best) {
+                double prob = Double.MIN_VALUE;
+
+                if (newQuality > calculateFitness(f)) {
                     x[sel_i].setValuePropagate(sel_v);
-                    best = newQuality;
-                    for (int i = 0; i < x.length; i++) {
-                        x_best[i] = x[i].getValue();
+                    if (newQuality > best) {
+                        best = newQuality;
+                        for (int i = 0; i < x.length; i++) {
+                            x_best[i] = x[i].getValue();
+                        }
                     }
 
-                } else if (Math.random() <= Math.exp((calculateFitness(f) - newQuality) / currentTemp)) {
-                    x[sel_i].setValuePropagate(sel_v);
+                } else {
+                    prob = Math.exp((-calculateFitness(f) + newQuality) / currentTemp);
+                    System.out.println("denta fitness : " + (-calculateFitness(f) + newQuality));
+                    System.out.println("Phan tren mu : " + (-calculateFitness(f) + newQuality) / currentTemp);
+                    if (Math.random() <= prob) {
+                        x[sel_i].setValuePropagate(sel_v);
+                    }
+                }
+                if (prob != Double.MIN_VALUE) {
+                    System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality
+                            + ", best = " + best + ", Current Temperature : " + currentTemp + ", Prob : " + prob);
+                } else {
+                    System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best + ", Current Temperature : " + currentTemp);
                 }
 
-                System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best + ", Current Temperature : " + currentTemp);
                 currentTemp = currentTemp * descendingSpeed;
                 it++;
             }
@@ -498,7 +507,7 @@ public class MyLocalSearch {
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
 
             // Choose the variable and its value randomly
-            int sel_i = UtilManager.randomInt(0, n-1);
+            int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());
 
             // Check if constraints are be maintaining to 0
@@ -524,7 +533,7 @@ public class MyLocalSearch {
                 } else if (newQuality > currentCeiling) {
                     x[sel_i].setValuePropagate(sel_v);
                 }
-                
+
                 System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best + ", Current Ceiling : " + currentCeiling);
                 currentCeiling = currentCeiling + descendingSpeed;
                 it++;
@@ -576,7 +585,7 @@ public class MyLocalSearch {
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
 
             // Choose the variable and its value randomly
-            int sel_i = UtilManager.randomInt(0, n-1);
+            int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());
 
             // Check if constraints are be maintaining to 0
@@ -592,25 +601,24 @@ public class MyLocalSearch {
                 // Get new quality of neighbor
                 double newQuality = calculateFitness(f, deltaF1, deltaF2, deltaF3, deltaF4);
 
-                if (newQuality >= (best-sacrifice)) {
+                if (newQuality >= (best - sacrifice)) {
                     x[sel_i].setValuePropagate(sel_v);
-                    
+
                     if (newQuality > best) {
                         best = newQuality;
                         for (int i = 0; i < x.length; i++) {
                             x_best[i] = x[i].getValue();
                         }
                     }
-                    
 
                 }
-                
-                
-                
+
                 System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best);
                 it++;
-                
-                if (it % 500 == 0) sacrifice *= 0.98;
+
+                if (it % 500 == 0) {
+                    sacrifice *= 0.98;
+                }
             }
 
             iterationFitness.add((double) best);
@@ -624,7 +632,6 @@ public class MyLocalSearch {
         ExamineTimetablingProblem.bestFitness.add((double) best);
     }
 
-    
     public void myHillClimbingSearchMaintainConstraints(IFunction[] f, IConstraint S,
             int maxTime, int maxIter, int currTest) {
 
@@ -653,14 +660,13 @@ public class MyLocalSearch {
 
         System.out.println("Degrated Ceiling, init S = " + S.violations() + ", best = " + best);
 
-       
         Random R = new Random();
         ArrayList<Double> iterationFitness = new ArrayList<Double>();
         int it = 0;
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
 
             // Choose the variable and its value randomly
-            int sel_i = UtilManager.randomInt(0, n-1);
+            int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());
 
             // Check if constraints are be maintaining to 0
@@ -676,7 +682,7 @@ public class MyLocalSearch {
                 // Get new quality of neighbor
                 double newQuality = calculateFitness(f, deltaF1, deltaF2, deltaF3, deltaF4);
 
-                if (newQuality >= best)  {
+                if (newQuality >= best) {
                     x[sel_i].setValuePropagate(sel_v);
 
                     best = newQuality;
@@ -685,9 +691,7 @@ public class MyLocalSearch {
                     }
 
                 }
-                
-                
-                
+
                 System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best);
                 it++;
 
@@ -703,11 +707,11 @@ public class MyLocalSearch {
         ExamineTimetablingProblem.fitnessList3.add(currTest, iterationFitness);
         ExamineTimetablingProblem.bestFitness.add((double) best);
     }
-    
+
     public void myImprovingTabuSearchMaintainConstraints(IFunction[] f, IConstraint S,
             int tabulen, int maxTime, int maxIter, int maxStable, int currTest) {
         double t0 = System.currentTimeMillis();
-        
+
         VarIntLS[] x = S.getVariables();
         HashMap<VarIntLS, Integer> map = new HashMap<VarIntLS, Integer>();
         for (int i = 0; i < x.length; i++) {
@@ -751,15 +755,15 @@ public class MyLocalSearch {
         ArrayList<Double> iterationFitness = new ArrayList<Double>();
 
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
-            
+
             // Choose the variable and its value randomly
-            int sel_i = UtilManager.randomInt(0, n-1);
+            int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());
 
             // Check if constraints are be maintaining to 0
             int deltaS = S.getAssignDelta(x[sel_i], sel_v);
             if (deltaS <= 0) {
-                
+
                 // Get changes of each objectives
                 int deltaF1 = f[0].getAssignDelta(x[sel_i], sel_v);
                 int deltaF2 = f[1].getAssignDelta(x[sel_i], sel_v);
@@ -768,16 +772,17 @@ public class MyLocalSearch {
 
                 // Get new quality of neighbor
                 double newQuality = calculateFitness(f, deltaF1, deltaF2, deltaF3, deltaF4);
- 
+
                 // If neighbor don't belong to Tabu List || newQuality > best
                 if (tabu[sel_i][sel_v - minV] <= it
                         || newQuality > best) {
                     // Update nic (number of not improving successive iterations)
-                    if (newQuality <= best)
+                    if (newQuality <= best) {
                         nic++;
-                    else if (newQuality > best)
+                    } else if (newQuality > best) {
                         nic = 0;
-                    
+                    }
+
                     // Update the best solution
                     if (newQuality >= best) {
                         x[sel_i].setValuePropagate(sel_v);
@@ -789,20 +794,19 @@ public class MyLocalSearch {
                     }
                 }
 
-                
                 if (nic >= maxStable) {
                     System.out.println("TabuSearch::restart.....");
                     restartMaintainConstraint(x, S, tabu);
                     nic = 0;
                 }
-                    
+
                 System.out.println("Iter : " + it + ", S = " + S.violations() + ", Fitness = " + newQuality + ", best = " + best + ", nic = " + nic);
                 it++;
             }
-            
+
             iterationFitness.add((double) calculateFitness(f));
         }
-        
+
         for (int i = 0; i < x.length; i++) {
             x[i].setValuePropagate(x_best[i]);
         }

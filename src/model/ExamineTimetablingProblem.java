@@ -8,7 +8,10 @@ package model;
 import gui_timetabling.Line;
 import gui_timetabling.MultipleLinesChart;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.Implicate;
@@ -192,14 +195,15 @@ public class ExamineTimetablingProblem {
         examClassToTeacher = new VarIntLS[numExamClass][numTeacher];
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             for (int teacherIndex = 0; teacherIndex < 2; teacherIndex++) {
-                examClassToTeacher[examClassIndex][teacherIndex] = new VarIntLS(ls, 0, numTeacher-1);
+                examClassToTeacher[examClassIndex][teacherIndex] = new VarIntLS(ls, 0, numTeacher - 1);
             }
         }
 
+        // 2 giang vien duoc phan cung lop phai khac nhau
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
         }
-        
+
         // Room Capacity Constraint
         int numStudentPerClass;
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
@@ -211,19 +215,23 @@ public class ExamineTimetablingProblem {
         int sameCourseCodeClasslength = sameCourseCodeClass.size();
         for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
             ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
+            System.out.println("?????????????????????????/ =========>>>>> " + courseIndex + " -- " + listClasses);
 
             // Get timeSlot and days of exam classes having common course code
             int length = listClasses.size();
-            VarIntLS[] listTimeSlots = new VarIntLS[length];
-            VarIntLS[] listDays = new VarIntLS[length];
-            for (int index = 0; index < length; index++) {
-                listTimeSlots[index] = examTimeSlots[listClasses.get(index)];
-                listDays[index] = examDays[listClasses.get(index)];
-            }
+            if (length > 0) {
 
-            S.post(new AND(
-                    new IsEqual(new Max(listTimeSlots), new Min(listTimeSlots)),
-                    new IsEqual(new Max(listDays), new Min(listDays))));
+                VarIntLS[] listTimeSlots = new VarIntLS[length];
+                VarIntLS[] listDays = new VarIntLS[length];
+                for (int index = 0; index < length; index++) {
+                    listTimeSlots[index] = examTimeSlots[listClasses.get(index)];
+                    listDays[index] = examDays[listClasses.get(index)];
+                }
+
+                S.post(new AND(
+                        new IsEqual(new Max(listTimeSlots), new Min(listTimeSlots)),
+                        new IsEqual(new Max(listDays), new Min(listDays))));
+            }
         }
 
         // Constraint : Don't allow to violate the busy list of rooms
@@ -470,7 +478,6 @@ public class ExamineTimetablingProblem {
         ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
 
-
     public static void main(String[] args) {
         ExamineTimetablingProblem Timetabling = new ExamineTimetablingProblem();
         System.out.println(Timetabling.manager.toString());
@@ -622,7 +629,6 @@ public class ExamineTimetablingProblem {
 
     }
 
-
     public static void testBatchTabu(int nbTrials, ExamineTimetablingProblem Timetabling) {
         if (Timetabling == null) {
             Timetabling = new ExamineTimetablingProblem();
@@ -713,39 +719,326 @@ public class ExamineTimetablingProblem {
         System.out.println("Time = " + avg_t);
     }
 
-    public void showSolution() {
-        System.out.println("\n================ Solution =======================");
+    private ArrayList<Integer> getClassIDInDay(int day) {
+        ArrayList<Integer> classIDs = new ArrayList<>();
 
         for (int i = 0; i < numExamClass; ++i) {
-            
-            System.out.println("Lop " + (i + 1) + ": Ngay " + examDays[i].getValue() + ", Kip: " + examTimeSlots[i].getValue()
-                    + ", Phong: " + examRooms[i].getValue() + ", GV: " + examClassToTeacher[i][0].getValue() + "-" + examClassToTeacher[i][1].getValue()
-            );
-            String idExam = "ExamClass" + i;
-            System.out.println("Suc chua cua phong: " + roomSlots[examRooms[i].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
-            System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID() + ", Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0]) + ", Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1]));
-            System.out.println("Lich ban cua phong thi: " + hmIDToRoom.get("Room" + examRooms[i].getValue()).getBusyTimeList());
-//            System.out.println("GV1id: " + examClassToTeacher[i][0].getValue());
-//            System.out.println("GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()));
-//            System.out.println("GV2id: " + examClassToTeacher[i][1].getValue());
-//            System.out.println("GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()));
-            System.out.println("Lich ban cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getBusyTimeList());
-            System.out.println("Lich ban cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getBusyTimeList());
-            
-            System.out.println("=============================");
+            // add class into list if exam day of this class is day input
+            if (examDays[i].getValue() == day) {
+                classIDs.add(i);
+            }
         }
-        
-        System.out.println("\n================ Solution =======================");
-        
-        System.out.println("\n Ma tran chung sinh vien\n");
-        for(int i = 0; i < numExamClass-1; ++i){
-            for(int j = i+1; j<numExamClass; ++j){
-                if(commonStudents[i][j] > 0){
-                    System.out.println("(" + i + "," + j + ") = " + commonStudents[i][j]);
+
+        return classIDs;
+    }
+
+    private HashMap<Integer, ArrayList<Integer>> getClassIDInAllDays() {
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        Set<Integer> dayDomain = examDays[0].getDomain();
+
+        for (Integer day : dayDomain) {
+            map.put(day, getClassIDInDay(day));
+        }
+
+        return map;
+    }
+
+    public void checkConstraintOfSolution(boolean isShowDetail) {
+        System.out.println("\n================ Check constraint =======================");
+
+        ArrayList<Integer> vioList = new ArrayList<>();
+        System.out.println("Ràng buộc 1: 2 giảng viên trông thi cùng 1 lớp phải khác nhau");
+        int violation1 = 0;
+        for (int i = 0; i < numExamClass; ++i) {
+            if (isShowDetail) {
+                System.out.println("Lớp: " + i + ", GV1: " + examClassToTeacher[i][0].getValue() + ", GV2: " + examClassToTeacher[i][1].getValue());
+            }
+            if (examClassToTeacher[i][0].getValue() == examClassToTeacher[i][1].getValue()) {
+                ++violation1;
+            }
+        }
+        System.out.println("Số vi phạm ràng buộc 1: " + violation1);
+        vioList.add(violation1);
+
+        System.out.println("\nRàng buộc 2: phòng thi phải chứa đủ số lượng sinh viên của lớp thi");
+        int violation2 = 0;
+        for (int i = 0; i < numExamClass; ++i) {
+            int roomID = examRooms[i].getValue();
+            int numSlotOfRoom = hmIDToRoom.get("Room" + roomID).getNumSlots();
+            int numStudentEnroll = hmIDToExamClass.get("ExamClass" + i).getNumStudentEnroll();
+            if (isShowDetail) {
+                System.out.println("Lớp: " + i + ", Số SV của lớp: " + numStudentEnroll + ", phòng thi: " + roomID + ", Số ghế của phòng thi: " + numSlotOfRoom);
+            }
+            if (numSlotOfRoom < numStudentEnroll) {
+                ++violation2;
+            }
+        }
+        System.out.println("Số vi phạm ràng buộc 2: " + violation2);
+        vioList.add(violation2);
+
+        System.out.println("\nRàng buộc 3: Các lớp thi của cùng 1 học phần thì phải thi cùng thời điểm");
+        int violation3 = 0;
+        for (Course course : hmIDToCourse.values()) {
+            System.out.println("\nDanh sách các lớp thi của học phần: " + course.getCourseIDInt());
+            ArrayList<ExamClass> classList = course.getExamClassList();
+            Integer day = null;
+            Integer timeSlot = null;
+            for (ExamClass examClass : classList) {
+                int classID = examClass.getExamClassIDInt();
+                int dayOfClass = examDays[classID].getValue();
+                int timeSlotOfClass = examTimeSlots[classID].getValue();
+                if (isShowDetail) {
+                    System.out.println("Lớp: " + classID + ", Ngày thi: " + dayOfClass + ", Kíp thi: " + timeSlotOfClass);
+                }
+                if (day == null) {
+                    day = dayOfClass;
+                    timeSlot = timeSlotOfClass;
+                } else {
+                    if (day != dayOfClass || timeSlot != timeSlotOfClass) {
+                        ++violation3;
+                    }
                 }
             }
         }
+        System.out.println("Số vi phạm ràng buộc 3: " + violation3);
+        vioList.add(violation3);
+
+        System.out.println("\nRàng buộc 4: Phòng thi không được sử dụng vào ngày bận của phòng đó");
+        int violation4 = 0;
+        for (int roomIndex = 0; roomIndex < numRoom; ++roomIndex) {
+            Room room = hmIDToRoom.get("Room" + roomIndex);
+            // get list <day,timeslot> used
+            ArrayList<TimeUnit> usedList = new ArrayList<>();
+            for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
+                if (examRooms[classIndex].getValue() == roomIndex) {
+                    usedList.add(new TimeUnit(examDays[classIndex].getValue(), examTimeSlots[classIndex].getValue()));
+                }
+            }
+            ArrayList<TimeUnit> busyList = room.getBusyTimeList();
+            if (isShowDetail) {
+                System.out.println("\nPhòng: " + roomIndex);
+                System.out.println("Lịch bận:     " + busyList);
+                System.out.println("Lịch sử dụng: " + usedList);
+            }
+            for (TimeUnit timeUnit : usedList) {
+                if (busyList.contains(timeUnit)) {
+                    ++violation4;
+                }
+            }
+        }
+        System.out.println("Số vi phạm ràng buộc 4: " + violation4);
+        vioList.add(violation4);
+
+        System.out.println("\nRàng buộc 5: Giảng viên không được phân trông thi vào lịch bận của gv đó");
+        int violation5 = 0;
+        for (int teacherIndex = 0; teacherIndex < numTeacher; ++teacherIndex) {
+            Teacher teacher = hmIDToTeacher.get("Teacher" + teacherIndex);
+            // get list <day,timeslot> used
+            ArrayList<TimeUnit> usedList = new ArrayList<>();
+            for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
+                if (examClassToTeacher[classIndex][0].getValue() == teacherIndex
+                        || examClassToTeacher[classIndex][1].getValue() == teacherIndex) {
+                    usedList.add(new TimeUnit(examDays[classIndex].getValue(), examTimeSlots[classIndex].getValue()));
+                }
+            }
+            ArrayList<TimeUnit> busyList = teacher.getBusyTimeList();
+            if (isShowDetail) {
+                System.out.println("\nGiảng viên: " + teacherIndex);
+                System.out.println("Lịch bận:     " + busyList);
+                System.out.println("Lịch sử dụng: " + usedList);
+            }
+            for (TimeUnit timeUnit : usedList) {
+                if (busyList.contains(timeUnit)) {
+                    ++violation5;
+                }
+            }
+        }
+        System.out.println("Số vi phạm ràng buộc 5: " + violation5);
+        vioList.add(violation5);
+
+        System.out.println("\nRàng buộc 6: Tại mỗi thời điểm thi, các lớp thi phải khác phòng");
+        System.out.println("Ràng buộc 7: Tại mỗi thời điểm thi, các lớp thi phải khác giảng viên trông thi");
+        int violation6 = 0;
+        int violation7 = 0;
+
+        Set<TimeUnit> setTimeUnitHasExamClass = new HashSet<>();
+        for (int i = 0; i < numExamClass; ++i) {
+            setTimeUnitHasExamClass.add(new TimeUnit(examDays[i].getValue(), examTimeSlots[i].getValue()));
+        }
+        for (TimeUnit tu : setTimeUnitHasExamClass) {
+            int day = tu.getDay();
+            int timeSlot = tu.getTimeSlot();
+            if (isShowDetail) {
+                System.out.println("\nDanh sách các lớp thi vào ngày: " + day + ", Kíp: " + timeSlot);
+            }
+
+            for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
+                // lấy ra lớp thi vào <day,timeSlot>
+                int dayOfClass = examDays[classIndex].getValue();
+                int timeSlotOfClass = examTimeSlots[classIndex].getValue();
+                int roomIDOfClass = examRooms[classIndex].getValue();
+                int teacherIDOfClass1 = examClassToTeacher[classIndex][0].getValue();
+                int teacherIDOfClass2 = examClassToTeacher[classIndex][1].getValue();
+
+                if (day == dayOfClass && timeSlot == timeSlotOfClass) {
+                    if (isShowDetail) {
+                        System.out.println("Lớp: " + classIndex + ", phòng thi: " + roomIDOfClass
+                                + ", GV1: " + teacherIDOfClass1 + ", GV2: " + teacherIDOfClass2);
+                    }
+
+                }
+            }
+
+        }
+        // count violation 6, 7
+        for (int classIndex1 = 0; classIndex1 < numExamClass - 1; ++classIndex1) {
+            for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; ++classIndex2) {
+                if (examDays[classIndex1].getValue() == examDays[classIndex2].getValue()
+                        && examTimeSlots[classIndex1].getValue() == examTimeSlots[classIndex2].getValue()) {
+                    if (examRooms[classIndex1].getValue() == examRooms[classIndex2].getValue()) {
+                        ++violation6;
+                    }
+                    int teacher1_0 = examClassToTeacher[classIndex1][0].getValue();
+                    int teacher1_1 = examClassToTeacher[classIndex1][1].getValue();
+                    int teacher2_0 = examClassToTeacher[classIndex2][0].getValue();
+                    int teacher2_1 = examClassToTeacher[classIndex2][1].getValue();
+                    if (teacher1_0 == teacher2_0 || teacher1_0 == teacher2_1
+                            || teacher1_1 == teacher2_0 || teacher1_1 == teacher2_1) {
+                        ++violation7;
+                    }
+                }
+            }
+        }
+        System.out.println("Số vi phạm ràng buộc 6: " + violation6);
+        System.out.println("Số vi phạm ràng buộc 7: " + violation7);
+        vioList.add(violation6);
+        vioList.add(violation7);
+
+        System.out.println("\nRàng buộc 8: Nếu 2 lớp thi có chung sinh viên và thi cùng ngày thì phải thi cách nhau ít nhất 1 kíp thi");
+        int violation8 = 0;
+        for (int classIndex1 = 0; classIndex1 < numExamClass - 1; ++classIndex1) {
+            for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; ++classIndex2) {
+                if (commonStudents[classIndex1][classIndex2] > 0) {
+                    int day1 = examDays[classIndex1].getValue();
+                    int day2 = examDays[classIndex2].getValue();
+                    int timeSlot1 = examTimeSlots[classIndex1].getValue();
+                    int timeSlot2 = examTimeSlots[classIndex2].getValue();
+
+                    if (isShowDetail) {
+
+                        System.out.println("\nLớp: " + classIndex1 + ", ngày thi: " + day1 + ", kíp thi: " + timeSlot1);
+                        System.out.println("Lớp: " + classIndex2 + ", ngày thi: " + day2 + ", kíp thi: " + timeSlot2);
+                        System.out.println("Số sinh viên chung: " + commonStudents[classIndex1][classIndex2]);
+                    }
+
+                    if (day1 == day2 && Math.abs(timeSlot1 - timeSlot2) < 2) {
+                        ++violation8;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Số vi phạm ràng buộc 8: " + violation8);
+        vioList.add(violation8);
+
+        System.out.println("\nRàng buộc 9: Mỗi lớp thi có giảng viên trông thi không dạy môn của lớp thi đó");
+        int violation9 = 0;
+        for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
+            int courseIDOfClass = hmIDToExamClass.get("ExamClass" + classIndex).getCourse().getCourseIDInt();
+            ArrayList<Integer> teachingCourseListIDInt1 = hmIDToTeacher.get("Teacher" + examClassToTeacher[classIndex][0].getValue()).getTeachingCourseListIDInt();
+            ArrayList<Integer> teachingCourseListIDInt2 = hmIDToTeacher.get("Teacher" + examClassToTeacher[classIndex][1].getValue()).getTeachingCourseListIDInt();
+
+            if (isShowDetail) {
+                System.out.println("\nLớp: " + classIndex + ", học phần của lớp: " + courseIDOfClass);
+                System.out.println("Danh sách học phần mà GV1 dạy: " + teachingCourseListIDInt1);
+                System.out.println("Danh sách học phần mà GV2 dạy: " + teachingCourseListIDInt2);
+            }
+            if (teachingCourseListIDInt1.contains(courseIDOfClass)) {
+                ++violation9;
+            }
+            if (teachingCourseListIDInt2.contains(courseIDOfClass)) {
+                ++violation9;
+            }
+        }
+
+        System.out.println("Số vi phạm ràng buộc 9: " + violation9);
+        vioList.add(violation9);
+
+        System.out.println("");
+        int sumVio = 0;
+        for (int i = 0; i < vioList.size(); ++i) {
+            int vio = vioList.get(i);
+            System.out.println("Ràng buộc: " + (i + 1) + ", số vi phạm: " + vio);
+            sumVio += vio;
+        }
+
+        System.out.println("Tổng số vi phạm: " + sumVio);
+        System.out.println("\n================ </Check constraint> =======================");
+    }
+
+    public void showSolution() {
+        System.out.println("\n================ Solution =======================");
+
+        HashMap<Integer, ArrayList<Integer>> mapDayToClassIDs = getClassIDInAllDays();
+        ArrayList<Integer> orderedDays = new ArrayList<>(examDays[0].getDomain());
+        Collections.sort(orderedDays);
+
+        for (Integer day : orderedDays) {
+            ArrayList<Integer> classIdsInDay = mapDayToClassIDs.get(day);
+            System.out.println("============= <Day " + day + "> ================");
+            for (Integer classId : classIdsInDay) {
+                System.out.println("Lop " + (classId + 1) + ": Ngay " + examDays[classId].getValue() + ", Kip: " + examTimeSlots[classId].getValue()
+                        + ", Phong: " + examRooms[classId].getValue() + ", GV: " + examClassToTeacher[classId][0].getValue() + "-" + examClassToTeacher[classId][1].getValue());
+                String idExam = "ExamClass" + classId;
+                System.out.println("Suc chua cua phong: " + roomSlots[examRooms[classId].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
+                System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID());
+                System.out.println("Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[classId][0].getValue()).getTeachingCourseList());
+                System.out.println("Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[classId][1].getValue()).getTeachingCourseList());
+                System.out.println("Lich ban cua phong thi: " + rooms.get(examRooms[classId].getValue()).getBusyTimeList());
+                System.out.println("Lich ban cua GV1: " + teachers.get(examClassToTeacher[classId][0].getValue()).getBusyTimeList());
+                System.out.println("Lich ban cua GV2: " + teachers.get(examClassToTeacher[classId][1].getValue()).getBusyTimeList());
+
+            }
+            System.out.println("============= </Day " + day + "> ================\n");
+        }
+
+//        for (int i = 0; i < numExamClass; ++i) {
+//
+//            System.out.println("Lop " + (i + 1) + ": Ngay " + examDays[i].getValue() + ", Kip: " + examTimeSlots[i].getValue()
+//                    + ", Phong: " + examRooms[i].getValue() + ", GV: " + examClassToTeacher[i][0].getValue() + "-" + examClassToTeacher[i][1].getValue()
+//            );
+//            String idExam = "ExamClass" + i;
+//            System.out.println("Suc chua cua phong: " + roomSlots[examRooms[i].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
+//            System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID() + "\n Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getTeachingCourseList() + "\n Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getTeachingCourseList());
+//            System.out.println("Lich ban cua phong thi: " + rooms.get(examRooms[i].getValue()).getBusyTimeList());
+////            System.out.println("Lich ban cua phong thi: " + hmIDToRoom.get("Room" + examRooms[i].getValue()).getBusyTimeList());
+////            System.out.println("GV1id: " + examClassToTeacher[i][0].getValue());
+////            System.out.println("GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()));
+////            System.out.println("GV2id: " + examClassToTeacher[i][1].getValue());
+////            System.out.println("GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()));
+//            System.out.println("Lich ban cua GV1: " + teachers.get(examClassToTeacher[i][0].getValue()).getBusyTimeList());
+//            System.out.println("Lich ban cua GV2: " + teachers.get(examClassToTeacher[i][1].getValue()).getBusyTimeList());
+//
+////             System.out.println("Lich ban cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getBusyTimeList());
+////            System.out.println("Lich ban cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getBusyTimeList());
+//            System.out.println("=============================");
+//        }
+        System.out.println("\n================ </Solution> =======================\n");
+
+//        System.out.println("\n Các cặp lớp thi chung sinh viên và ngày, kíp thi của cặp lớp \n");
+//        for (int i = 0; i < numExamClass - 1; ++i) {
+//            for (int j = i + 1; j < numExamClass; ++j) {
+//                if (commonStudents[i][j] > 0) {
+//                    System.out.println("Class " + i + ", Day: " + examDays[i].getValue() + ", Slot: " + examTimeSlots[i].getValue());
+//                    System.out.println("Class " + i + ", Day: " + examDays[j].getValue() + ", Slot: " + examTimeSlots[j].getValue());
+//                    System.out.println(commonStudents[i][j] + " students\n");
+//
+//                }
+//            }
+//        }
         System.out.println("===================================");
+
+        checkConstraintOfSolution(true);
     }
 
 }
