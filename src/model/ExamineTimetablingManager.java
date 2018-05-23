@@ -57,41 +57,85 @@ public class ExamineTimetablingManager implements Serializable {
 
     public ArrayList<Area> getAreaList() {
         ArrayList<Area> list = new ArrayList<>();
+        Area[] areas = new Area[hmIDToArea.size()];
+        
         for (String id : hmIDToArea.keySet()) {
-            list.add(hmIDToArea.get(id));
+            Area a = hmIDToArea.get(id);
+            int idInt = a.getAreaIDInt();
+            areas[idInt] = a;
         }
+        for(int i = 0; i < areas.length; ++i){
+            list.add(areas[i]);
+        }
+        
         return list;
     }
 
     public ArrayList<Course> getCourseList() {
         ArrayList<Course> list = new ArrayList<>();
+        Course[] courses = new Course[hmIDToCourse.size()];
+        
         for (String id : hmIDToCourse.keySet()) {
-            list.add(hmIDToCourse.get(id));
+            Course c = hmIDToCourse.get(id);
+            int idInt = c.getCourseIDInt();
+            courses[idInt] = c;
         }
+        for(int i = 0; i < courses.length; ++i){
+            list.add(courses[i]);
+        }
+        
         return list;
     }
 
     public ArrayList<ExamClass> getExamClassList() {
         ArrayList<ExamClass> list = new ArrayList<>();
+        ExamClass[] examClass = new ExamClass[hmIDToExamClass.size()];
+        
         for (String id : hmIDToExamClass.keySet()) {
-            list.add(hmIDToExamClass.get(id));
+            ExamClass e = hmIDToExamClass.get(id);
+            int idInt = e.getExamClassIDInt();
+            examClass[idInt] = e;
         }
+        for(int i = 0; i < examClass.length; ++i){
+            list.add(examClass[i]);
+        }
+        
         return list;
     }
 
     public ArrayList<Room> getRoomList() {
+//        ArrayList<Room> list = new ArrayList<>();
         ArrayList<Room> list = new ArrayList<>();
+        Room[] rooms = new Room[hmIDToRoom.size()];
+        
         for (String id : hmIDToRoom.keySet()) {
-            list.add(hmIDToRoom.get(id));
+            Room r = hmIDToRoom.get(id);
+            System.out.println("Room = "+ r.toString());
+            int idInt = r.getRoomIDInt();
+            rooms[idInt] = r;
+            
         }
+        
+        for(int i = 0; i < rooms.length; ++i){
+            list.add(rooms[i]);
+        }
+        
         return list;
     }
 
     public ArrayList<Teacher> getTeacherList() {
-        ArrayList<Teacher> list = new ArrayList<>();
+        ArrayList<Teacher> list = new ArrayList<>(hmIDToTeacher.size());
+        Teacher[] teachers = new Teacher[hmIDToTeacher.size()];
+        
         for (String id : hmIDToTeacher.keySet()) {
-            list.add(hmIDToTeacher.get(id));
+            Teacher t = hmIDToTeacher.get(id);
+            int idInt = t.getTeacherIDInt();
+            teachers[idInt] = t;
         }
+        for(int i = 0; i < teachers.length; ++i){
+            list.add(teachers[i]);
+        }
+        
         return list;
     }
 

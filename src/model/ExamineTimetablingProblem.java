@@ -196,6 +196,8 @@ public class ExamineTimetablingProblem {
             }
         }
 
+        
+        // 2 giang vien duoc phan cung lop phai khac nhau
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
         }
@@ -569,16 +571,19 @@ public class ExamineTimetablingProblem {
                     + ", Phong: " + examRooms[i].getValue() + ", GV: " + examClassToTeacher[i][0].getValue() + "-" + examClassToTeacher[i][1].getValue()
             );
             String idExam = "ExamClass" + i;
-            System.out.println("Suc chua cua phong: " + roomSlots[examRooms[i].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
-            System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID() + ", Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0]) + ", Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1]));
-            System.out.println("Lich ban cua phong thi: " + hmIDToRoom.get("Room" + examRooms[i].getValue()).getBusyTimeList());
+            System.out.println("Suc chua cua phong: " +  roomSlots[examRooms[i].getValue()] + ", So SV thi: " + hmIDToExamClass.get(idExam).getNumStudentEnroll());
+            System.out.println("Hoc phan cua lop thi: " + hmIDToExamClass.get(idExam).getCourse().getCourseID() + "\n Hoc phan cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getTeachingCourseList() + "\n Hoc phan cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getTeachingCourseList());
+            System.out.println("Lich ban cua phong thi: " + rooms.get(examRooms[i].getValue()).getBusyTimeList());
+//            System.out.println("Lich ban cua phong thi: " + hmIDToRoom.get("Room" + examRooms[i].getValue()).getBusyTimeList());
 //            System.out.println("GV1id: " + examClassToTeacher[i][0].getValue());
 //            System.out.println("GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()));
 //            System.out.println("GV2id: " + examClassToTeacher[i][1].getValue());
 //            System.out.println("GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()));
-            System.out.println("Lich ban cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getBusyTimeList());
-            System.out.println("Lich ban cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getBusyTimeList());
+            System.out.println("Lich ban cua GV1: " + teachers.get(examClassToTeacher[i][0].getValue()).getBusyTimeList());
+            System.out.println("Lich ban cua GV2: " + teachers.get(examClassToTeacher[i][1].getValue()).getBusyTimeList());
             
+//             System.out.println("Lich ban cua GV1: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][0].getValue()).getBusyTimeList());
+//            System.out.println("Lich ban cua GV2: " + hmIDToTeacher.get("Teacher" + examClassToTeacher[i][1].getValue()).getBusyTimeList());
             System.out.println("=============================");
         }
         
@@ -588,7 +593,10 @@ public class ExamineTimetablingProblem {
         for(int i = 0; i < numExamClass-1; ++i){
             for(int j = i+1; j<numExamClass; ++j){
                 if(commonStudents[i][j] > 0){
-                    System.out.println("(" + i + "," + j + ") = " + commonStudents[i][j]);
+                    System.out.print("\n(" + i + "," + j + ") = " + commonStudents[i][j]);
+                    if(examDays[i].getValue() == examDays[j].getValue()){
+                        System.out.print(", Kip = " + examTimeSlots[i].getValue() + "-" + examTimeSlots[j].getValue() + "\n");
+                    }
                 }
             }
         }
