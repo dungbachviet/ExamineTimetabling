@@ -26,15 +26,28 @@ public class UtilManager {
     public static ExamineTimetablingManager generateData(int difficultLevelOfData) {
 
         // parameters control difficult level
-        int numAreas = 3;
+//        int numAreas = 3;
+//        
+//
+//        int numRooms = numAreas * 3;
+//        int numCourses = 6;
+//
+//        int numExamClasses = (int)(numCourses * 1.5);
+//        int numExamDays = 10;
+//        int numStudents = 100;
+//        int numTeachers = 6;
+
+
+        int numAreas = 100;
 
         int numRooms = numAreas * 3;
         int numCourses = 6;
 
         int numExamClasses = (int)(numCourses * 1.5);
-        int numExamDays = 10;
-        int numStudents = 100;
-        int numTeachers = 6;
+        int numExamDays = 50;
+        int numStudents = 60;
+        int numTeachers = 100;
+
 
         System.out.println("\n============= <Generating data> =============");
         System.out.println("\nRandom data Level " + difficultLevelOfData);

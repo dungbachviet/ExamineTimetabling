@@ -59,7 +59,7 @@ public class ExamineTimetablingProblem {
 
     public static int tabulen = 20;
     public static int maxTime = 70;
-    public static int maxIter = 200000;
+    public static int maxIter = 2000;
     public static int maxStable = 200;
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
@@ -119,6 +119,7 @@ public class ExamineTimetablingProblem {
     public ExamineTimetablingProblem() {
 
         manager = UtilManager.generateData(1);
+        DataIO.writeObject("src/dataset_timetabling/test_data.txt", manager);
 //        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
 
         maxExamGap = manager.getGapThreshold();
@@ -126,10 +127,7 @@ public class ExamineTimetablingProblem {
         maxSuitableTimeSlot = manager.getTrafficJamThreshold();
         maxDistributeDifficulty = manager.getDifficultExamThreshold();
 
-//        maxExamGap = 1;
-//        minDisproportion = 1;
-//        maxSuitableTimeSlot = 1;
-//        maxDistributeDifficulty = 1;
+
         System.out.println("maxExamGap : " + maxExamGap);
         System.out.println("minDisproportion : " + minDisproportion);
         System.out.println("maxSuitableTimeSlot : " + maxSuitableTimeSlot);
@@ -167,7 +165,7 @@ public class ExamineTimetablingProblem {
 //                if (commonStudents[classIndex1][classIndex2] > 0) {
 //                    numCommonClass++;
 //                }
-                System.out.println(commonStudents[classIndex1][classIndex2]);
+                System.out.println(classIndex1 + ", " + classIndex2 + " : " + commonStudents[classIndex1][classIndex2]);
 
             }
         }
@@ -199,19 +197,19 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // 2 giang vien duoc phan cung lop phai khac nhau
-        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
-            S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
-        }
+//        // Constraint 1 : 2 giang vien duoc phan cung lop phai khac nhau
+//        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
+//            S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
+//        }
+//
+//        // Constraint 2 : Room Capacity Constraint
+//        int numStudentPerClass;
+//        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
+//            numStudentPerClass = examClasses.get(examClassIndex).getEnrollmentList().size();
+//            S.post(new LessOrEqual(numStudentPerClass, new ElementTmp(roomSlots, examRooms[examClassIndex])));
+//        }
 
-        // Room Capacity Constraint
-        int numStudentPerClass;
-        for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
-            numStudentPerClass = examClasses.get(examClassIndex).getEnrollmentList().size();
-            S.post(new LessOrEqual(numStudentPerClass, new ElementTmp(roomSlots, examRooms[examClassIndex])));
-        }
-
-        // Constraint - same day and same time-slot if exam classes have the same course code
+        // Constraint 3 - same day and same time-slot if exam classes have the same course code
         int sameCourseCodeClasslength = sameCourseCodeClass.size();
         for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
             ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
@@ -234,85 +232,85 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // Constraint : Don't allow to violate the busy list of rooms
-        for (int roomIndex = 0; roomIndex < numRoom; roomIndex++) {
-            ArrayList<TimeUnit> busyList = rooms.get(roomIndex).getBusyTimeList();
-            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
-                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
-                    // examRooms[classIndex]=roomIndex & examDays[classIndex] belongs to busy day ==> not same timeslot
-                    S.post(new Implicate(
-                            new AND(
-                                    new IsEqual(examRooms[classIndex], roomIndex),
-                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay())
-                            ),
-                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())
-                    ));
-                }
-            }
-        }
+//        // Constraint 4 : Don't allow to violate the busy list of rooms
+//        for (int roomIndex = 0; roomIndex < numRoom; roomIndex++) {
+//            ArrayList<TimeUnit> busyList = rooms.get(roomIndex).getBusyTimeList();
+//            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+//                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+//                    // examRooms[classIndex]=roomIndex & examDays[classIndex] belongs to busy day ==> not same timeslot
+//                    S.post(new Implicate(
+//                            new AND(
+//                                    new IsEqual(examRooms[classIndex], roomIndex),
+//                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay())
+//                            ),
+//                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())
+//                    ));
+//                }
+//            }
+//        }
+//
+//        // Constraint 5: Don't allow to violate the busy list of teachers
+//        for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
+//            ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
+//            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+//                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
+//
+//                    S.post(new Implicate(
+//                            new AND(
+//                                    new OR(new IsEqual(examClassToTeacher[classIndex][0], teacherIndex),// is equal to teacher1
+//                                            new IsEqual(examClassToTeacher[classIndex][1], teacherIndex)),// is equal to teacher2
+//                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay()) // same day
+//                            ),
+//                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())// not same timeslot
+//                    ));
+//                }
+//            }
+//        }
 
-        // Constraint : Don't allow to violate the busy list of teachers
-        for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
-            ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
-            for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
-                for (int busyIndex = 0; busyIndex < busyList.size(); busyIndex++) {
-
-                    S.post(new Implicate(
-                            new AND(
-                                    new OR(new IsEqual(examClassToTeacher[classIndex][0], teacherIndex),// is equal to teacher1
-                                            new IsEqual(examClassToTeacher[classIndex][1], teacherIndex)),// is equal to teacher2
-                                    new IsEqual(examDays[classIndex], busyList.get(busyIndex).getDay()) // same day
-                            ),
-                            new NotEqual(examTimeSlots[classIndex], busyList.get(busyIndex).getTimeSlot())// not same timeslot
-                    ));
-                }
-            }
-        }
-
-        // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
-        // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
-        // Constraint : Any 2 exam classes having any same student are at least 1 timeslot apart
+        // Constraint 6: Don't allow any 2 exam classes to be placed at same room, same time
+        // Constraint 7: Don't allow any 2 exam classes having any same teacher to be placed at same time
+        // Constraint 8: Any 2 exam classes having any same student are at least 1 timeslot apart
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
-                // Same room, same day ==> not same timeslot
-                S.post(new Implicate(
-                        new AND(
-                                new IsEqual(examRooms[classIndex1], examRooms[classIndex2]), // same room
-                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // saem day
-                        ),
-                        new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]) // not same timeslot
-                ));
+//                // constraint 6 : same room, same day ==> not same timeslot
+//                S.post(new Implicate(
+//                        new AND(
+//                                new IsEqual(examRooms[classIndex1], examRooms[classIndex2]), // same room
+//                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // saem day
+//                        ),
+//                        new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]) // not same timeslot
+//                ));
 
-                // Same timeslot, same day ==> not any same teacher
-                S.post(new Implicate(
-                        new AND(
-                                new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]), // same timeslot
-                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // same day
-                        ),
-                        new AND( // 4 conditions : not any common teacher exists in 2 exam class at same time
-                                new NotEqual(
-                                        examClassToTeacher[classIndex1][1],
-                                        examClassToTeacher[classIndex2][0]
-                                ),
-                                new AND(
-                                        new NotEqual(
-                                                examClassToTeacher[classIndex1][1],
-                                                examClassToTeacher[classIndex2][1]
-                                        ),
-                                        new AND(
-                                                new NotEqual(
-                                                        examClassToTeacher[classIndex1][0],
-                                                        examClassToTeacher[classIndex2][0]
-                                                ),
-                                                new NotEqual(
-                                                        examClassToTeacher[classIndex1][0],
-                                                        examClassToTeacher[classIndex2][1]
-                                                ))
-                                )
-                        )
-                ));
+//                // Constraint 7 : Same timeslot, same day ==> not any same teacher
+//                S.post(new Implicate(
+//                        new AND(
+//                                new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]), // same timeslot
+//                                new IsEqual(examDays[classIndex1], examDays[classIndex2]) // same day
+//                        ),
+//                        new AND( // 4 conditions : not any common teacher exists in 2 exam class at same time
+//                                new NotEqual(
+//                                        examClassToTeacher[classIndex1][1],
+//                                        examClassToTeacher[classIndex2][0]
+//                                ),
+//                                new AND(
+//                                        new NotEqual(
+//                                                examClassToTeacher[classIndex1][1],
+//                                                examClassToTeacher[classIndex2][1]
+//                                        ),
+//                                        new AND(
+//                                                new NotEqual(
+//                                                        examClassToTeacher[classIndex1][0],
+//                                                        examClassToTeacher[classIndex2][0]
+//                                                ),
+//                                                new NotEqual(
+//                                                        examClassToTeacher[classIndex1][0],
+//                                                        examClassToTeacher[classIndex2][1]
+//                                                ))
+//                                )
+//                        )
+//                ));
 
-                // Same student, same day ==> |timeslot1 - timeslot2| >= 2
+                // Constraint 8 : Same student, same day ==> |timeslot1 - timeslot2| >= 2
                 VarIntLS[] convertIntToVarIntLS = new VarIntLS[2];
                 convertIntToVarIntLS[0] = new VarIntLS(ls, 0, 0);
                 convertIntToVarIntLS[1] = new VarIntLS(ls, commonStudents[classIndex1][classIndex2], commonStudents[classIndex1][classIndex2]);
@@ -335,28 +333,28 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // Constraint - Don't allow teacher to supervise any exam class having same courseID with her/him
-        for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
-            int courseID = examClasses.get(classIndex).getCourse().getCourseIDInt();
-            VarIntLS convertIntToVarIntLS = new VarIntLS(ls, courseID, courseID);
-            for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
-                ArrayList<Integer> courseList = teachers.get(teacherIndex).getTeachingCourseListIDInt();
-                for (int courseIndex = 0; courseIndex < courseList.size(); courseIndex++) {
-
-                    S.post(
-                            new Implicate(
-                                    new IsEqual(convertIntToVarIntLS, courseList.get(courseIndex)), // same courseID
-                                    new AND(
-                                            new NotEqual(examClassToTeacher[classIndex][0], teacherIndex), // the teacher can not be any one of 
-                                            new NotEqual(examClassToTeacher[classIndex][1], teacherIndex) // two teachers assigned that exam class
-                                    )
-                            )
-                    );
-
-                }
-
-            }
-        }
+//        // Constraint - Don't allow teacher to supervise any exam class having same courseID with her/him
+//        for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
+//            int courseID = examClasses.get(classIndex).getCourse().getCourseIDInt();
+//            VarIntLS convertIntToVarIntLS = new VarIntLS(ls, courseID, courseID);
+//            for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
+//                ArrayList<Integer> courseList = teachers.get(teacherIndex).getTeachingCourseListIDInt();
+//                for (int courseIndex = 0; courseIndex < courseList.size(); courseIndex++) {
+//
+//                    S.post(
+//                            new Implicate(
+//                                    new IsEqual(convertIntToVarIntLS, courseList.get(courseIndex)), // same courseID
+//                                    new AND(
+//                                            new NotEqual(examClassToTeacher[classIndex][0], teacherIndex), // the teacher can not be any one of 
+//                                            new NotEqual(examClassToTeacher[classIndex][1], teacherIndex) // two teachers assigned that exam class
+//                                    )
+//                            )
+//                    );
+//
+//                }
+//
+//            }
+//        }
 
         // Objective 1 : Maximize the minimum of gap between 2 exam times
         ArrayList<IFunction> commonExamGaps = new ArrayList<IFunction>();
@@ -464,18 +462,23 @@ public class ExamineTimetablingProblem {
         MyLocalSearch ts = new MyLocalSearch();
 
         // Phase 1 : Find the feasible solution (constraint violation = 0)
-        ts.TwoStagesGreedy(S, currTest);
+//        ts.TwoStagesGreedy(S, currTest);
+        ts.myTabuSearch(S, tabulen, maxTime, maxIter, maxStable);
+//        ts.TwoStagesGreedy(S, currTest);
+        
+//        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
+//        IFunction[] obj = new IFunction[4];
+//        obj[0] = examGapObj;
+//        obj[1] = disproportionObj;
+//        obj[2] = suitableTimeSlotObj;
+//        obj[3] = distributeDifficultyObj;
+//        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
+//
+//        // Phase 3 : Continue improving the quality of solution
+//        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
 
-        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
-        IFunction[] obj = new IFunction[4];
-        obj[0] = examGapObj;
-        obj[1] = disproportionObj;
-        obj[2] = suitableTimeSlotObj;
-        obj[3] = distributeDifficultyObj;
-        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
+    this.showSolution();
 
-        // Phase 3 : Continue improving the quality of solution
-        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
 
     public static void main(String[] args) {
@@ -490,7 +493,10 @@ public class ExamineTimetablingProblem {
 //        maxTime = 10;
 //        maxIter = 100000;
 //        maxStable = 200;
-        ExamineTimetablingProblem.testBatchDegratedCeiling(1, Timetabling);
+//        ExamineTimetablingProblem.testBatchDegratedCeiling(1, Timetabling);
+        Timetabling.solveDegratedCeiling(0);
+
+
 //
 //        int[] tabuLenArr = new int[]{20, 40};
 //        int[] maxTimeArr = new int[]{15, 20};

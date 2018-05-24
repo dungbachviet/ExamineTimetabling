@@ -1,0 +1,2 @@
+ParameterID maxTime maxIter desiredFitness MinFitness AverageFitness MaxFitness VarianceFitness MinTime AverageTime MaxTime VarianceTime 
+Para1 60 20000 0.5 0.48198830409356724 0.49087719298245613 0.499766081871345 0.00888888888888889 11.079 11.079 11.079 0.0 

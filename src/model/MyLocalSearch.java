@@ -46,8 +46,8 @@ public class MyLocalSearch {
 
         ArrayList<Double> iterationViolation = new ArrayList<Double>();
         int it = 0;
-        while (it < 20000 && S.violations() > 0) {
-
+//        while (it < 20000 && S.violations() > 0) {
+        while (S.violations() > 0) {
             VarIntLS sel_x = mms.selectMostViolatingVariable();
             int sel_v = mms.selectMostPromissingValue(sel_x);
 
@@ -59,7 +59,7 @@ public class MyLocalSearch {
         }
 
         System.out.println(S.violations());
-        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
+//        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
     }
 
     public double calculateFitness(IFunction[] f) {
@@ -347,7 +347,7 @@ public class MyLocalSearch {
                         + ", best = " + best + ", delta = " + minDelta
                         + ", nic = " + nic);
                 // update best
-                if (S.violations() <= best) {
+                if (S.violations() < best) {
                     best = S.violations();
                     for (int i = 0; i < x.length; i++) {
                         x_best[i] = x[i].getValue();
