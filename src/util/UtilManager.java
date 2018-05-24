@@ -31,7 +31,7 @@ public class UtilManager {
         int numRooms = numAreas * 3;
         int numCourses = 6;
 
-        int numExamClasses = (int)(numCourses * 1.5);
+        int numExamClasses = (int) (numCourses * 1.5);
         int numExamDays = 10;
         int numStudents = 100;
         int numTeachers = 6;
@@ -202,6 +202,7 @@ public class UtilManager {
             int numCourseOfStudent = randomInt(minCourseOfStudent, maxCourseOfStudent);
             idCourse = 0;
             int idExamClass = 0;
+            ArrayList<String> assignedCourseOfStudentList = new ArrayList<>();
             for (int j = 0; j < numCourseOfStudent; ++j) {
 //                String courseID = "Course" + String.valueOf(randomInt(0, numCourses - 1));
                 boolean loop = true;
@@ -209,25 +210,28 @@ public class UtilManager {
                     String courseID = "Course" + idCourse;
                     Course course = hmIDToCourse.get(courseID);
                     ExamClass examClass = course.getExamClassEmptyEnrollment();
-
-                    if (examClass == null) {
-                        ArrayList<ExamClass> examClassList = course.getExamClassList();
-                        if (!examClassList.isEmpty()) {
+                    if (!assignedCourseOfStudentList.contains(courseID)) {
+                        if (examClass == null) {
+                            ArrayList<ExamClass> examClassList = course.getExamClassList();
+                            if (!examClassList.isEmpty()) {
 //                        idExamClass = (idExamClass + 1) * (examClassList.size() - 1);
-                            examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
-                            // add connection student enrollment exam class
-                            if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
-                                loop = true;
+                                examClass = examClassList.get(randomInt(0, examClassList.size() - 1));
+                                // add connection student enrollment exam class
+                                if (examClass.getEnrollmentList().size() >= maxStudentOfClass) {
+                                    loop = true;
+                                } else {
+                                    examClass.addEnrollment(studentID);
+                                    assignedCourseOfStudentList.add(courseID);
+                                    loop = false;
+                                }
                             } else {
-                                examClass.addEnrollment(studentID);
-                                loop = false;
+                                loop = true;
                             }
                         } else {
-                            loop = true;
+                            loop = false;
+                            examClass.addEnrollment(studentID);
+                            assignedCourseOfStudentList.add(courseID);
                         }
-                    } else {
-                        loop = false;
-                        examClass.addEnrollment(studentID);
                     }
 
                     idCourse = (idCourse + 1) % (numCourses - 1);
