@@ -302,9 +302,12 @@ public class ExamineTimetablingManager implements Serializable {
 
         for (Course course : getCourseList()) {
             ArrayList<Integer> list = new ArrayList<>();
-            for (ExamClass examClass : course.getExamClassList()) {
-                list.add(examClass.getExamClassIDInt());
+            ArrayList<Integer> orderedExamClassListIDInt = course.getExamClassListIDInt();
+            Collections.sort(orderedExamClassListIDInt);
+            for (Integer examClassIDInt : orderedExamClassListIDInt) {
+                list.add(examClassIDInt);
             }
+            result.add(list);
         }
 
         return result;

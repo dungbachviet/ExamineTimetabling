@@ -1,0 +1,2 @@
+ParameterID TabuLen maxTime maxIter maxStable MinFitness AverageFitness MaxFitness VarianceFitness MinTime AverageTime MaxTime VarianceTime 
+Para1 30 30 500 200 0.25506483343315933 0.2639317457431334 0.27279865805310743 0.008866912309974051 9.552 9.552 9.552 0.0 

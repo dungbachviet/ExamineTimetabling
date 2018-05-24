@@ -45,6 +45,15 @@ public class Course implements Serializable {
         return examClassList;
     }
     
+    public ArrayList<Integer> getExamClassListIDInt(){
+        ArrayList<Integer> list = new ArrayList<>();
+        for(ExamClass e : examClassList){
+            list.add(Integer.parseInt(e.getExamClassID().substring("ExamClass".length())));
+        }
+        
+        return list;
+    }
+    
     public int getNumExamClasses(){
         return examClassList.size();
     }

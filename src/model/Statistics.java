@@ -52,12 +52,12 @@ public class Statistics {
 
     public static void tabuStatistic(String dirSaveFile) {
 
-        int[] tabuLenArr = new int[]{40, 50};
-        int[] maxTimeArr = new int[]{200, 200};
-        int[] maxIterArr = new int[]{300000, 500000};
-        int[] maxStableArr = new int[]{200, 300};
+        int[] tabuLenArr = new int[]{30};
+        int[] maxTimeArr = new int[]{30};
+        int[] maxIterArr = new int[]{500};
+        int[] maxStableArr = new int[]{200};
         int numParameters = tabuLenArr.length;
-        int numTest = 2;
+        int numTest = 1;
         
         
 //        int[] tabuLenArr = new int[]{40};
@@ -216,12 +216,17 @@ public class Statistics {
 
     public static void annealingStatistic(String dirSaveFile) {
 
-        int[] maxTimeArr = new int[]{200, 200};
-        int[] maxIterArr = new int[]{300000, 500000};
-        double[] initialTempArr = new double[]{5000, 7000};
-        double[] endingTempArr = new double[]{0.05, 0.01};
+//        int[] maxTimeArr = new int[]{200, 200};
+//        int[] maxIterArr = new int[]{300000, 500000};
+//        double[] initialTempArr = new double[]{5000, 7000};
+//        double[] endingTempArr = new double[]{0.05, 0.01};
+        
+        int[] maxTimeArr = new int[]{200};
+        int[] maxIterArr = new int[]{10000};
+        double[] initialTempArr = new double[]{0.05};
+        double[] endingTempArr = new double[]{0.0005};
         int numParameters = maxTimeArr.length;
-        int numTest = 2;
+        int numTest = 1;
         
         
 //        int[] maxTimeArr = new int[]{800};
@@ -387,7 +392,7 @@ public class Statistics {
 //        int numTest = 2;
 
         int[] maxTimeArr = new int[]{60};
-        int[] maxIterArr = new int[]{100};
+        int[] maxIterArr = new int[]{20000};
         double[] desiredFitnessArr = new double[]{0.5};
         int numParameters = maxTimeArr.length;
         int numTest = 1;

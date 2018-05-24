@@ -31,7 +31,7 @@ public class UtilManager {
         int numRooms = numAreas * 3;
         int numCourses = 6;
 
-        int numExamClasses = numCourses * 2;
+        int numExamClasses = (int)(numCourses * 1.5);
         int numExamDays = 10;
         int numStudents = 100;
         int numTeachers = 6;
@@ -104,10 +104,10 @@ public class UtilManager {
         }
 
         ArrayList<Integer> jamLevelList = new ArrayList<>();
-        jamLevelList.add(4);        // mức độ tắc nghẽn của kíp 0 là mức 4 - mức cao nhất
-        jamLevelList.add(2);
-        jamLevelList.add(1);
+        jamLevelList.add(1);        // mức độ tắc nghẽn của kíp 0 là mức 4 - mức cao nhất
         jamLevelList.add(3);
+        jamLevelList.add(4);
+        jamLevelList.add(2);
 
         Random R = new Random(7);
 
@@ -164,8 +164,13 @@ public class UtilManager {
 
             // add connection between course and teacher
             // each course taught by 2 teacher
+            ArrayList<String> addedTeacherID = new ArrayList<>();
             for (int j = 0; j < 2; ++j) {
                 String teacherID = "Teacher" + String.valueOf(randomInt(0, numTeachers - 1));
+                while (addedTeacherID.contains(teacherID)) {
+                    teacherID = "Teacher" + String.valueOf(randomInt(0, numTeachers - 1));
+                }
+                addedTeacherID.add(teacherID);
                 Teacher teacher = hmIDToTeacher.get(teacherID);
                 teacher.addCourse(course);
                 course.addTeacher(teacher);
@@ -220,7 +225,7 @@ public class UtilManager {
                         } else {
                             loop = true;
                         }
-                    }else{
+                    } else {
                         loop = false;
                         examClass.addEnrollment(studentID);
                     }
