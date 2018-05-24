@@ -7,9 +7,11 @@ package model;
 
 import gui_timetabling.Line;
 import gui_timetabling.MultipleLinesChart;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,6 +48,7 @@ import static util.UtilManager.randomDouble;
 public class ExamineTimetablingProblem {
 
     //==============
+    public static String dirStatistic = "./";
     public static ArrayList<Double> bestFitness;
     public static ArrayList<Double> timeRun;
     public static ArrayList<ArrayList<Double>> violationList;
@@ -58,9 +61,9 @@ public class ExamineTimetablingProblem {
     public static int maxDistributeDifficulty;
 
     public static int tabulen = 20;
-    public static int maxTime = 70;
-    public static int maxIter = 200000;
-    public static int maxStable = 200;
+    public static int maxTime = 500;
+    public static int maxIter = 10000;
+    public static int maxStable = 300;
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
 
@@ -117,19 +120,18 @@ public class ExamineTimetablingProblem {
     public int numCommonClass;
 
     public ExamineTimetablingProblem() {
+        System.out.println("Constructor ETP");
 
         manager = UtilManager.generateData(1);
+//        DataIO.writeObject("src/dataset_timetabling/test_data.txt", manager);
 //        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
-
+        System.out.println("125");
         maxExamGap = manager.getGapThreshold();
         minDisproportion = manager.getDisproportinationThreshold();
+        System.out.println("128");
         maxSuitableTimeSlot = manager.getTrafficJamThreshold();
         maxDistributeDifficulty = manager.getDifficultExamThreshold();
 
-//        maxExamGap = 1;
-//        minDisproportion = 1;
-//        maxSuitableTimeSlot = 1;
-//        maxDistributeDifficulty = 1;
         System.out.println("maxExamGap : " + maxExamGap);
         System.out.println("minDisproportion : " + minDisproportion);
         System.out.println("maxSuitableTimeSlot : " + maxSuitableTimeSlot);
@@ -167,7 +169,7 @@ public class ExamineTimetablingProblem {
 //                if (commonStudents[classIndex1][classIndex2] > 0) {
 //                    numCommonClass++;
 //                }
-                System.out.println(commonStudents[classIndex1][classIndex2]);
+                System.out.println(classIndex1 + ", " + classIndex2 + " : " + commonStudents[classIndex1][classIndex2]);
 
             }
         }
@@ -177,7 +179,7 @@ public class ExamineTimetablingProblem {
     }
 
     public void stateModel() {
-
+        System.out.println("Begin state model...");
         ls = new LocalSearchManager();
         S = new ConstraintSystem(ls);
 
@@ -199,19 +201,19 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // 2 giang vien duoc phan cung lop phai khac nhau
+        // Constraint 1 : 2 giang vien duoc phan cung lop phai khac nhau
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             S.post(new NotEqual(examClassToTeacher[examClassIndex][0], examClassToTeacher[examClassIndex][1]));
         }
 
-        // Room Capacity Constraint
+        // Constraint 2 : Room Capacity Constraint
         int numStudentPerClass;
         for (int examClassIndex = 0; examClassIndex < numExamClass; examClassIndex++) {
             numStudentPerClass = examClasses.get(examClassIndex).getEnrollmentList().size();
             S.post(new LessOrEqual(numStudentPerClass, new ElementTmp(roomSlots, examRooms[examClassIndex])));
         }
 
-        // Constraint - same day and same time-slot if exam classes have the same course code
+        // Constraint 3 - same day and same time-slot if exam classes have the same course code
         int sameCourseCodeClasslength = sameCourseCodeClass.size();
         for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
             ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
@@ -234,7 +236,7 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // Constraint : Don't allow to violate the busy list of rooms
+        // Constraint 4 : Don't allow to violate the busy list of rooms
         for (int roomIndex = 0; roomIndex < numRoom; roomIndex++) {
             ArrayList<TimeUnit> busyList = rooms.get(roomIndex).getBusyTimeList();
             for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
@@ -251,7 +253,7 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // Constraint : Don't allow to violate the busy list of teachers
+        // Constraint 5: Don't allow to violate the busy list of teachers
         for (int teacherIndex = 0; teacherIndex < numTeacher; teacherIndex++) {
             ArrayList<TimeUnit> busyList = teachers.get(teacherIndex).getBusyTimeList();
             for (int classIndex = 0; classIndex < numExamClass; classIndex++) {
@@ -269,12 +271,12 @@ public class ExamineTimetablingProblem {
             }
         }
 
-        // Constraint : Don't allow any 2 exam classes to be placed at same room, same time
-        // Constraint : Don't allow any 2 exam classes having any same teacher to be placed at same time
-        // Constraint : Any 2 exam classes having any same student are at least 1 timeslot apart
+        // Constraint 6: Don't allow any 2 exam classes to be placed at same room, same time
+        // Constraint 7: Don't allow any 2 exam classes having any same teacher to be placed at same time
+        // Constraint 8: Any 2 exam classes having any same student are at least 1 timeslot apart
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; classIndex1++) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; classIndex2++) {
-                // Same room, same day ==> not same timeslot
+                // constraint 6 : same room, same day ==> not same timeslot
                 S.post(new Implicate(
                         new AND(
                                 new IsEqual(examRooms[classIndex1], examRooms[classIndex2]), // same room
@@ -283,7 +285,7 @@ public class ExamineTimetablingProblem {
                         new NotEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]) // not same timeslot
                 ));
 
-                // Same timeslot, same day ==> not any same teacher
+                // Constraint 7 : Same timeslot, same day ==> not any same teacher
                 S.post(new Implicate(
                         new AND(
                                 new IsEqual(examTimeSlots[classIndex1], examTimeSlots[classIndex2]), // same timeslot
@@ -312,7 +314,7 @@ public class ExamineTimetablingProblem {
                         )
                 ));
 
-                // Same student, same day ==> |timeslot1 - timeslot2| >= 2
+                // Constraint 8 : Same student, same day ==> |timeslot1 - timeslot2| >= 2
                 VarIntLS[] convertIntToVarIntLS = new VarIntLS[2];
                 convertIntToVarIntLS[0] = new VarIntLS(ls, 0, 0);
                 convertIntToVarIntLS[1] = new VarIntLS(ls, commonStudents[classIndex1][classIndex2], commonStudents[classIndex1][classIndex2]);
@@ -464,18 +466,22 @@ public class ExamineTimetablingProblem {
         MyLocalSearch ts = new MyLocalSearch();
 
         // Phase 1 : Find the feasible solution (constraint violation = 0)
-        ts.TwoStagesGreedy(S, currTest);
+//        ts.TwoStagesGreedy(S, currTest);
+        ts.myTabuSearch(S, tabulen, maxTime, maxIter, maxStable);
+//        ts.TwoStagesGreedy(S, currTest);
 
-        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
-        IFunction[] obj = new IFunction[4];
-        obj[0] = examGapObj;
-        obj[1] = disproportionObj;
-        obj[2] = suitableTimeSlotObj;
-        obj[3] = distributeDifficultyObj;
-        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
+//        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
+//        IFunction[] obj = new IFunction[4];
+//        obj[0] = examGapObj;
+//        obj[1] = disproportionObj;
+//        obj[2] = suitableTimeSlotObj;
+//        obj[3] = distributeDifficultyObj;
+//        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
+//
+//        // Phase 3 : Continue improving the quality of solution
+//        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
+        this.showSolution();
 
-        // Phase 3 : Continue improving the quality of solution
-        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
     }
 
     public static void main(String[] args) {
@@ -490,7 +496,10 @@ public class ExamineTimetablingProblem {
 //        maxTime = 10;
 //        maxIter = 100000;
 //        maxStable = 200;
-        ExamineTimetablingProblem.testBatchDegratedCeiling(1, Timetabling);
+//        ExamineTimetablingProblem.testBatchDegratedCeiling(1, Timetabling);
+        Timetabling.solveDegratedCeiling(0);
+//        Timetabling.showSolution();
+
 //
 //        int[] tabuLenArr = new int[]{20, 40};
 //        int[] maxTimeArr = new int[]{15, 20};
@@ -626,7 +635,6 @@ public class ExamineTimetablingProblem {
 //        // write infomation data file
 //        String infoDataPath = dirSaveFile + "/info_data.txt";
 //        DataIO.writeStringToFile(infoDataPath, Timetabling.manager.toString());
-
     }
 
     public static void testBatchTabu(int nbTrials, ExamineTimetablingProblem Timetabling) {
@@ -974,6 +982,81 @@ public class ExamineTimetablingProblem {
 
         System.out.println("Tổng số vi phạm: " + sumVio);
         System.out.println("\n================ </Check constraint> =======================");
+        
+        writeExcelETM(dirStatistic + "Output.csv");
+    }
+
+    public void writeExcelETM(String filePath) {
+
+        Set<TimeUnit> setTimeUnitHasExamClass = new HashSet<>();
+        Set<Integer> setDayHasExamClass = new HashSet<Integer>();
+
+        for (int i = 0; i < numExamClass; ++i) {
+            setTimeUnitHasExamClass.add(new TimeUnit(examDays[i].getValue(), examTimeSlots[i].getValue()));
+            setDayHasExamClass.add(examDays[i].getValue());
+        }
+        ArrayList<Integer> orderedDay = new ArrayList<>(setDayHasExamClass);
+        Collections.sort(orderedDay);
+        ArrayList<TimeUnit> orderedTU = new ArrayList<>(setTimeUnitHasExamClass);
+        Collections.sort(orderedTU, new Comparator<TimeUnit>() {
+            @Override
+            public int compare(TimeUnit o1, TimeUnit o2) {
+                int day1 = o1.getDay();
+                int day2 = o2.getDay();
+                int slot1 = o1.getTimeSlot();
+                int slot2 = o2.getTimeSlot();
+
+                if (day1 != day2) {
+                    return day1 - day2;
+                }
+                return slot1 - slot2;
+            }
+        });
+
+        ArrayList<ArrayList<String>> result = new ArrayList<>();
+        ArrayList<String> colName = new ArrayList<>();
+        colName.add("x");
+        colName.add("Kíp 0");
+        colName.add("Kíp 1");
+        colName.add("Kíp 2");
+        colName.add("Kíp 3");
+        result.add(colName);
+
+        for (Integer day : orderedDay) {
+//            int day = tu.getDay();
+//            int timeSlot = tu.getTimeSlot();
+            ArrayList<String> row = new ArrayList<>();
+            row.add("Ngày " + day);
+
+            for (int slot = 0; slot < 3; ++slot) {
+                String oneCell = "";
+                for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
+                    // lấy ra lớp thi vào <day,timeSlot>
+                    int dayOfClass = examDays[classIndex].getValue();
+                    int timeSlotOfClass = examTimeSlots[classIndex].getValue();
+                    int roomIDOfClass = examRooms[classIndex].getValue();
+                    int teacherIDOfClass1 = examClassToTeacher[classIndex][0].getValue();
+                    int teacherIDOfClass2 = examClassToTeacher[classIndex][1].getValue();
+
+                    if (day == dayOfClass && slot == timeSlotOfClass) {
+//                        System.out.println("Lớp: " + classIndex + ", phòng thi: " + roomIDOfClass
+//                                + ", GV1: " + teacherIDOfClass1 + ", GV2: " + teacherIDOfClass2);
+                        ExamClass e = hmIDToExamClass.get("ExamClass" + classIndex);
+                        Room r = hmIDToRoom.get("Room" + roomIDOfClass);
+                        String oneClass = "(Lớp: "+classIndex + " - Mã HP: " + e.getCourse().getCourseIDInt() + 
+                                " - Số SV thi: " + e.getNumStudentEnroll() + " - Phòng thi: " + roomIDOfClass +
+                                " - Số chỗ của phòng: " + r.getNumSlots() + " - GV trông thi 1: " + teacherIDOfClass1 +
+                                " - GV trông thi 2: " + teacherIDOfClass2 + ")";
+                        oneCell += oneClass + " ";
+                    }
+                }
+                row.add(oneCell);
+            }
+            result.add(row);
+        }
+        
+        DataIO.writeFileExcel(filePath, result);
+
     }
 
     public void showSolution() {

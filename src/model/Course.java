@@ -81,6 +81,10 @@ public class Course implements Serializable {
     public void addExamClass(ExamClass examClass) {
         examClassList.add(examClass);
     }
+    
+    public void removeExamClass(ExamClass examClass){
+        examClassList.remove(examClass);
+    }
 
     public void addTeacher(Teacher teacher) {
         teacherList.add(teacher);

@@ -26,15 +26,27 @@ public class UtilManager {
     public static ExamineTimetablingManager generateData(int difficultLevelOfData) {
 
         // parameters control difficult level
+//        int numAreas = 3;
+//        
+//
+//        int numRooms = numAreas * 3;
+//        int numCourses = 6;
+//
+//        int numExamClasses = (int)(numCourses * 1.5);
+//        int numExamDays = 10;
+//        int numStudents = 100;
+//        int numTeachers = 6;
+
+
         int numAreas = 3;
 
-        int numRooms = numAreas * 3;
-        int numCourses = 6;
+        int numRooms = numAreas * 4;
+        int numCourses = 10;
 
-        int numExamClasses = (int) (numCourses * 1.5);
+        int numExamClasses = (int) (numCourses * 3);
         int numExamDays = 10;
-        int numStudents = 100;
-        int numTeachers = 6;
+        int numStudents = 500;
+        int numTeachers = 30;
 
         System.out.println("\n============= <Generating data> =============");
         System.out.println("\nRandom data Level " + difficultLevelOfData);
@@ -83,8 +95,8 @@ public class UtilManager {
 
         int numTabuDays = 3;
 
-        int minCourseOfStudent = 3;
-        int maxCourseOfStudent = 6;
+        int minCourseOfStudent = 2;
+        int maxCourseOfStudent = 3;
 
         ExamineTimetablingManager etm = new ExamineTimetablingManager();
 
@@ -238,12 +250,24 @@ public class UtilManager {
                 }
             }
         }
+        
+        // remove exam class has no student enroll
+//        ArrayList<String> emptyEnrollClassList = new ArrayList<>();
+//        for(String classID : hmIDToExamClass.keySet()){
+//            if(hmIDToExamClass.get(classID).getNumStudentEnroll() <= 0){
+//                emptyEnrollClassList.add(classID);
+//            }
+//        }
+//        for(String classID : emptyEnrollClassList){
+//            ExamClass e = hmIDToExamClass.get(classID);
+//            e.getCourse().removeExamClass(e);
+//            hmIDToExamClass.remove(classID);
+//        }
 
         etm.setHmIDToArea(hmIDToArea);
         etm.setHmIDToCourse(hmIDToCourse);
         etm.setHmIDToExamClass(hmIDToExamClass);
         etm.setHmIDToRoom(hmIDToRoom);
-        etm.setHmIDToTeacher(hmIDToTeacher);
         etm.setHmIDToTeacher(hmIDToTeacher);
         etm.setAvailableDayList(availableDayList);
         etm.setJamLevelList(jamLevelList);
