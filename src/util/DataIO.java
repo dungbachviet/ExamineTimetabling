@@ -92,7 +92,7 @@ public class DataIO {
             
             for(ArrayList<String> list : output){
                 for(String str : list){
-                    fw.write(str + " ");
+                    fw.write(str + ",");
                 }
                 fw.write("\n");
             }
