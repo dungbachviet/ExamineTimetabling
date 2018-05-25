@@ -63,7 +63,8 @@ public class ExamineTimetablingProblem {
     public static int tabulen = 20;
     public static int maxTime = 500;
     public static int maxIter = 10000;
-    public static int maxStable = 300;
+    public static int maxStable = 50;
+    
     public static double initialTemp = 5000;
     public static double endingTemp = 0.05;
 
@@ -123,7 +124,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Constructor ETP");
 
         manager = UtilManager.generateData(1);
-//        DataIO.writeObject("src/dataset_timetabling/test_data.txt", manager);
+        DataIO.writeObject("src/dataset_timetabling/test_data.txt", manager);
 //        manager = DataIO.readObject("src/dataset_timetabling/test_data.txt");
         System.out.println("125");
         maxExamGap = manager.getGapThreshold();
@@ -425,7 +426,8 @@ public class ExamineTimetablingProblem {
         MyLocalSearch ts = new MyLocalSearch();
 
         // Phase 1 : Find the feasible solution (constraint violation = 0)
-        ts.TwoStagesGreedy(S, currTest);
+//        ts.TwoStagesGreedy(S, currTest);
+        ts.myTabuSearch(S, 20, 0, 0, 50, currTest);
 
         // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
         IFunction[] obj = new IFunction[4];
@@ -433,6 +435,7 @@ public class ExamineTimetablingProblem {
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
+        
         ts.myImprovingTabuSearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
 //        ts.myTabuSearchMaintainConstraints(obj, S, tabulen, maxTime, maxIter, maxStable, currTest);
 
@@ -445,7 +448,8 @@ public class ExamineTimetablingProblem {
         MyLocalSearch ts = new MyLocalSearch();
 
         // Phase 1 : Find the feasible solution (constraint violation = 0)
-        ts.TwoStagesGreedy(S, currTest);
+//        ts.TwoStagesGreedy(S, currTest);
+        ts.myTabuSearch(S, 20, 0, 0, 50, currTest);
 
         // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
         IFunction[] obj = new IFunction[4];
@@ -453,8 +457,7 @@ public class ExamineTimetablingProblem {
         obj[1] = disproportionObj;
         obj[2] = suitableTimeSlotObj;
         obj[3] = distributeDifficultyObj;
-//        ts.myAnnealingSearchMaintainConstraints(obj, S, maxTime, maxIter, initialTemp, endingTemp, currTest);
-
+        
         ts.myAnnealingSearchMaintainConstraints(obj, S, maxTime, maxIter, initialTemp, endingTemp, currTest);
 
         // Phase 3 : Continue improving the quality of solution
@@ -467,19 +470,20 @@ public class ExamineTimetablingProblem {
 
         // Phase 1 : Find the feasible solution (constraint violation = 0)
 //        ts.TwoStagesGreedy(S, currTest);
-        ts.myTabuSearch(S, tabulen, maxTime, maxIter, maxStable);
-//        ts.TwoStagesGreedy(S, currTest);
+        ts.myTabuSearch(S, 20, 0, 0, 50, currTest);
 
-//        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
-//        IFunction[] obj = new IFunction[4];
-//        obj[0] = examGapObj;
-//        obj[1] = disproportionObj;
-//        obj[2] = suitableTimeSlotObj;
-//        obj[3] = distributeDifficultyObj;
-//        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
-//
-//        // Phase 3 : Continue improving the quality of solution
-//        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
+
+        // Phase 2 : Improve the quality of solution (maintain the constraint violation to 0)
+        IFunction[] obj = new IFunction[4];
+        obj[0] = examGapObj;
+        obj[1] = disproportionObj;
+        obj[2] = suitableTimeSlotObj;
+        obj[3] = distributeDifficultyObj;
+        ts.myDegratedCeilingSearchMaintainConstraints(obj, S, maxTime, maxIter, desiredFitness, currTest);
+
+        // Phase 3 : Continue improving the quality of solution
+        ts.myHillClimbingSearchMaintainConstraints(obj, S, maxTime, maxIter, currTest);
+        
         this.showSolution();
 
     }
@@ -755,7 +759,7 @@ public class ExamineTimetablingProblem {
         System.out.println("\n================ Check constraint =======================");
 
         ArrayList<Integer> vioList = new ArrayList<>();
-        System.out.println("Ràng buộc 1: 2 giảng viên trông thi cùng 1 lớp phải khác nhau");
+        System.out.println("RÀNG BUỘC 1: 2 GIẢNG VIÊN TRÔNG THI CÙNG 1 LỚP PHẢI KHÁC NHAU");
         int violation1 = 0;
         for (int i = 0; i < numExamClass; ++i) {
             if (isShowDetail) {
@@ -768,7 +772,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 1: " + violation1);
         vioList.add(violation1);
 
-        System.out.println("\nRàng buộc 2: phòng thi phải chứa đủ số lượng sinh viên của lớp thi");
+        System.out.println("\nRÀNG BUỘC 2: PHÒNG THI PHẢI CHỨA ĐỦ SỐ LƯỢNG SINH VIÊN CỦA LỚP THI");
         int violation2 = 0;
         for (int i = 0; i < numExamClass; ++i) {
             int roomID = examRooms[i].getValue();
@@ -784,7 +788,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 2: " + violation2);
         vioList.add(violation2);
 
-        System.out.println("\nRàng buộc 3: Các lớp thi của cùng 1 học phần thì phải thi cùng thời điểm");
+        System.out.println("\nRÀNG BUỘC 3: CÁC LỚP THI CỦA CÙNG 1 HỌC PHẦN THÌ PHẢI THI CÙNG THỜI ĐIỂM");
         int violation3 = 0;
         for (Course course : hmIDToCourse.values()) {
             System.out.println("\nDanh sách các lớp thi của học phần: " + course.getCourseIDInt());
@@ -811,7 +815,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 3: " + violation3);
         vioList.add(violation3);
 
-        System.out.println("\nRàng buộc 4: Phòng thi không được sử dụng vào ngày bận của phòng đó");
+        System.out.println("\nRÀNG BUỘC 4: PHÒNG THI KHÔNG ĐƯỢC SỬ DỤNG VÀO NGÀY BẬN CỦA PHÒNG ĐÓ");
         int violation4 = 0;
         for (int roomIndex = 0; roomIndex < numRoom; ++roomIndex) {
             Room room = hmIDToRoom.get("Room" + roomIndex);
@@ -837,7 +841,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 4: " + violation4);
         vioList.add(violation4);
 
-        System.out.println("\nRàng buộc 5: Giảng viên không được phân trông thi vào lịch bận của gv đó");
+        System.out.println("\nRÀNG BUỘC 5: GIẢNG VIÊN KHÔNG ĐƯỢC PHÂN TRÔNG THI VÀO LỊCH BẬN CỦA GV ĐÓ");
         int violation5 = 0;
         for (int teacherIndex = 0; teacherIndex < numTeacher; ++teacherIndex) {
             Teacher teacher = hmIDToTeacher.get("Teacher" + teacherIndex);
@@ -864,8 +868,8 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 5: " + violation5);
         vioList.add(violation5);
 
-        System.out.println("\nRàng buộc 6: Tại mỗi thời điểm thi, các lớp thi phải khác phòng");
-        System.out.println("Ràng buộc 7: Tại mỗi thời điểm thi, các lớp thi phải khác giảng viên trông thi");
+        System.out.println("\nRÀNG BUỘC 6: TẠI MỖI THỜI ĐIỂM THI, CÁC LỚP THI PHẢI KHÁC PHÒNG");
+        System.out.println("\nRÀNG BUỘC 7: TẠI MỖI THỜI ĐIỂM THI, CÁC LỚP THI PHẢI KHÁC GIẢNG VIÊN TRÔNG THI");
         int violation6 = 0;
         int violation7 = 0;
 
@@ -922,7 +926,7 @@ public class ExamineTimetablingProblem {
         vioList.add(violation6);
         vioList.add(violation7);
 
-        System.out.println("\nRàng buộc 8: Nếu 2 lớp thi có chung sinh viên và thi cùng ngày thì phải thi cách nhau ít nhất 1 kíp thi");
+        System.out.println("\nRÀNG BUỘC 8: NẾU 2 LỚP THI CÓ CHUNG SINH VIÊN VÀ THI CÙNG NGÀY THÌ PHẢI THI CÁCH NHAU ÍT NHẤT 1 KÍP THI");
         int violation8 = 0;
         for (int classIndex1 = 0; classIndex1 < numExamClass - 1; ++classIndex1) {
             for (int classIndex2 = classIndex1 + 1; classIndex2 < numExamClass; ++classIndex2) {
@@ -949,7 +953,7 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 8: " + violation8);
         vioList.add(violation8);
 
-        System.out.println("\nRàng buộc 9: Mỗi lớp thi có giảng viên trông thi không dạy môn của lớp thi đó");
+        System.out.println("\nRÀNG BUỘC 9: MỖI LỚP THI CÓ GIẢNG VIÊN TRÔNG THI KHÔNG DẠY MÔN CỦA LỚP THI ĐÓ");
         int violation9 = 0;
         for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
             int courseIDOfClass = hmIDToExamClass.get("ExamClass" + classIndex).getCourse().getCourseIDInt();
@@ -1043,7 +1047,7 @@ public class ExamineTimetablingProblem {
 //                                + ", GV1: " + teacherIDOfClass1 + ", GV2: " + teacherIDOfClass2);
                         ExamClass e = hmIDToExamClass.get("ExamClass" + classIndex);
                         Room r = hmIDToRoom.get("Room" + roomIDOfClass);
-                        String oneClass = "(Lớp: "+classIndex + " - Mã HP: " + e.getCourse().getCourseIDInt() + 
+                        String oneClass = "(Lớp: "+classIndex + " - Mã HP: " + e.getCourse().getCourseIDInt() + " - Độ Khó : " + e.getDifficultCourse() +
                                 " - Số SV thi: " + e.getNumStudentEnroll() + " - Phòng thi: " + roomIDOfClass +
                                 " - Số chỗ của phòng: " + r.getNumSlots() + " - GV trông thi 1: " + teacherIDOfClass1 +
                                 " - GV trông thi 2: " + teacherIDOfClass2 + ")";

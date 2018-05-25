@@ -59,7 +59,7 @@ public class MyLocalSearch {
         }
 
         System.out.println(S.violations());
-//        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
+        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
     }
 
     public double calculateFitness(IFunction[] f) {
@@ -68,10 +68,19 @@ public class MyLocalSearch {
 //        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
 //        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
-        return 0.25 * ((double) f[0].getValue() / ExamineTimetablingProblem.maxExamGap
-                - (double) ExamineTimetablingProblem.minDisproportion / f[1].getValue()
-                + (double) f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + (double) f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
+
+        double[] weights = {0, 0, 0, 1};
+
+//        return weights[0] * ((double) f[0].getValue() / ExamineTimetablingProblem.maxExamGap)
+//                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / f[1].getValue())
+//                + weights[2] * ((double) f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot)
+//                + weights[3] * ((double) f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+        
+        return weights[0] * ((double) f[0].getValue() / 1.0)
+                + weights[1] * (1.0/f[1].getValue())
+                + weights[2] * ((double) f[2].getValue() / 1.0)
+                + weights[3] * ((double) f[3].getValue() / 1.0);
     }
 
     public double calculateFitness(IFunction[] f, int delta1, int delta2, int delta3, int delta4) {
@@ -80,10 +89,19 @@ public class MyLocalSearch {
 //        System.out.println("f[1].getValue() = " + f[1].getValue() + ", ExamineTimetablingProblem.minDisproportion " + ExamineTimetablingProblem.minDisproportion);
 //        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
-        return 0.25 * ((double) (f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap
-                - (double) ExamineTimetablingProblem.minDisproportion / (f[1].getValue() + delta2)
-                + (double) (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot
-                + (double) (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
+
+
+        double[] weights = {0, 0, 0, 1};
+//        return weights[0] * ((double) (f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap)
+//                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / (f[1].getValue() + delta2))
+//                + weights[2] * ((double) (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot)
+//                + weights[3] * ((double) (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
+        
+        
+        return weights[0] * ((double) (f[0].getValue() + delta1) / 1.0)
+                + weights[1] * (1.0/(f[1].getValue() + delta2))
+                + weights[2] * ((double) (f[2].getValue() + delta3) / 1.0)
+                + weights[3] * ((double) (f[3].getValue() + delta4) / 1.0);
     }
 
     public void myTabuSearchMaintainConstraints(IFunction[] f, IConstraint S,
@@ -249,7 +267,7 @@ public class MyLocalSearch {
     }
 
     public void myTabuSearch(IConstraint S, int tabulen, int maxTime, int maxIter,
-            int maxStable) {
+            int maxStable, int currentTest) {
         double t0 = System.currentTimeMillis();
 
         VarIntLS[] x = S.getVariables();
@@ -279,7 +297,7 @@ public class MyLocalSearch {
         }
 
         int it = 0;
-        maxTime = maxTime * 1000;// convert into milliseconds
+//        maxTime = maxTime * 1000;// convert into milliseconds
 
         int best = S.violations();
         int[] x_best = new int[x.length];
@@ -290,9 +308,13 @@ public class MyLocalSearch {
         System.out.println("TabuSearch, init S = " + S.violations());
         int nic = 0;
         ArrayList<OneVariableValueMove> moves = new ArrayList<OneVariableValueMove>();
+        
+        ArrayList<Double> iterationViolation = new ArrayList<Double>();
         Random R = new Random();
-        while (it < maxIter && System.currentTimeMillis() - t0 < maxTime
-                && S.violations() > 0) {
+//        while (it < maxIter && System.currentTimeMillis() - t0 < maxTime
+//                && S.violations() > 0) {
+            
+        while (S.violations() > 0) {    
             int sel_i = -1;
             int sel_v = -1;
             int minDelta = 10000000;
@@ -326,8 +348,9 @@ public class MyLocalSearch {
 
             if (moves.size() <= 0) {
                 System.out.println("TabuSearch::restart.....");
+                int oldViolation = S.violations();
                 restartMaintainConstraint(x, S, tabu);
-                if (S.violations() == 0) {
+                if (S.violations() < oldViolation) {
                     best = S.violations();
                     for (int i = 0; i < x.length; i++) {
                         x_best[i] = x[i].getValue();
@@ -360,17 +383,34 @@ public class MyLocalSearch {
                     nic++;
                     if (nic > maxStable) {
                         System.out.println("TabuSearch::restart.....");
+                        
+                        int oldViolation = S.violations();
                         restartMaintainConstraint(x, S, tabu);
+                        
+                        if (S.violations() < oldViolation) {
+                            best = S.violations();
+                            for (int i = 0; i < x.length; i++) {
+                                x_best[i] = x[i].getValue();
+                            }
+                        }
+                        
                         nic = 0;
                     }
                 }
             }
             it++;
+            
+            iterationViolation.add((double) S.violations());
         }
         for (int i = 0; i < x.length; i++) {
             x[i].setValuePropagate(x_best[i]);
         }
-        System.out.println("TabuSearch, init S = " + S.violations());
+        System.out.println("TabuSearch, Found : S = " + S.violations());
+        System.out.println("Running Time : " + (System.currentTimeMillis() - t0)/1000);
+        System.out.println("Number of running iterations : " + it);
+        
+        ExamineTimetablingProblem.violationList.add(currentTest, iterationViolation);
+        
     }
 
     public void myAnnealingSearchMaintainConstraints(IFunction[] f, IConstraint S,
@@ -539,7 +579,7 @@ public class MyLocalSearch {
                 it++;
             }
 
-            iterationFitness.add((double) best);
+            iterationFitness.add((double) calculateFitness(f));
         }
 
         for (int i = 0; i < x.length; i++) {
@@ -617,11 +657,11 @@ public class MyLocalSearch {
                 it++;
 
                 if (it % 500 == 0) {
-                    sacrifice *= 0.98;
+                    sacrifice *= 0.9;
                 }
             }
 
-            iterationFitness.add((double) best);
+            iterationFitness.add((double) calculateFitness(f));
         }
 
         for (int i = 0; i < x.length; i++) {

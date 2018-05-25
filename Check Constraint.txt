@@ -1,0 +1,588 @@
+================ Check constraint =======================
+Ràng buộc 1: 2 giảng viên trông thi cùng 1 lớp phải khác nhau
+Lớp: 0, GV1: 13, GV2: 3
+Lớp: 1, GV1: 2, GV2: 7
+Lớp: 2, GV1: 0, GV2: 20
+Lớp: 3, GV1: 18, GV2: 27
+Lớp: 4, GV1: 28, GV2: 6
+Lớp: 5, GV1: 6, GV2: 9
+Lớp: 6, GV1: 2, GV2: 22
+Lớp: 7, GV1: 3, GV2: 25
+Lớp: 8, GV1: 12, GV2: 16
+Lớp: 9, GV1: 4, GV2: 18
+Số vi phạm ràng buộc 1: 0
+
+Ràng buộc 2: phòng thi phải chứa đủ số lượng sinh viên của lớp thi
+Lớp: 0, Số SV của lớp: 39, phòng thi: 14, Số ghế của phòng thi: 55
+Lớp: 1, Số SV của lớp: 34, phòng thi: 21, Số ghế của phòng thi: 77
+Lớp: 2, Số SV của lớp: 18, phòng thi: 53, Số ghế của phòng thi: 54
+Lớp: 3, Số SV của lớp: 0, phòng thi: 14, Số ghế của phòng thi: 55
+Lớp: 4, Số SV của lớp: 28, phòng thi: 23, Số ghế của phòng thi: 61
+Lớp: 5, Số SV của lớp: 36, phòng thi: 47, Số ghế của phòng thi: 87
+Lớp: 6, Số SV của lớp: 37, phòng thi: 58, Số ghế của phòng thi: 74
+Lớp: 7, Số SV của lớp: 0, phòng thi: 53, Số ghế của phòng thi: 54
+Lớp: 8, Số SV của lớp: 33, phòng thi: 29, Số ghế của phòng thi: 69
+Lớp: 9, Số SV của lớp: 30, phòng thi: 23, Số ghế của phòng thi: 61
+Số vi phạm ràng buộc 2: 0
+
+Ràng buộc 3: Các lớp thi của cùng 1 học phần thì phải thi cùng thời điểm
+
+Danh sách các lớp thi của học phần: 0
+Lớp: 0, Ngày thi: 4, Kíp thi: 0
+Lớp: 4, Ngày thi: 4, Kíp thi: 0
+Lớp: 8, Ngày thi: 4, Kíp thi: 0
+
+Danh sách các lớp thi của học phần: 2
+Lớp: 2, Ngày thi: 2, Kíp thi: 0
+Lớp: 6, Ngày thi: 2, Kíp thi: 0
+
+Danh sách các lớp thi của học phần: 1
+Lớp: 1, Ngày thi: 0, Kíp thi: 1
+Lớp: 5, Ngày thi: 0, Kíp thi: 1
+Lớp: 9, Ngày thi: 0, Kíp thi: 1
+
+Danh sách các lớp thi của học phần: 4
+
+Danh sách các lớp thi của học phần: 3
+Lớp: 3, Ngày thi: 0, Kíp thi: 0
+Lớp: 7, Ngày thi: 0, Kíp thi: 0
+Số vi phạm ràng buộc 3: 0
+
+Ràng buộc 4: Phòng thi không được sử dụng vào ngày bận của phòng đó
+
+Phòng: 0
+Lịch bận:     [TimeUnit{13, 3}, TimeUnit{5, 1}, TimeUnit{0, 2}]
+Lịch sử dụng: []
+
+Phòng: 1
+Lịch bận:     [TimeUnit{12, 2}, TimeUnit{13, 3}, TimeUnit{14, 1}]
+Lịch sử dụng: []
+
+Phòng: 2
+Lịch bận:     [TimeUnit{12, 1}, TimeUnit{14, 3}, TimeUnit{10, 2}, TimeUnit{11, 3}]
+Lịch sử dụng: []
+
+Phòng: 3
+Lịch bận:     [TimeUnit{13, 0}, TimeUnit{19, 3}, TimeUnit{9, 1}, TimeUnit{15, 0}, TimeUnit{17, 0}]
+Lịch sử dụng: []
+
+Phòng: 4
+Lịch bận:     [TimeUnit{18, 2}, TimeUnit{6, 0}, TimeUnit{11, 3}]
+Lịch sử dụng: []
+
+Phòng: 5
+Lịch bận:     [TimeUnit{14, 0}, TimeUnit{5, 2}, TimeUnit{5, 3}, TimeUnit{11, 1}, TimeUnit{6, 0}]
+Lịch sử dụng: []
+
+Phòng: 6
+Lịch bận:     [TimeUnit{18, 1}, TimeUnit{8, 0}, TimeUnit{14, 3}, TimeUnit{6, 0}]
+Lịch sử dụng: []
+
+Phòng: 7
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{15, 3}, TimeUnit{11, 3}]
+Lịch sử dụng: []
+
+Phòng: 8
+Lịch bận:     [TimeUnit{12, 2}, TimeUnit{2, 0}, TimeUnit{7, 3}]
+Lịch sử dụng: []
+
+Phòng: 9
+Lịch bận:     [TimeUnit{13, 0}, TimeUnit{2, 3}, TimeUnit{15, 3}]
+Lịch sử dụng: []
+
+Phòng: 10
+Lịch bận:     [TimeUnit{13, 1}, TimeUnit{10, 2}, TimeUnit{0, 2}]
+Lịch sử dụng: []
+
+Phòng: 11
+Lịch bận:     [TimeUnit{2, 0}, TimeUnit{9, 3}, TimeUnit{4, 2}, TimeUnit{6, 0}]
+Lịch sử dụng: []
+
+Phòng: 12
+Lịch bận:     [TimeUnit{1, 2}, TimeUnit{18, 0}, TimeUnit{3, 2}, TimeUnit{11, 3}]
+Lịch sử dụng: []
+
+Phòng: 13
+Lịch bận:     [TimeUnit{18, 0}, TimeUnit{18, 1}, TimeUnit{9, 0}, TimeUnit{10, 0}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 14
+Lịch bận:     [TimeUnit{2, 0}, TimeUnit{19, 0}, TimeUnit{5, 0}]
+Lịch sử dụng: [TimeUnit{4, 0}, TimeUnit{0, 0}]
+
+Phòng: 15
+Lịch bận:     [TimeUnit{12, 3}, TimeUnit{2, 2}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 16
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{13, 2}, TimeUnit{11, 1}]
+Lịch sử dụng: []
+
+Phòng: 17
+Lịch bận:     [TimeUnit{12, 2}, TimeUnit{18, 1}, TimeUnit{3, 0}, TimeUnit{3, 3}, TimeUnit{15, 3}]
+Lịch sử dụng: []
+
+Phòng: 18
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{9, 1}, TimeUnit{10, 1}, TimeUnit{15, 2}, TimeUnit{6, 1}]
+Lịch sử dụng: []
+
+Phòng: 19
+Lịch bận:     [TimeUnit{7, 0}, TimeUnit{8, 1}, TimeUnit{9, 1}, TimeUnit{0, 2}, TimeUnit{11, 3}]
+Lịch sử dụng: []
+
+Phòng: 20
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{3, 3}, TimeUnit{10, 2}]
+Lịch sử dụng: []
+
+Phòng: 21
+Lịch bận:     [TimeUnit{7, 2}, TimeUnit{4, 3}, TimeUnit{10, 3}]
+Lịch sử dụng: [TimeUnit{0, 1}]
+
+Phòng: 22
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{3, 0}, TimeUnit{14, 2}]
+Lịch sử dụng: []
+
+Phòng: 23
+Lịch bận:     [TimeUnit{13, 2}, TimeUnit{10, 1}, TimeUnit{0, 3}, TimeUnit{6, 2}]
+Lịch sử dụng: [TimeUnit{4, 0}, TimeUnit{0, 1}]
+
+Phòng: 24
+Lịch bận:     [TimeUnit{1, 2}, TimeUnit{7, 3}, TimeUnit{2, 3}, TimeUnit{15, 1}, TimeUnit{16, 2}]
+Lịch sử dụng: []
+
+Phòng: 25
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{18, 3}, TimeUnit{19, 1}, TimeUnit{5, 1}, TimeUnit{16, 0}]
+Lịch sử dụng: []
+
+Phòng: 26
+Lịch bận:     [TimeUnit{19, 0}, TimeUnit{14, 0}, TimeUnit{9, 1}]
+Lịch sử dụng: []
+
+Phòng: 27
+Lịch bận:     [TimeUnit{13, 0}, TimeUnit{19, 0}, TimeUnit{4, 0}]
+Lịch sử dụng: []
+
+Phòng: 28
+Lịch bận:     [TimeUnit{13, 1}, TimeUnit{18, 3}, TimeUnit{15, 2}, TimeUnit{10, 1}]
+Lịch sử dụng: []
+
+Phòng: 29
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{17, 3}, TimeUnit{12, 3}]
+Lịch sử dụng: [TimeUnit{4, 0}]
+
+Phòng: 30
+Lịch bận:     [TimeUnit{13, 0}, TimeUnit{13, 3}, TimeUnit{9, 1}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 31
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{7, 3}, TimeUnit{9, 0}, TimeUnit{11, 1}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 32
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{1, 3}, TimeUnit{16, 0}, TimeUnit{11, 0}]
+Lịch sử dụng: []
+
+Phòng: 33
+Lịch bận:     [TimeUnit{12, 3}, TimeUnit{7, 3}, TimeUnit{14, 1}, TimeUnit{11, 0}]
+Lịch sử dụng: []
+
+Phòng: 34
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{19, 0}, TimeUnit{19, 2}, TimeUnit{17, 0}]
+Lịch sử dụng: []
+
+Phòng: 35
+Lịch bận:     [TimeUnit{8, 3}, TimeUnit{4, 3}, TimeUnit{0, 0}, TimeUnit{10, 2}]
+Lịch sử dụng: []
+
+Phòng: 36
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{1, 3}, TimeUnit{19, 1}, TimeUnit{1, 1}]
+Lịch sử dụng: []
+
+Phòng: 37
+Lịch bận:     [TimeUnit{9, 2}, TimeUnit{10, 1}, TimeUnit{11, 1}, TimeUnit{1, 0}]
+Lịch sử dụng: []
+
+Phòng: 38
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{3, 0}, TimeUnit{0, 2}, TimeUnit{17, 0}]
+Lịch sử dụng: []
+
+Phòng: 39
+Lịch bận:     [TimeUnit{1, 3}, TimeUnit{13, 2}, TimeUnit{9, 2}, TimeUnit{6, 2}]
+Lịch sử dụng: []
+
+Phòng: 40
+Lịch bận:     [TimeUnit{7, 0}, TimeUnit{9, 0}, TimeUnit{0, 0}, TimeUnit{0, 3}, TimeUnit{1, 1}]
+Lịch sử dụng: []
+
+Phòng: 41
+Lịch bận:     [TimeUnit{3, 0}, TimeUnit{3, 1}, TimeUnit{10, 3}]
+Lịch sử dụng: []
+
+Phòng: 42
+Lịch bận:     [TimeUnit{2, 3}, TimeUnit{8, 2}, TimeUnit{19, 2}, TimeUnit{9, 3}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 43
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{1, 3}, TimeUnit{19, 1}, TimeUnit{15, 1}, TimeUnit{11, 1}]
+Lịch sử dụng: []
+
+Phòng: 44
+Lịch bận:     [TimeUnit{13, 1}, TimeUnit{13, 2}, TimeUnit{19, 2}, TimeUnit{5, 0}]
+Lịch sử dụng: []
+
+Phòng: 45
+Lịch bận:     [TimeUnit{7, 2}, TimeUnit{4, 1}, TimeUnit{5, 1}]
+Lịch sử dụng: []
+
+Phòng: 46
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{9, 3}, TimeUnit{6, 2}]
+Lịch sử dụng: []
+
+Phòng: 47
+Lịch bận:     [TimeUnit{18, 0}, TimeUnit{19, 2}, TimeUnit{9, 1}, TimeUnit{5, 3}, TimeUnit{11, 1}]
+Lịch sử dụng: [TimeUnit{0, 1}]
+
+Phòng: 48
+Lịch bận:     [TimeUnit{7, 0}, TimeUnit{3, 2}, TimeUnit{3, 3}, TimeUnit{15, 1}, TimeUnit{16, 0}]
+Lịch sử dụng: []
+
+Phòng: 49
+Lịch bận:     [TimeUnit{8, 0}, TimeUnit{13, 2}, TimeUnit{9, 0}, TimeUnit{5, 1}, TimeUnit{6, 0}]
+Lịch sử dụng: []
+
+Phòng: 50
+Lịch bận:     [TimeUnit{2, 0}, TimeUnit{18, 2}, TimeUnit{6, 1}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 51
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{10, 1}, TimeUnit{5, 0}]
+Lịch sử dụng: []
+
+Phòng: 52
+Lịch bận:     [TimeUnit{15, 1}, TimeUnit{16, 1}, TimeUnit{16, 2}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Phòng: 53
+Lịch bận:     [TimeUnit{7, 2}, TimeUnit{19, 1}, TimeUnit{9, 2}, TimeUnit{16, 2}]
+Lịch sử dụng: [TimeUnit{2, 0}, TimeUnit{0, 0}]
+
+Phòng: 54
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{19, 1}, TimeUnit{14, 3}, TimeUnit{4, 2}]
+Lịch sử dụng: []
+
+Phòng: 55
+Lịch bận:     [TimeUnit{18, 3}, TimeUnit{15, 0}, TimeUnit{10, 0}, TimeUnit{0, 3}, TimeUnit{12, 0}]
+Lịch sử dụng: []
+
+Phòng: 56
+Lịch bận:     [TimeUnit{13, 1}, TimeUnit{4, 0}, TimeUnit{5, 1}, TimeUnit{5, 3}, TimeUnit{17, 1}]
+Lịch sử dụng: []
+
+Phòng: 57
+Lịch bận:     [TimeUnit{14, 0}, TimeUnit{11, 1}, TimeUnit{1, 1}]
+Lịch sử dụng: []
+
+Phòng: 58
+Lịch bận:     [TimeUnit{1, 3}, TimeUnit{2, 1}, TimeUnit{8, 1}, TimeUnit{13, 3}, TimeUnit{1, 0}]
+Lịch sử dụng: [TimeUnit{2, 0}]
+
+Phòng: 59
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{18, 1}, TimeUnit{13, 1}, TimeUnit{14, 0}]
+Lịch sử dụng: []
+Số vi phạm ràng buộc 4: 0
+
+Ràng buộc 5: Giảng viên không được phân trông thi vào lịch bận của gv đó
+
+Giảng viên: 0
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{13, 1}, TimeUnit{19, 0}, TimeUnit{19, 1}, TimeUnit{15, 2}]
+Lịch sử dụng: [TimeUnit{2, 0}]
+
+Giảng viên: 1
+Lịch bận:     [TimeUnit{2, 3}, TimeUnit{9, 2}, TimeUnit{10, 0}, TimeUnit{9, 3}, TimeUnit{17, 1}]
+Lịch sử dụng: []
+
+Giảng viên: 2
+Lịch bận:     [TimeUnit{1, 2}, TimeUnit{2, 1}, TimeUnit{3, 2}, TimeUnit{4, 0}, TimeUnit{15, 1}]
+Lịch sử dụng: [TimeUnit{0, 1}, TimeUnit{2, 0}]
+
+Giảng viên: 3
+Lịch bận:     [TimeUnit{18, 3}, TimeUnit{9, 3}, TimeUnit{0, 3}, TimeUnit{17, 0}]
+Lịch sử dụng: [TimeUnit{4, 0}, TimeUnit{0, 0}]
+
+Giảng viên: 4
+Lịch bận:     [TimeUnit{1, 3}, TimeUnit{4, 2}, TimeUnit{16, 2}]
+Lịch sử dụng: [TimeUnit{0, 1}]
+
+Giảng viên: 5
+Lịch bận:     [TimeUnit{15, 1}, TimeUnit{5, 0}, TimeUnit{6, 1}]
+Lịch sử dụng: []
+
+Giảng viên: 6
+Lịch bận:     [TimeUnit{12, 2}, TimeUnit{13, 0}, TimeUnit{4, 3}, TimeUnit{5, 1}, TimeUnit{17, 1}]
+Lịch sử dụng: [TimeUnit{4, 0}, TimeUnit{0, 1}]
+
+Giảng viên: 7
+Lịch bận:     [TimeUnit{1, 3}, TimeUnit{18, 1}, TimeUnit{14, 0}, TimeUnit{10, 2}, TimeUnit{6, 0}]
+Lịch sử dụng: [TimeUnit{0, 1}]
+
+Giảng viên: 8
+Lịch bận:     [TimeUnit{2, 2}, TimeUnit{15, 2}, TimeUnit{16, 2}, TimeUnit{0, 3}]
+Lịch sử dụng: []
+
+Giảng viên: 9
+Lịch bận:     [TimeUnit{8, 2}, TimeUnit{4, 0}, TimeUnit{0, 0}, TimeUnit{15, 3}, TimeUnit{10, 3}]
+Lịch sử dụng: [TimeUnit{0, 1}]
+
+Giảng viên: 10
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{18, 1}, TimeUnit{4, 1}, TimeUnit{17, 0}]
+Lịch sử dụng: []
+
+Giảng viên: 11
+Lịch bận:     [TimeUnit{7, 2}, TimeUnit{19, 1}, TimeUnit{14, 1}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Giảng viên: 12
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{3, 2}, TimeUnit{0, 1}, TimeUnit{1, 0}, TimeUnit{11, 3}]
+Lịch sử dụng: [TimeUnit{4, 0}]
+
+Giảng viên: 13
+Lịch bận:     [TimeUnit{18, 0}, TimeUnit{14, 1}, TimeUnit{15, 0}, TimeUnit{10, 3}, TimeUnit{17, 0}]
+Lịch sử dụng: [TimeUnit{4, 0}]
+
+Giảng viên: 14
+Lịch bận:     [TimeUnit{2, 2}, TimeUnit{9, 2}, TimeUnit{0, 1}]
+Lịch sử dụng: []
+
+Giảng viên: 15
+Lịch bận:     [TimeUnit{19, 1}, TimeUnit{8, 2}, TimeUnit{5, 0}, TimeUnit{17, 0}]
+Lịch sử dụng: []
+
+Giảng viên: 16
+Lịch bận:     [TimeUnit{13, 0}, TimeUnit{11, 1}, TimeUnit{1, 0}]
+Lịch sử dụng: [TimeUnit{4, 0}]
+
+Giảng viên: 17
+Lịch bận:     [TimeUnit{17, 2}, TimeUnit{18, 1}, TimeUnit{19, 2}, TimeUnit{4, 0}, TimeUnit{14, 3}]
+Lịch sử dụng: []
+
+Giảng viên: 18
+Lịch bận:     [TimeUnit{17, 3}, TimeUnit{4, 2}, TimeUnit{4, 3}, TimeUnit{17, 1}]
+Lịch sử dụng: [TimeUnit{0, 0}, TimeUnit{0, 1}]
+
+Giảng viên: 19
+Lịch bận:     [TimeUnit{7, 3}, TimeUnit{14, 1}, TimeUnit{4, 0}, TimeUnit{15, 0}, TimeUnit{4, 3}]
+Lịch sử dụng: []
+
+Giảng viên: 20
+Lịch bận:     [TimeUnit{6, 3}, TimeUnit{5, 3}, TimeUnit{6, 2}]
+Lịch sử dụng: [TimeUnit{2, 0}]
+
+Giảng viên: 21
+Lịch bận:     [TimeUnit{19, 1}, TimeUnit{3, 2}, TimeUnit{5, 2}, TimeUnit{11, 2}]
+Lịch sử dụng: []
+
+Giảng viên: 22
+Lịch bận:     [TimeUnit{2, 1}, TimeUnit{15, 0}, TimeUnit{15, 1}, TimeUnit{5, 3}, TimeUnit{0, 2}]
+Lịch sử dụng: [TimeUnit{2, 0}]
+
+Giảng viên: 23
+Lịch bận:     [TimeUnit{7, 1}, TimeUnit{19, 2}, TimeUnit{14, 1}]
+Lịch sử dụng: []
+
+Giảng viên: 24
+Lịch bận:     [TimeUnit{19, 0}, TimeUnit{2, 3}, TimeUnit{5, 1}, TimeUnit{16, 2}, TimeUnit{6, 0}]
+Lịch sử dụng: []
+
+Giảng viên: 25
+Lịch bận:     [TimeUnit{14, 0}, TimeUnit{19, 3}, TimeUnit{14, 3}, TimeUnit{10, 1}]
+Lịch sử dụng: [TimeUnit{0, 0}]
+
+Giảng viên: 26
+Lịch bận:     [TimeUnit{18, 3}, TimeUnit{9, 0}, TimeUnit{4, 0}, TimeUnit{10, 2}, TimeUnit{10, 3}]
+Lịch sử dụng: []
+
+Giảng viên: 27
+Lịch bận:     [TimeUnit{8, 1}, TimeUnit{9, 1}, TimeUnit{5, 0}, TimeUnit{11, 0}, TimeUnit{16, 2}]
+Lịch sử dụng: [TimeUnit{0, 0}]
+
+Giảng viên: 28
+Lịch bận:     [TimeUnit{1, 2}, TimeUnit{0, 1}, TimeUnit{11, 1}]
+Lịch sử dụng: [TimeUnit{4, 0}]
+
+Giảng viên: 29
+Lịch bận:     [TimeUnit{2, 3}, TimeUnit{13, 3}, TimeUnit{10, 0}, TimeUnit{12, 0}]
+Lịch sử dụng: []
+Số vi phạm ràng buộc 5: 0
+
+Ràng buộc 6: Tại mỗi thời điểm thi, các lớp thi phải khác phòng
+Ràng buộc 7: Tại mỗi thời điểm thi, các lớp thi phải khác giảng viên trông thi
+
+Danh sách các lớp thi vào ngày: 2, Kíp: 0
+Lớp: 2, phòng thi: 53, GV1: 0, GV2: 20
+Lớp: 6, phòng thi: 58, GV1: 2, GV2: 22
+
+Danh sách các lớp thi vào ngày: 4, Kíp: 0
+Lớp: 0, phòng thi: 14, GV1: 13, GV2: 3
+Lớp: 4, phòng thi: 23, GV1: 28, GV2: 6
+Lớp: 8, phòng thi: 29, GV1: 12, GV2: 16
+
+Danh sách các lớp thi vào ngày: 0, Kíp: 0
+Lớp: 3, phòng thi: 14, GV1: 18, GV2: 27
+Lớp: 7, phòng thi: 53, GV1: 3, GV2: 25
+
+Danh sách các lớp thi vào ngày: 0, Kíp: 1
+Lớp: 1, phòng thi: 21, GV1: 2, GV2: 7
+Lớp: 5, phòng thi: 47, GV1: 6, GV2: 9
+Lớp: 9, phòng thi: 23, GV1: 4, GV2: 18
+Số vi phạm ràng buộc 6: 0
+Số vi phạm ràng buộc 7: 0
+
+Ràng buộc 8: Nếu 2 lớp thi có chung sinh viên và thi cùng ngày thì phải thi cách nhau ít nhất 1 kíp thi
+
+Lớp: 0, ngày thi: 4, kíp thi: 0
+Lớp: 1, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 16
+
+Lớp: 0, ngày thi: 4, kíp thi: 0
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 4
+
+Lớp: 0, ngày thi: 4, kíp thi: 0
+Lớp: 5, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 16
+
+Lớp: 0, ngày thi: 4, kíp thi: 0
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 14
+
+Lớp: 0, ngày thi: 4, kíp thi: 0
+Lớp: 9, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 7
+
+Lớp: 1, ngày thi: 0, kíp thi: 1
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 7
+
+Lớp: 1, ngày thi: 0, kíp thi: 1
+Lớp: 4, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 9
+
+Lớp: 1, ngày thi: 0, kíp thi: 1
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 10
+
+Lớp: 1, ngày thi: 0, kíp thi: 1
+Lớp: 8, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 9
+
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Lớp: 4, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 6
+
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Lớp: 5, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 5
+
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Lớp: 8, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 8
+
+Lớp: 2, ngày thi: 2, kíp thi: 0
+Lớp: 9, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 6
+
+Lớp: 4, ngày thi: 4, kíp thi: 0
+Lớp: 5, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 6
+
+Lớp: 4, ngày thi: 4, kíp thi: 0
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 9
+
+Lớp: 4, ngày thi: 4, kíp thi: 0
+Lớp: 9, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 13
+
+Lớp: 5, ngày thi: 0, kíp thi: 1
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Số sinh viên chung: 15
+
+Lớp: 5, ngày thi: 0, kíp thi: 1
+Lớp: 8, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 14
+
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Lớp: 8, ngày thi: 4, kíp thi: 0
+Số sinh viên chung: 14
+
+Lớp: 6, ngày thi: 2, kíp thi: 0
+Lớp: 9, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 12
+
+Lớp: 8, ngày thi: 4, kíp thi: 0
+Lớp: 9, ngày thi: 0, kíp thi: 1
+Số sinh viên chung: 10
+Số vi phạm ràng buộc 8: 0
+
+Ràng buộc 9: Mỗi lớp thi có giảng viên trông thi không dạy môn của lớp thi đó
+
+Lớp: 0, học phần của lớp: 0
+Danh sách học phần mà GV1 dạy: [1, 2]
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 1, học phần của lớp: 1
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 2, học phần của lớp: 2
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 3, học phần của lớp: 3
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 4, học phần của lớp: 0
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: [3]
+
+Lớp: 5, học phần của lớp: 1
+Danh sách học phần mà GV1 dạy: [3]
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 6, học phần của lớp: 2
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: [1]
+
+Lớp: 7, học phần của lớp: 3
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: []
+
+Lớp: 8, học phần của lớp: 0
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: [3]
+
+Lớp: 9, học phần của lớp: 1
+Danh sách học phần mà GV1 dạy: []
+Danh sách học phần mà GV2 dạy: []
+Số vi phạm ràng buộc 9: 0
+
+Ràng buộc: 1, số vi phạm: 0
+Ràng buộc: 2, số vi phạm: 0
+Ràng buộc: 3, số vi phạm: 0
+Ràng buộc: 4, số vi phạm: 0
+Ràng buộc: 5, số vi phạm: 0
+Ràng buộc: 6, số vi phạm: 0
+Ràng buộc: 7, số vi phạm: 0
+Ràng buộc: 8, số vi phạm: 0
+Ràng buộc: 9, số vi phạm: 0
+Tổng số vi phạm: 0
+
+================ </Check constraint> =======================
+
+Write excel ./Output.csv done
+
+Write info data src/statistics/1527187068201/info_data.txt done
+
+Write ETM to file src/statistics/1527187068201/data done
+BUILD SUCCESSFUL (total time: 1 minute 17 seconds)

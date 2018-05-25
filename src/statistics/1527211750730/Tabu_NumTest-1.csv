@@ -1,0 +1,2 @@
+ParameterID,TabuLen,maxTime,maxIter,maxStable,MinFitness,AverageFitness,MaxFitness,VarianceFitness,MinTime,AverageTime,MaxTime,VarianceTime,
+Para1,30,0,100000,200,0.008547008547008548,0.008547008547008548,0.008547008547008548,0.0,1.089,1.089,1.089,0.0,

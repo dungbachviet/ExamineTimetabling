@@ -35,10 +35,10 @@ public class Statistics {
     public static void separateAlgorithmStatistic() {
         String dirSaveFile = "src/statistics/" + System.currentTimeMillis();
 
-        // choose algorithm
-//        tabuStatistic(dirSaveFile);
+        // Choose algorithm
+        tabuStatistic(dirSaveFile);
 //        annealingStatistic(dirSaveFile);
-        degratedCeilingStatistic(dirSaveFile);
+//        degratedCeilingStatistic(dirSaveFile);
         
         //show solution
         Timetabling.showSolution();
@@ -53,8 +53,11 @@ public class Statistics {
     public static void tabuStatistic(String dirSaveFile) {
 
         int[] tabuLenArr = new int[]{30};
-        int[] maxTimeArr = new int[]{30};
-        int[] maxIterArr = new int[]{500};
+        
+        int[] maxTimeArr = new int[]{70};
+//        int[] maxTimeArr = new int[]{0};
+        
+        int[] maxIterArr = new int[]{50000};
         int[] maxStableArr = new int[]{200};
         int numParameters = tabuLenArr.length;
         int numTest = 1;
@@ -221,8 +224,8 @@ public class Statistics {
 //        double[] initialTempArr = new double[]{5000, 7000};
 //        double[] endingTempArr = new double[]{0.05, 0.01};
         
-        int[] maxTimeArr = new int[]{200};
-        int[] maxIterArr = new int[]{10000};
+        int[] maxTimeArr = new int[]{70};
+        int[] maxIterArr = new int[]{100000};
         double[] initialTempArr = new double[]{0.05};
         double[] endingTempArr = new double[]{0.0005};
         int numParameters = maxTimeArr.length;
@@ -391,9 +394,9 @@ public class Statistics {
 //        int numParameters = maxTimeArr.length;
 //        int numTest = 2;
 
-        int[] maxTimeArr = new int[]{60};
-        int[] maxIterArr = new int[]{20000};
-        double[] desiredFitnessArr = new double[]{0.5};
+        int[] maxTimeArr = new int[]{70};
+        int[] maxIterArr = new int[]{200000};
+        double[] desiredFitnessArr = new double[]{0.4};
         int numParameters = maxTimeArr.length;
         int numTest = 1;
         
