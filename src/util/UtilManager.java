@@ -41,7 +41,7 @@ public class UtilManager {
         int numRooms = numAreas * 2;
         int numCourses = 10;
 
-        int numExamClasses = (int) (numCourses * 1);
+        int numExamClasses = (int) (numCourses * 3);
         int numExamDays = 20;
         int numStudents = 200;
         int numTeachers = 20;

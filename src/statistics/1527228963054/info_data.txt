@@ -1,0 +1,107 @@
+
+============= <ETM> =============
+List available days: 17
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 14, 16, 17, 18, 19]
+List jam level: 4
+[1, 3, 4, 2]
+List areas: 10
+Area{ID=Area6, roomList=[Room{ID=Room6, area=Area6, numSlots=100, busyTimeList=[TimeUnit{8, 2}, TimeUnit{15, 0}, TimeUnit{16, 0}, TimeUnit{11, 1}, TimeUnit{12, 0}]}, Room{ID=Room16, area=Area6, numSlots=57, busyTimeList=[TimeUnit{1, 3}, TimeUnit{18, 3}, TimeUnit{3, 0}]}]}
+Area{ID=Area5, roomList=[Room{ID=Room5, area=Area5, numSlots=73, busyTimeList=[TimeUnit{18, 2}, TimeUnit{3, 2}, TimeUnit{9, 1}, TimeUnit{4, 3}, TimeUnit{5, 0}]}, Room{ID=Room15, area=Area5, numSlots=141, busyTimeList=[TimeUnit{7, 1}, TimeUnit{8, 1}, TimeUnit{14, 1}, TimeUnit{15, 3}]}]}
+Area{ID=Area8, roomList=[Room{ID=Room8, area=Area8, numSlots=65, busyTimeList=[TimeUnit{18, 0}, TimeUnit{7, 3}, TimeUnit{0, 0}]}, Room{ID=Room18, area=Area8, numSlots=87, busyTimeList=[TimeUnit{14, 0}, TimeUnit{15, 0}, TimeUnit{11, 0}, TimeUnit{5, 2}]}]}
+Area{ID=Area7, roomList=[Room{ID=Room7, area=Area7, numSlots=129, busyTimeList=[TimeUnit{19, 0}, TimeUnit{0, 0}, TimeUnit{10, 3}, TimeUnit{11, 1}]}, Room{ID=Room17, area=Area7, numSlots=80, busyTimeList=[TimeUnit{18, 1}, TimeUnit{8, 1}, TimeUnit{15, 0}, TimeUnit{10, 1}]}]}
+Area{ID=Area9, roomList=[Room{ID=Room9, area=Area9, numSlots=124, busyTimeList=[TimeUnit{2, 1}, TimeUnit{13, 2}, TimeUnit{15, 3}, TimeUnit{11, 0}, TimeUnit{6, 0}]}, Room{ID=Room19, area=Area9, numSlots=129, busyTimeList=[TimeUnit{7, 3}, TimeUnit{4, 2}, TimeUnit{10, 3}]}]}
+Area{ID=Area0, roomList=[Room{ID=Room0, area=Area0, numSlots=139, busyTimeList=[TimeUnit{9, 1}, TimeUnit{9, 3}, TimeUnit{1, 0}, TimeUnit{16, 3}, TimeUnit{0, 3}]}, Room{ID=Room10, area=Area0, numSlots=130, busyTimeList=[TimeUnit{1, 2}, TimeUnit{13, 3}, TimeUnit{9, 0}, TimeUnit{9, 1}, TimeUnit{10, 0}]}]}
+Area{ID=Area2, roomList=[Room{ID=Room2, area=Area2, numSlots=137, busyTimeList=[TimeUnit{18, 1}, TimeUnit{18, 2}, TimeUnit{9, 1}, TimeUnit{15, 0}, TimeUnit{0, 3}]}, Room{ID=Room12, area=Area2, numSlots=140, busyTimeList=[TimeUnit{7, 0}, TimeUnit{18, 3}, TimeUnit{4, 0}, TimeUnit{5, 0}]}]}
+Area{ID=Area1, roomList=[Room{ID=Room1, area=Area1, numSlots=56, busyTimeList=[TimeUnit{10, 0}, TimeUnit{16, 3}, TimeUnit{1, 0}]}, Room{ID=Room11, area=Area1, numSlots=81, busyTimeList=[TimeUnit{1, 2}, TimeUnit{18, 1}, TimeUnit{13, 3}, TimeUnit{10, 1}, TimeUnit{6, 2}]}]}
+Area{ID=Area4, roomList=[Room{ID=Room4, area=Area4, numSlots=127, busyTimeList=[TimeUnit{7, 1}, TimeUnit{13, 1}, TimeUnit{15, 1}, TimeUnit{4, 2}]}, Room{ID=Room14, area=Area4, numSlots=62, busyTimeList=[TimeUnit{7, 2}, TimeUnit{9, 1}, TimeUnit{16, 1}, TimeUnit{6, 2}]}]}
+Area{ID=Area3, roomList=[Room{ID=Room3, area=Area3, numSlots=76, busyTimeList=[TimeUnit{18, 0}, TimeUnit{2, 1}, TimeUnit{13, 1}, TimeUnit{4, 3}, TimeUnit{17, 0}]}, Room{ID=Room13, area=Area3, numSlots=95, busyTimeList=[TimeUnit{3, 1}, TimeUnit{19, 1}, TimeUnit{15, 2}, TimeUnit{5, 1}]}]}
+
+List courses: 10
+Course{ID=Course0, difficult=2}
+Course{ID=Course2, difficult=3}
+Course{ID=Course1, difficult=3}
+Course{ID=Course4, difficult=1}
+Course{ID=Course3, difficult=2}
+Course{ID=Course6, difficult=3}
+Course{ID=Course5, difficult=1}
+Course{ID=Course8, difficult=2}
+Course{ID=Course7, difficult=2}
+Course{ID=Course9, difficult=1}
+
+List exam class: 30
+ExamClass{examClassID=ExamClass22, course=Course4, enrollmentList=[]}
+ExamClass{examClassID=ExamClass21, course=Course3, enrollmentList=[]}
+ExamClass{examClassID=ExamClass24, course=Course6, enrollmentList=[]}
+ExamClass{examClassID=ExamClass23, course=Course5, enrollmentList=[]}
+ExamClass{examClassID=ExamClass26, course=Course8, enrollmentList=[]}
+ExamClass{examClassID=ExamClass25, course=Course7, enrollmentList=[]}
+ExamClass{examClassID=ExamClass28, course=Course1, enrollmentList=[Student3, Student6, Student13, Student14, Student16, Student17, Student24, Student25, Student27, Student28, Student42, Student51, Student57, Student61, Student67, Student68, Student71, Student73, Student75, Student78, Student80, Student83, Student85, Student88, Student90, Student97, Student99, Student100, Student114, Student119, Student121, Student125, Student140, Student145, Student154, Student156, Student159, Student161, Student162, Student163, Student172, Student174, Student175, Student179, Student180, Student187, Student188, Student189, Student191, Student192, Student194]}
+ExamClass{examClassID=ExamClass27, course=Course0, enrollmentList=[Student3, Student6, Student7, Student8, Student11, Student16, Student18, Student26, Student29, Student30, Student32, Student34, Student39, Student41, Student46, Student49, Student50, Student63, Student69, Student72, Student73, Student75, Student78, Student79, Student80, Student81, Student82, Student83, Student89, Student97, Student99, Student100, Student104, Student105, Student108, Student109, Student110, Student114, Student118, Student123, Student125, Student132, Student140, Student141, Student142, Student146, Student147, Student150, Student154, Student157, Student158, Student160, Student162, Student168, Student172, Student175, Student176, Student178, Student182, Student184, Student198]}
+ExamClass{examClassID=ExamClass9, course=Course0, enrollmentList=[Student1, Student5, Student10, Student19, Student21, Student35, Student36, Student38, Student40, Student44, Student47, Student56, Student58, Student60, Student61, Student66, Student91, Student95, Student98, Student101, Student103, Student107, Student115, Student116, Student117, Student121, Student127, Student129, Student131, Student134, Student136, Student137, Student143, Student151, Student152, Student161, Student164, Student177, Student179, Student189, Student190, Student193, Student199]}
+ExamClass{examClassID=ExamClass20, course=Course2, enrollmentList=[Student8, Student12, Student16, Student25, Student45, Student62, Student65, Student68, Student72, Student74, Student87, Student116, Student121, Student126, Student138, Student148, Student161, Student164, Student165, Student170, Student171, Student173, Student174, Student181, Student184, Student192]}
+ExamClass{examClassID=ExamClass19, course=Course1, enrollmentList=[Student2, Student9, Student10, Student32, Student34, Student44, Student45, Student49, Student50, Student53, Student55, Student62, Student64, Student66, Student69, Student81, Student82, Student89, Student94, Student102, Student103, Student105, Student106, Student107, Student108, Student115, Student117, Student122, Student127, Student128, Student129, Student130, Student135, Student136, Student137, Student138, Student139, Student148, Student150, Student151, Student153, Student160, Student164, Student167, Student168, Student170, Student171, Student185, Student193, Student197]}
+ExamClass{examClassID=ExamClass18, course=Course0, enrollmentList=[Student2, Student12, Student13, Student14, Student22, Student24, Student25, Student27, Student28, Student37, Student48, Student52, Student53, Student54, Student62, Student65, Student67, Student68, Student70, Student84, Student85, Student88, Student93, Student94, Student111, Student112, Student119, Student120, Student124, Student135, Student138, Student145, Student148, Student155, Student156, Student169, Student173, Student185, Student186, Student194, Student196]}
+ExamClass{examClassID=ExamClass11, course=Course2, enrollmentList=[Student7, Student10, Student13, Student14, Student19, Student28, Student32, Student40, Student41, Student44, Student56, Student57, Student76, Student77, Student82, Student86, Student94, Student103, Student104, Student108, Student109, Student120, Student129, Student131, Student137, Student139, Student144, Student145, Student149, Student155, Student158, Student168, Student186, Student191]}
+ExamClass{examClassID=ExamClass10, course=Course1, enrollmentList=[Student1, Student5, Student7, Student20, Student21, Student22, Student23, Student26, Student29, Student33, Student36, Student37, Student38, Student40, Student46, Student48, Student52, Student54, Student56, Student58, Student60, Student65, Student74, Student76, Student79, Student84, Student91, Student98, Student104, Student111, Student113, Student116, Student120, Student123, Student124, Student126, Student131, Student133, Student141, Student142, Student146, Student149, Student157, Student158, Student166, Student169, Student177, Student181, Student182, Student183, Student184, Student186, Student195, Student196]}
+ExamClass{examClassID=ExamClass13, course=Course4, enrollmentList=[]}
+ExamClass{examClassID=ExamClass12, course=Course3, enrollmentList=[]}
+ExamClass{examClassID=ExamClass15, course=Course6, enrollmentList=[]}
+ExamClass{examClassID=ExamClass14, course=Course5, enrollmentList=[]}
+ExamClass{examClassID=ExamClass17, course=Course8, enrollmentList=[]}
+ExamClass{examClassID=ExamClass16, course=Course7, enrollmentList=[]}
+ExamClass{examClassID=ExamClass6, course=Course6, enrollmentList=[]}
+ExamClass{examClassID=ExamClass5, course=Course5, enrollmentList=[]}
+ExamClass{examClassID=ExamClass8, course=Course8, enrollmentList=[]}
+ExamClass{examClassID=ExamClass7, course=Course7, enrollmentList=[]}
+ExamClass{examClassID=ExamClass2, course=Course2, enrollmentList=[Student5, Student11, Student20, Student23, Student36, Student39, Student47, Student55, Student66, Student75, Student80, Student84, Student95, Student98, Student110, Student113, Student136, Student142, Student160, Student175, Student195, Student197]}
+ExamClass{examClassID=ExamClass1, course=Course1, enrollmentList=[Student0, Student4, Student8, Student11, Student12, Student15, Student18, Student19, Student30, Student31, Student35, Student39, Student41, Student43, Student47, Student59, Student63, Student70, Student72, Student77, Student86, Student87, Student92, Student93, Student95, Student96, Student101, Student109, Student110, Student112, Student118, Student132, Student134, Student143, Student144, Student147, Student152, Student155, Student165, Student173, Student176, Student178, Student190, Student198, Student199]}
+ExamClass{examClassID=ExamClass4, course=Course4, enrollmentList=[]}
+ExamClass{examClassID=ExamClass3, course=Course3, enrollmentList=[]}
+ExamClass{examClassID=ExamClass29, course=Course2, enrollmentList=[Student9, Student22, Student33, Student35, Student42, Student53, Student54, Student91, Student92, Student96, Student105, Student111, Student130, Student134, Student135, Student140, Student151, Student156, Student169, Student177, Student179, Student189, Student193]}
+ExamClass{examClassID=ExamClass0, course=Course0, enrollmentList=[Student0, Student4, Student9, Student15, Student17, Student20, Student23, Student31, Student33, Student42, Student43, Student45, Student51, Student55, Student57, Student59, Student64, Student71, Student74, Student76, Student77, Student86, Student87, Student90, Student92, Student96, Student102, Student106, Student113, Student122, Student126, Student128, Student130, Student133, Student139, Student144, Student149, Student153, Student159, Student163, Student165, Student166, Student167, Student170, Student171, Student174, Student180, Student181, Student183, Student187, Student188, Student191, Student192, Student195, Student197]}
+
+List rooms: 20
+Room{ID=Room2, area=Area2, numSlots=137, busyTimeList=[TimeUnit{18, 1}, TimeUnit{18, 2}, TimeUnit{9, 1}, TimeUnit{15, 0}, TimeUnit{0, 3}]}
+Room{ID=Room13, area=Area3, numSlots=95, busyTimeList=[TimeUnit{3, 1}, TimeUnit{19, 1}, TimeUnit{15, 2}, TimeUnit{5, 1}]}
+Room{ID=Room1, area=Area1, numSlots=56, busyTimeList=[TimeUnit{10, 0}, TimeUnit{16, 3}, TimeUnit{1, 0}]}
+Room{ID=Room12, area=Area2, numSlots=140, busyTimeList=[TimeUnit{7, 0}, TimeUnit{18, 3}, TimeUnit{4, 0}, TimeUnit{5, 0}]}
+Room{ID=Room0, area=Area0, numSlots=139, busyTimeList=[TimeUnit{9, 1}, TimeUnit{9, 3}, TimeUnit{1, 0}, TimeUnit{16, 3}, TimeUnit{0, 3}]}
+Room{ID=Room15, area=Area5, numSlots=141, busyTimeList=[TimeUnit{7, 1}, TimeUnit{8, 1}, TimeUnit{14, 1}, TimeUnit{15, 3}]}
+Room{ID=Room14, area=Area4, numSlots=62, busyTimeList=[TimeUnit{7, 2}, TimeUnit{9, 1}, TimeUnit{16, 1}, TimeUnit{6, 2}]}
+Room{ID=Room11, area=Area1, numSlots=81, busyTimeList=[TimeUnit{1, 2}, TimeUnit{18, 1}, TimeUnit{13, 3}, TimeUnit{10, 1}, TimeUnit{6, 2}]}
+Room{ID=Room10, area=Area0, numSlots=130, busyTimeList=[TimeUnit{1, 2}, TimeUnit{13, 3}, TimeUnit{9, 0}, TimeUnit{9, 1}, TimeUnit{10, 0}]}
+Room{ID=Room9, area=Area9, numSlots=124, busyTimeList=[TimeUnit{2, 1}, TimeUnit{13, 2}, TimeUnit{15, 3}, TimeUnit{11, 0}, TimeUnit{6, 0}]}
+Room{ID=Room8, area=Area8, numSlots=65, busyTimeList=[TimeUnit{18, 0}, TimeUnit{7, 3}, TimeUnit{0, 0}]}
+Room{ID=Room7, area=Area7, numSlots=129, busyTimeList=[TimeUnit{19, 0}, TimeUnit{0, 0}, TimeUnit{10, 3}, TimeUnit{11, 1}]}
+Room{ID=Room6, area=Area6, numSlots=100, busyTimeList=[TimeUnit{8, 2}, TimeUnit{15, 0}, TimeUnit{16, 0}, TimeUnit{11, 1}, TimeUnit{12, 0}]}
+Room{ID=Room5, area=Area5, numSlots=73, busyTimeList=[TimeUnit{18, 2}, TimeUnit{3, 2}, TimeUnit{9, 1}, TimeUnit{4, 3}, TimeUnit{5, 0}]}
+Room{ID=Room4, area=Area4, numSlots=127, busyTimeList=[TimeUnit{7, 1}, TimeUnit{13, 1}, TimeUnit{15, 1}, TimeUnit{4, 2}]}
+Room{ID=Room3, area=Area3, numSlots=76, busyTimeList=[TimeUnit{18, 0}, TimeUnit{2, 1}, TimeUnit{13, 1}, TimeUnit{4, 3}, TimeUnit{17, 0}]}
+Room{ID=Room17, area=Area7, numSlots=80, busyTimeList=[TimeUnit{18, 1}, TimeUnit{8, 1}, TimeUnit{15, 0}, TimeUnit{10, 1}]}
+Room{ID=Room16, area=Area6, numSlots=57, busyTimeList=[TimeUnit{1, 3}, TimeUnit{18, 3}, TimeUnit{3, 0}]}
+Room{ID=Room19, area=Area9, numSlots=129, busyTimeList=[TimeUnit{7, 3}, TimeUnit{4, 2}, TimeUnit{10, 3}]}
+Room{ID=Room18, area=Area8, numSlots=87, busyTimeList=[TimeUnit{14, 0}, TimeUnit{15, 0}, TimeUnit{11, 0}, TimeUnit{5, 2}]}
+
+List teachers: 20
+Teacher{ID=Teacher10, teachingCourseList=[Course{ID=Course1, difficult=3}, Course{ID=Course4, difficult=1}], busyTimeList=[TimeUnit{9, 1}, TimeUnit{15, 3}, TimeUnit{0, 3}]}
+Teacher{ID=Teacher11, teachingCourseList=[], busyTimeList=[TimeUnit{12, 1}, TimeUnit{13, 2}, TimeUnit{9, 2}, TimeUnit{10, 3}, TimeUnit{6, 2}]}
+Teacher{ID=Teacher12, teachingCourseList=[Course{ID=Course0, difficult=2}, Course{ID=Course1, difficult=3}, Course{ID=Course4, difficult=1}], busyTimeList=[TimeUnit{18, 0}, TimeUnit{2, 0}, TimeUnit{8, 0}, TimeUnit{6, 1}]}
+Teacher{ID=Teacher13, teachingCourseList=[], busyTimeList=[TimeUnit{19, 3}, TimeUnit{3, 3}, TimeUnit{9, 2}, TimeUnit{0, 0}, TimeUnit{0, 1}]}
+Teacher{ID=Teacher14, teachingCourseList=[Course{ID=Course3, difficult=2}, Course{ID=Course8, difficult=2}], busyTimeList=[TimeUnit{13, 2}, TimeUnit{19, 0}, TimeUnit{14, 1}, TimeUnit{16, 0}]}
+Teacher{ID=Teacher15, teachingCourseList=[Course{ID=Course8, difficult=2}, Course{ID=Course9, difficult=1}], busyTimeList=[TimeUnit{15, 0}, TimeUnit{0, 1}, TimeUnit{16, 2}]}
+Teacher{ID=Teacher16, teachingCourseList=[], busyTimeList=[TimeUnit{13, 3}, TimeUnit{10, 1}, TimeUnit{17, 1}]}
+Teacher{ID=Teacher17, teachingCourseList=[], busyTimeList=[TimeUnit{6, 3}, TimeUnit{12, 1}, TimeUnit{10, 0}]}
+Teacher{ID=Teacher18, teachingCourseList=[Course{ID=Course3, difficult=2}], busyTimeList=[TimeUnit{18, 3}, TimeUnit{14, 2}, TimeUnit{6, 0}, TimeUnit{6, 1}]}
+Teacher{ID=Teacher19, teachingCourseList=[Course{ID=Course5, difficult=1}], busyTimeList=[TimeUnit{7, 0}, TimeUnit{13, 0}, TimeUnit{11, 1}]}
+Teacher{ID=Teacher0, teachingCourseList=[Course{ID=Course2, difficult=3}, Course{ID=Course5, difficult=1}, Course{ID=Course9, difficult=1}], busyTimeList=[TimeUnit{1, 3}, TimeUnit{18, 3}, TimeUnit{5, 1}, TimeUnit{16, 2}]}
+Teacher{ID=Teacher1, teachingCourseList=[], busyTimeList=[TimeUnit{12, 1}, TimeUnit{8, 1}, TimeUnit{15, 1}, TimeUnit{11, 0}, TimeUnit{5, 2}]}
+Teacher{ID=Teacher4, teachingCourseList=[Course{ID=Course7, difficult=2}], busyTimeList=[TimeUnit{1, 3}, TimeUnit{13, 1}, TimeUnit{9, 1}, TimeUnit{0, 0}, TimeUnit{0, 1}]}
+Teacher{ID=Teacher5, teachingCourseList=[], busyTimeList=[TimeUnit{1, 2}, TimeUnit{8, 3}, TimeUnit{5, 0}, TimeUnit{10, 1}]}
+Teacher{ID=Teacher2, teachingCourseList=[], busyTimeList=[TimeUnit{8, 0}, TimeUnit{19, 0}, TimeUnit{19, 1}]}
+Teacher{ID=Teacher3, teachingCourseList=[Course{ID=Course6, difficult=3}], busyTimeList=[TimeUnit{19, 2}, TimeUnit{9, 1}, TimeUnit{15, 3}]}
+Teacher{ID=Teacher8, teachingCourseList=[], busyTimeList=[TimeUnit{14, 2}, TimeUnit{9, 2}, TimeUnit{15, 0}]}
+Teacher{ID=Teacher9, teachingCourseList=[], busyTimeList=[TimeUnit{7, 1}, TimeUnit{14, 3}, TimeUnit{10, 2}, TimeUnit{16, 0}]}
+Teacher{ID=Teacher6, teachingCourseList=[Course{ID=Course6, difficult=3}, Course{ID=Course7, difficult=2}], busyTimeList=[TimeUnit{12, 3}, TimeUnit{14, 0}, TimeUnit{10, 2}, TimeUnit{11, 3}]}
+Teacher{ID=Teacher7, teachingCourseList=[Course{ID=Course0, difficult=2}, Course{ID=Course2, difficult=3}], busyTimeList=[TimeUnit{18, 2}, TimeUnit{5, 2}, TimeUnit{10, 3}, TimeUnit{11, 1}, TimeUnit{17, 1}]}
+
+============= </ETM> =============

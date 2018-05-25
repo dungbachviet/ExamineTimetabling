@@ -1,0 +1,2 @@
+ParameterID,maxTime,maxIter,desiredFitness,MinFitness,AverageFitness,MaxFitness,VarianceFitness,MinTime,AverageTime,MaxTime,VarianceTime,
+Para1,70,200000,0.4,0.4402232515813343,0.5329370673708079,0.6256508831602816,0.09271381578947366,96.281,96.281,96.281,0.0,

@@ -75,13 +75,17 @@ public class ExamineTimetablingProblem {
 //        maxIter = 100000;
 //        maxStable = 200;
     //==============
-    ExamineTimetablingManager manager;
+    public static ExamineTimetablingManager manager;
 
     public HashMap<String, Area> hmIDToArea;
     public HashMap<String, Course> hmIDToCourse;
     public HashMap<String, ExamClass> hmIDToExamClass;
     public HashMap<String, Room> hmIDToRoom;
     public HashMap<String, Teacher> hmIDToTeacher;
+    
+    public static HashMap<Integer, VarIntLS> hmIntegerToExamDays = new HashMap<Integer, VarIntLS>();
+    public static HashMap<Integer, VarIntLS> hmIntegerToTimeSlots = new HashMap<Integer, VarIntLS>();
+    
 
     public ArrayList<Integer> availableDayList; // ds các ngày có thể tổ chức thi
     public ArrayList<Integer> jamLevelList; // ds mức độ tắc nghẽn của các kíp thi
@@ -99,14 +103,15 @@ public class ExamineTimetablingProblem {
     ArrayList<ExamClass> examClasses;
     ArrayList<Room> rooms;
     ArrayList<Teacher> teachers;
-    Set<Integer> setAvailableDay;
-    ArrayList<ArrayList<Integer>> sameCourseCodeClass;
+    public static Set<Integer> setAvailableDay;
+    
+    public static ArrayList<ArrayList<Integer>> sameCourseCodeClass;
 
     LocalSearchManager ls;
     ConstraintSystem S;
 
-    VarIntLS[] examDays;
-    VarIntLS[] examTimeSlots;
+    public static VarIntLS[] examDays;
+    public static VarIntLS[] examTimeSlots;
     VarIntLS[] examRooms;
     VarIntLS[][] examClassToTeacher;
 
@@ -193,6 +198,9 @@ public class ExamineTimetablingProblem {
             System.out.println("Domain : examDays : " + setAvailableDay);
             examTimeSlots[index] = new VarIntLS(ls, 0, 3);
             examRooms[index] = new VarIntLS(ls, 0, numRoom - 1);
+            
+            hmIntegerToExamDays.put(index, examDays[index]);
+            hmIntegerToTimeSlots.put(index, examTimeSlots[index]);
         }
 
         examClassToTeacher = new VarIntLS[numExamClass][numTeacher];
@@ -214,28 +222,28 @@ public class ExamineTimetablingProblem {
             S.post(new LessOrEqual(numStudentPerClass, new ElementTmp(roomSlots, examRooms[examClassIndex])));
         }
 
-        // Constraint 3 - same day and same time-slot if exam classes have the same course code
-        int sameCourseCodeClasslength = sameCourseCodeClass.size();
-        for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
-            ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
-            System.out.println("?????????????????????????/ =========>>>>> " + courseIndex + " -- " + listClasses);
-
-            // Get timeSlot and days of exam classes having common course code
-            int length = listClasses.size();
-            if (length > 0) {
-
-                VarIntLS[] listTimeSlots = new VarIntLS[length];
-                VarIntLS[] listDays = new VarIntLS[length];
-                for (int index = 0; index < length; index++) {
-                    listTimeSlots[index] = examTimeSlots[listClasses.get(index)];
-                    listDays[index] = examDays[listClasses.get(index)];
-                }
-
-                S.post(new AND(
-                        new IsEqual(new Max(listTimeSlots), new Min(listTimeSlots)),
-                        new IsEqual(new Max(listDays), new Min(listDays))));
-            }
-        }
+//        // Constraint 3 - same day and same time-slot if exam classes have the same course code
+//        int sameCourseCodeClasslength = sameCourseCodeClass.size();
+//        for (int courseIndex = 0; courseIndex < sameCourseCodeClasslength; courseIndex++) {
+//            ArrayList<Integer> listClasses = sameCourseCodeClass.get(courseIndex);
+//            System.out.println("?????????????????????????/ =========>>>>> " + courseIndex + " -- " + listClasses);
+//
+//            // Get timeSlot and days of exam classes having common course code
+//            int length = listClasses.size();
+//            if (length > 0) {
+//
+//                VarIntLS[] listTimeSlots = new VarIntLS[length];
+//                VarIntLS[] listDays = new VarIntLS[length];
+//                for (int index = 0; index < length; index++) {
+//                    listTimeSlots[index] = examTimeSlots[listClasses.get(index)];
+//                    listDays[index] = examDays[listClasses.get(index)];
+//                }
+//
+//                S.post(new AND(
+//                        new IsEqual(new Max(listTimeSlots), new Min(listTimeSlots)),
+//                        new IsEqual(new Max(listDays), new Min(listDays))));
+//            }
+//        }
 
         // Constraint 4 : Don't allow to violate the busy list of rooms
         for (int roomIndex = 0; roomIndex < numRoom; roomIndex++) {
@@ -788,32 +796,32 @@ public class ExamineTimetablingProblem {
         System.out.println("Số vi phạm ràng buộc 2: " + violation2);
         vioList.add(violation2);
 
-        System.out.println("\nRÀNG BUỘC 3: CÁC LỚP THI CỦA CÙNG 1 HỌC PHẦN THÌ PHẢI THI CÙNG THỜI ĐIỂM");
-        int violation3 = 0;
-        for (Course course : hmIDToCourse.values()) {
-            System.out.println("\nDanh sách các lớp thi của học phần: " + course.getCourseIDInt());
-            ArrayList<ExamClass> classList = course.getExamClassList();
-            Integer day = null;
-            Integer timeSlot = null;
-            for (ExamClass examClass : classList) {
-                int classID = examClass.getExamClassIDInt();
-                int dayOfClass = examDays[classID].getValue();
-                int timeSlotOfClass = examTimeSlots[classID].getValue();
-                if (isShowDetail) {
-                    System.out.println("Lớp: " + classID + ", Ngày thi: " + dayOfClass + ", Kíp thi: " + timeSlotOfClass);
-                }
-                if (day == null) {
-                    day = dayOfClass;
-                    timeSlot = timeSlotOfClass;
-                } else {
-                    if (day != dayOfClass || timeSlot != timeSlotOfClass) {
-                        ++violation3;
-                    }
-                }
-            }
-        }
-        System.out.println("Số vi phạm ràng buộc 3: " + violation3);
-        vioList.add(violation3);
+//        System.out.println("\nRÀNG BUỘC 3: CÁC LỚP THI CỦA CÙNG 1 HỌC PHẦN THÌ PHẢI THI CÙNG THỜI ĐIỂM");
+//        int violation3 = 0;
+//        for (Course course : hmIDToCourse.values()) {
+//            System.out.println("\nDanh sách các lớp thi của học phần: " + course.getCourseIDInt());
+//            ArrayList<ExamClass> classList = course.getExamClassList();
+//            Integer day = null;
+//            Integer timeSlot = null;
+//            for (ExamClass examClass : classList) {
+//                int classID = examClass.getExamClassIDInt();
+//                int dayOfClass = examDays[classID].getValue();
+//                int timeSlotOfClass = examTimeSlots[classID].getValue();
+//                if (isShowDetail) {
+//                    System.out.println("Lớp: " + classID + ", Ngày thi: " + dayOfClass + ", Kíp thi: " + timeSlotOfClass);
+//                }
+//                if (day == null) {
+//                    day = dayOfClass;
+//                    timeSlot = timeSlotOfClass;
+//                } else {
+//                    if (day != dayOfClass || timeSlot != timeSlotOfClass) {
+//                        ++violation3;
+//                    }
+//                }
+//            }
+//        }
+//        System.out.println("Số vi phạm ràng buộc 3: " + violation3);
+//        vioList.add(violation3);
 
         System.out.println("\nRÀNG BUỘC 4: PHÒNG THI KHÔNG ĐƯỢC SỬ DỤNG VÀO NGÀY BẬN CỦA PHÒNG ĐÓ");
         int violation4 = 0;
@@ -1032,7 +1040,7 @@ public class ExamineTimetablingProblem {
             ArrayList<String> row = new ArrayList<>();
             row.add("Ngày " + day);
 
-            for (int slot = 0; slot < 3; ++slot) {
+            for (int slot = 0; slot < 4; ++slot) {
                 String oneCell = "";
                 for (int classIndex = 0; classIndex < numExamClass; ++classIndex) {
                     // lấy ra lớp thi vào <day,timeSlot>

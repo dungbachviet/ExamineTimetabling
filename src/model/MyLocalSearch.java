@@ -15,6 +15,11 @@ import localsearch.search.MoveType;
 import localsearch.search.OneVariableValueMove;
 
 import localsearch.selectors.MinMaxSelector;
+import static model.ExamineTimetablingProblem.examDays;
+import static model.ExamineTimetablingProblem.examTimeSlots;
+import static model.ExamineTimetablingProblem.manager;
+import static model.ExamineTimetablingProblem.sameCourseCodeClass;
+import static model.ExamineTimetablingProblem.setAvailableDay;
 import util.UtilManager;
 
 /**
@@ -69,18 +74,18 @@ public class MyLocalSearch {
 //        System.out.println("f[2].getValue() = " + f[2].getValue() + ", ExamineTimetablingProblem.maxSuitableTimeSlot " + ExamineTimetablingProblem.maxSuitableTimeSlot);
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
 
-        double[] weights = {0, 0, 0, 1};
+        double[] weights = {0.25, 0.25, 0.25, 0.25};
 
-//        return weights[0] * ((double) f[0].getValue() / ExamineTimetablingProblem.maxExamGap)
-//                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / f[1].getValue())
-//                + weights[2] * ((double) f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot)
-//                + weights[3] * ((double) f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
+        return weights[0] * ((double) f[0].getValue() / ExamineTimetablingProblem.maxExamGap)
+                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / f[1].getValue())
+                + weights[2] * ((double) f[2].getValue() / ExamineTimetablingProblem.maxSuitableTimeSlot)
+                + weights[3] * ((double) f[3].getValue() / ExamineTimetablingProblem.maxDistributeDifficulty);
         
         
-        return weights[0] * ((double) f[0].getValue() / 1.0)
-                + weights[1] * (1.0/f[1].getValue())
-                + weights[2] * ((double) f[2].getValue() / 1.0)
-                + weights[3] * ((double) f[3].getValue() / 1.0);
+//        return weights[0] * ((double) f[0].getValue() / 1.0)
+//                + weights[1] * (1.0/f[1].getValue())
+//                + weights[2] * ((double) f[2].getValue() / 1.0)
+//                + weights[3] * ((double) f[3].getValue() / 1.0);
     }
 
     public double calculateFitness(IFunction[] f, int delta1, int delta2, int delta3, int delta4) {
@@ -91,17 +96,17 @@ public class MyLocalSearch {
 //        System.out.println("f[3].getValue() = " + f[3].getValue() + ", ExamineTimetablingProblem.maxDistributeDifficulty " + ExamineTimetablingProblem.maxDistributeDifficulty);
 
 
-        double[] weights = {0, 0, 0, 1};
-//        return weights[0] * ((double) (f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap)
-//                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / (f[1].getValue() + delta2))
-//                + weights[2] * ((double) (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot)
-//                + weights[3] * ((double) (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
+        double[] weights = {0.25, 0.25, 0.25, 0.25};
+        return weights[0] * ((double) (f[0].getValue() + delta1) / ExamineTimetablingProblem.maxExamGap)
+                + weights[1] * ((double) ExamineTimetablingProblem.minDisproportion / (f[1].getValue() + delta2))
+                + weights[2] * ((double) (f[2].getValue() + delta3) / ExamineTimetablingProblem.maxSuitableTimeSlot)
+                + weights[3] * ((double) (f[3].getValue() + delta4) / ExamineTimetablingProblem.maxDistributeDifficulty);
         
         
-        return weights[0] * ((double) (f[0].getValue() + delta1) / 1.0)
-                + weights[1] * (1.0/(f[1].getValue() + delta2))
-                + weights[2] * ((double) (f[2].getValue() + delta3) / 1.0)
-                + weights[3] * ((double) (f[3].getValue() + delta4) / 1.0);
+//        return weights[0] * ((double) (f[0].getValue() + delta1) / 1.0)
+//                + weights[1] * (1.0/(f[1].getValue() + delta2))
+//                + weights[2] * ((double) (f[2].getValue() + delta3) / 1.0)
+//                + weights[3] * ((double) (f[3].getValue() + delta4) / 1.0);
     }
 
     public void myTabuSearchMaintainConstraints(IFunction[] f, IConstraint S,
@@ -795,7 +800,7 @@ public class MyLocalSearch {
         ArrayList<Double> iterationFitness = new ArrayList<Double>();
 
         while (it < maxIter && System.currentTimeMillis() - t0 < maxTime) {
-
+   
             // Choose the variable and its value randomly
             int sel_i = UtilManager.randomInt(0, n - 1);
             int sel_v = UtilManager.randomInt(x[sel_i].getMinValue(), x[sel_i].getMaxValue());

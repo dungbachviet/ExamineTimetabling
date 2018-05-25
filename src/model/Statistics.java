@@ -36,9 +36,9 @@ public class Statistics {
         String dirSaveFile = "src/statistics/" + System.currentTimeMillis();
 
         // Choose algorithm
-        tabuStatistic(dirSaveFile);
+//        tabuStatistic(dirSaveFile);
 //        annealingStatistic(dirSaveFile);
-//        degratedCeilingStatistic(dirSaveFile);
+        degratedCeilingStatistic(dirSaveFile);
         
         //show solution
         Timetabling.showSolution();
@@ -396,7 +396,7 @@ public class Statistics {
 
         int[] maxTimeArr = new int[]{70};
         int[] maxIterArr = new int[]{200000};
-        double[] desiredFitnessArr = new double[]{0.4};
+        double[] desiredFitnessArr = new double[]{0.7};
         int numParameters = maxTimeArr.length;
         int numTest = 1;
         
